@@ -1,0 +1,22 @@
+[package]
+name = "la_dfa_2_dot"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0"
+env_logger = "0.10.0"
+parol_runtime = { version = "0.16.0", features = ["auto_generation"] }
+thiserror = "1.0"
+
+[build-dependencies]
+parol = "0.21.4"
+parol_runtime = { version = "0.16.0", features = ["auto_generation"] }
+
+# For faster builds.
+[profile.dev.build-override]
+opt-level = 3
+[profile.release.build-override]
+opt-level = 3

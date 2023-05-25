@@ -1,0 +1,40 @@
+
+%start LaDfa2Dot
+%title "LaDfa2Dot grammar"
+%comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
+%line_comment '//'
+%block_comment '/*' '*/'
+
+%%
+
+LaDfa2Dot
+    : 'LookaheadDFA'^ Parts
+    ;
+
+Parts
+    : '{' Prod0 Transitions K '}'^ [ ','^ ]
+    ;
+
+Prod0
+    : 'prod0' ':' Integer ','
+    ;
+
+Transitions
+    : 'transitions' ':' '&' '[' TransList ']' [ ','^ ]
+    ;
+
+TransList
+    : { TransEntry }
+    ;
+
+TransEntry
+    : 'Trans' '(' Integer ',' Integer ',' Integer ',' Integer ')' ','
+    ;
+
+K
+    : 'k' ':' Integer ','
+    ;
+
+Integer
+    : /-?\d+/
+    ;

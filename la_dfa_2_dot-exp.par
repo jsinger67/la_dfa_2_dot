@@ -1,0 +1,22 @@
+%start LaDfa2Dot
+%title "LaDfa2Dot grammar"
+%comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
+%line_comment "//"
+%block_comment "/\*" "\*/"
+
+%%
+
+/*  0 */ LaDfa2Dot: 'LookaheadDFA'^ /* Clipped */ Parts;
+/*  1 */ Parts: '{' Prod0 Transitions K '}'^ /* Clipped */ PartsOpt /* Option */;
+/*  2 */ PartsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
+/*  3 */ PartsOpt /* `Option<T>::None` */: ;
+/*  4 */ Prod0: 'prod0' ':' Integer ',';
+/*  5 */ Transitions: 'transitions' ':' '&' '[' TransList ']' TransitionsOpt /* Option */;
+/*  6 */ TransitionsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
+/*  7 */ TransitionsOpt /* `Option<T>::None` */: ;
+/*  8 */ TransList: TransListList /* Vec */;
+/*  9 */ TransListList /* `Vec<T>::Push` */: TransEntry TransListList;
+/* 10 */ TransListList /* `Vec<T>::New` */: ;
+/* 11 */ TransEntry: 'Trans' '(' Integer ',' Integer ',' Integer ',' Integer ')' ',';
+/* 12 */ K: 'k' ':' Integer ',';
+/* 13 */ Integer: /-?\d+/;
