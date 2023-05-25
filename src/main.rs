@@ -9,7 +9,7 @@ use crate::la_dfa_2_dot_grammar::LaDfa2DotGrammar;
 use crate::la_dfa_2_dot_parser::parse;
 use anyhow::{anyhow, Context, Result};
 use parol_runtime::{log::debug, Report};
-use std::{env, fs, time::Instant};
+use std::{env, fs};
 
 // To generate:
 // parol -f ./la_dfa_2_dot.par -e ./la_dfa_2_dot-exp.par -p ./src/la_dfa_2_dot_parser.rs -a ./src/la_dfa_2_dot_grammar_trait.rs -t LaDfa2DotGrammar -m la_dfa_2_dot_grammar -g
@@ -27,15 +27,11 @@ fn main() -> Result<()> {
         let input = fs::read_to_string(file_name.clone())
             .with_context(|| format!("Can't read file {}", file_name))?;
         let mut la_dfa_2_dot_grammar = LaDfa2DotGrammar::new();
-        let now = Instant::now();
         match parse(&input, &file_name, &mut la_dfa_2_dot_grammar) {
             Ok(_) => {
-                let elapsed_time = now.elapsed();
-                println!("Parsing took {} milliseconds.", elapsed_time.as_millis());
                 if args.len() > 2 && args[2] == "-q" {
                     Ok(())
                 } else {
-                    println!("Success!\n");
                     Ok(())
                 }
             }
