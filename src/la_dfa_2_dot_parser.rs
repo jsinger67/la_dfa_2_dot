@@ -19,7 +19,7 @@ use parol_runtime::lexer::tokenizer::{
     ERROR_TOKEN, NEW_LINE_TOKEN, UNMATCHABLE_TOKEN, WHITESPACE_TOKEN,
 };
 
-pub const TERMINALS: &[&str; 21] = &[
+pub const TERMINALS: &[&str; 25] = &[
     /*  0 */ UNMATCHABLE_TOKEN,
     /*  1 */ UNMATCHABLE_TOKEN,
     /*  2 */ UNMATCHABLE_TOKEN,
@@ -29,21 +29,25 @@ pub const TERMINALS: &[&str; 21] = &[
     /*  6 */ r###"\{"###,
     /*  7 */ r###"\}"###,
     /*  8 */ r###","###,
-    /*  9 */ r###"prod0"###,
-    /* 10 */ r###":"###,
-    /* 11 */ r###"transitions"###,
-    /* 12 */ r###"\&"###,
-    /* 13 */ r###"\["###,
-    /* 14 */ r###"\]"###,
-    /* 15 */ r###"Trans"###,
-    /* 16 */ r###"\("###,
-    /* 17 */ r###"\)"###,
-    /* 18 */ r###"k"###,
-    /* 19 */ r###"-?\d+"###,
-    /* 20 */ ERROR_TOKEN,
+    /*  9 */ r###"/"###,
+    /* 10 */ r###"\*"###,
+    /* 11 */ r###"prod0"###,
+    /* 12 */ r###":"###,
+    /* 13 */ r###"transitions"###,
+    /* 14 */ r###"\&"###,
+    /* 15 */ r###"\["###,
+    /* 16 */ r###"\]"###,
+    /* 17 */ r###"Trans"###,
+    /* 18 */ r###"\("###,
+    /* 19 */ r###"\)"###,
+    /* 20 */ r###"k"###,
+    /* 21 */ r###""\w+?""###,
+    /* 22 */ r###"-?\d+"###,
+    /* 23 */ r###"\-"###,
+    /* 24 */ ERROR_TOKEN,
 ];
 
-pub const TERMINAL_NAMES: &[&str; 21] = &[
+pub const TERMINAL_NAMES: &[&str; 25] = &[
     /*  0 */ "EndOfInput",
     /*  1 */ "Newline",
     /*  2 */ "Whitespace",
@@ -53,240 +57,304 @@ pub const TERMINAL_NAMES: &[&str; 21] = &[
     /*  6 */ "LBrace",
     /*  7 */ "RBrace",
     /*  8 */ "Comma",
-    /*  9 */ "Prod0",
-    /* 10 */ "Colon",
-    /* 11 */ "Transitions",
-    /* 12 */ "Amp",
-    /* 13 */ "LBracket",
-    /* 14 */ "RBracket",
-    /* 15 */ "Trans",
-    /* 16 */ "LParen",
-    /* 17 */ "RParen",
-    /* 18 */ "K",
-    /* 19 */ "Integer",
-    /* 20 */ "Error",
+    /*  9 */ "Slash",
+    /* 10 */ "Star",
+    /* 11 */ "Prod0",
+    /* 12 */ "Colon",
+    /* 13 */ "Transitions",
+    /* 14 */ "Amp",
+    /* 15 */ "LBracket",
+    /* 16 */ "RBracket",
+    /* 17 */ "Trans",
+    /* 18 */ "LParen",
+    /* 19 */ "RParen",
+    /* 20 */ "K",
+    /* 21 */ "NtName",
+    /* 22 */ "Integer",
+    /* 23 */ "Minus",
+    /* 24 */ "Error",
 ];
 
 /* SCANNER_0: "INITIAL" */
-const SCANNER_0: (&[&str; 5], &[usize; 15]) = (
+const SCANNER_0: (&[&str; 5], &[usize; 19]) = (
     &[
         /*  0 */ UNMATCHABLE_TOKEN,
         /*  1 */ NEW_LINE_TOKEN,
         /*  2 */ WHITESPACE_TOKEN,
         /*  3 */ r###"(//.*(\r\n|\r|\n|$))"###,
-        /*  4 */ r###"((?ms)/\*.*?\*/)"###,
+        /*  4 */ UNMATCHABLE_TOKEN,
     ],
     &[
         5,  /* LookaheadDFA */
         6,  /* LBrace */
         7,  /* RBrace */
         8,  /* Comma */
-        9,  /* Prod0 */
-        10, /* Colon */
-        11, /* Transitions */
-        12, /* Amp */
-        13, /* LBracket */
-        14, /* RBracket */
-        15, /* Trans */
-        16, /* LParen */
-        17, /* RParen */
-        18, /* K */
-        19, /* Integer */
+        9,  /* Slash */
+        10, /* Star */
+        11, /* Prod0 */
+        12, /* Colon */
+        13, /* Transitions */
+        14, /* Amp */
+        15, /* LBracket */
+        16, /* RBracket */
+        17, /* Trans */
+        18, /* LParen */
+        19, /* RParen */
+        20, /* K */
+        21, /* NtName */
+        22, /* Integer */
+        23, /* Minus */
     ],
 );
 
 const MAX_K: usize = 1;
 
-pub const NON_TERMINALS: &[&str; 11] = &[
-    /*  0 */ "Integer",
-    /*  1 */ "K",
-    /*  2 */ "LaDfa2Dot",
-    /*  3 */ "Parts",
-    /*  4 */ "PartsOpt",
-    /*  5 */ "Prod0",
-    /*  6 */ "TransEntry",
-    /*  7 */ "TransList",
-    /*  8 */ "TransListList",
-    /*  9 */ "Transitions",
-    /* 10 */ "TransitionsOpt",
+pub const NON_TERMINALS: &[&str; 15] = &[
+    /*  0 */ "Dash",
+    /*  1 */ "Integer",
+    /*  2 */ "K",
+    /*  3 */ "LaDfa2Dot",
+    /*  4 */ "NamingComment",
+    /*  5 */ "NtName",
+    /*  6 */ "Parts",
+    /*  7 */ "PartsOpt",
+    /*  8 */ "Prod0",
+    /*  9 */ "ProdNum",
+    /* 10 */ "TransEntry",
+    /* 11 */ "TransList",
+    /* 12 */ "TransListList",
+    /* 13 */ "Transitions",
+    /* 14 */ "TransitionsOpt",
 ];
 
-pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 11] = &[
-    /* 0 - "Integer" */
+pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 15] = &[
+    /* 0 - "Dash" */
+    LookaheadDFA {
+        prod0: 17,
+        transitions: &[],
+        k: 0,
+    },
+    /* 1 - "Integer" */
+    LookaheadDFA {
+        prod0: 16,
+        transitions: &[],
+        k: 0,
+    },
+    /* 2 - "K" */
     LookaheadDFA {
         prod0: 13,
         transitions: &[],
         k: 0,
     },
-    /* 1 - "K" */
-    LookaheadDFA {
-        prod0: 12,
-        transitions: &[],
-        k: 0,
-    },
-    /* 2 - "LaDfa2Dot" */
+    /* 3 - "LaDfa2Dot" */
     LookaheadDFA {
         prod0: 0,
         transitions: &[],
         k: 0,
     },
-    /* 3 - "Parts" */
-    LookaheadDFA {
-        prod0: 1,
-        transitions: &[],
-        k: 0,
-    },
-    /* 4 - "PartsOpt" */
-    LookaheadDFA {
-        prod0: -1,
-        transitions: &[Trans(0, 0, 2, 3), Trans(0, 8, 1, 2)],
-        k: 1,
-    },
-    /* 5 - "Prod0" */
+    /* 4 - "NamingComment" */
     LookaheadDFA {
         prod0: 4,
         transitions: &[],
         k: 0,
     },
-    /* 6 - "TransEntry" */
+    /* 5 - "NtName" */
     LookaheadDFA {
-        prod0: 11,
+        prod0: 15,
         transitions: &[],
         k: 0,
     },
-    /* 7 - "TransList" */
+    /* 6 - "Parts" */
     LookaheadDFA {
-        prod0: 8,
+        prod0: 1,
         transitions: &[],
         k: 0,
     },
-    /* 8 - "TransListList" */
+    /* 7 - "PartsOpt" */
     LookaheadDFA {
         prod0: -1,
-        transitions: &[Trans(0, 14, 2, 10), Trans(0, 15, 1, 9)],
+        transitions: &[Trans(0, 0, 2, 3), Trans(0, 8, 1, 2)],
         k: 1,
     },
-    /* 9 - "Transitions" */
+    /* 8 - "Prod0" */
     LookaheadDFA {
         prod0: 5,
         transitions: &[],
         k: 0,
     },
-    /* 10 - "TransitionsOpt" */
+    /* 9 - "ProdNum" */
+    LookaheadDFA {
+        prod0: 14,
+        transitions: &[],
+        k: 0,
+    },
+    /* 10 - "TransEntry" */
+    LookaheadDFA {
+        prod0: 12,
+        transitions: &[],
+        k: 0,
+    },
+    /* 11 - "TransList" */
+    LookaheadDFA {
+        prod0: 9,
+        transitions: &[],
+        k: 0,
+    },
+    /* 12 - "TransListList" */
     LookaheadDFA {
         prod0: -1,
-        transitions: &[Trans(0, 8, 1, 6), Trans(0, 18, 2, 7)],
+        transitions: &[Trans(0, 16, 2, 11), Trans(0, 17, 1, 10)],
+        k: 1,
+    },
+    /* 13 - "Transitions" */
+    LookaheadDFA {
+        prod0: 6,
+        transitions: &[],
+        k: 0,
+    },
+    /* 14 - "TransitionsOpt" */
+    LookaheadDFA {
+        prod0: -1,
+        transitions: &[Trans(0, 8, 1, 7), Trans(0, 20, 2, 8)],
         k: 1,
     },
 ];
 
-pub const PRODUCTIONS: &[Production; 14] = &[
-    // 0 - LaDfa2Dot: 'LookaheadDFA'^ /* Clipped */ Parts;
-    Production {
-        lhs: 2,
-        production: &[ParseType::N(3), ParseType::T(5)],
-    },
-    // 1 - Parts: '{' Prod0 Transitions K '}'^ /* Clipped */ PartsOpt /* Option */;
+pub const PRODUCTIONS: &[Production; 18] = &[
+    // 0 - LaDfa2Dot: NamingComment 'LookaheadDFA'^ /* Clipped */ Parts;
     Production {
         lhs: 3,
+        production: &[ParseType::N(6), ParseType::T(5), ParseType::N(4)],
+    },
+    // 1 - Parts: '{'^ /* Clipped */ Prod0 Transitions K '}'^ /* Clipped */ PartsOpt /* Option */;
+    Production {
+        lhs: 6,
         production: &[
-            ParseType::N(4),
+            ParseType::N(7),
             ParseType::T(7),
-            ParseType::N(1),
-            ParseType::N(9),
-            ParseType::N(5),
+            ParseType::N(2),
+            ParseType::N(13),
+            ParseType::N(8),
             ParseType::T(6),
         ],
     },
     // 2 - PartsOpt: ','^ /* Clipped */;
     Production {
-        lhs: 4,
+        lhs: 7,
         production: &[ParseType::T(8)],
     },
     // 3 - PartsOpt: ;
     Production {
-        lhs: 4,
+        lhs: 7,
         production: &[],
     },
-    // 4 - Prod0: 'prod0' ':' Integer ',';
+    // 4 - NamingComment: '/'^ /* Clipped */ '*'^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName '*'^ /* Clipped */ '/'^ /* Clipped */;
     Production {
-        lhs: 5,
+        lhs: 4,
         production: &[
-            ParseType::T(8),
+            ParseType::T(9),
+            ParseType::T(10),
+            ParseType::N(5),
             ParseType::N(0),
+            ParseType::N(9),
             ParseType::T(10),
             ParseType::T(9),
         ],
     },
-    // 5 - Transitions: 'transitions' ':' '&' '[' TransList ']' TransitionsOpt /* Option */;
+    // 5 - Prod0: 'prod0'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
     Production {
-        lhs: 9,
+        lhs: 8,
         production: &[
-            ParseType::N(10),
-            ParseType::T(14),
-            ParseType::N(7),
-            ParseType::T(13),
+            ParseType::T(8),
+            ParseType::N(1),
             ParseType::T(12),
-            ParseType::T(10),
             ParseType::T(11),
         ],
     },
-    // 6 - TransitionsOpt: ','^ /* Clipped */;
+    // 6 - Transitions: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */ TransList ']'^ /* Clipped */ TransitionsOpt /* Option */;
     Production {
-        lhs: 10,
+        lhs: 13,
+        production: &[
+            ParseType::N(14),
+            ParseType::T(16),
+            ParseType::N(11),
+            ParseType::T(15),
+            ParseType::T(14),
+            ParseType::T(12),
+            ParseType::T(13),
+        ],
+    },
+    // 7 - TransitionsOpt: ','^ /* Clipped */;
+    Production {
+        lhs: 14,
         production: &[ParseType::T(8)],
     },
-    // 7 - TransitionsOpt: ;
+    // 8 - TransitionsOpt: ;
+    Production {
+        lhs: 14,
+        production: &[],
+    },
+    // 9 - TransList: TransListList /* Vec */;
+    Production {
+        lhs: 11,
+        production: &[ParseType::N(12)],
+    },
+    // 10 - TransListList: TransEntry TransListList;
+    Production {
+        lhs: 12,
+        production: &[ParseType::N(12), ParseType::N(10)],
+    },
+    // 11 - TransListList: ;
+    Production {
+        lhs: 12,
+        production: &[],
+    },
+    // 12 - TransEntry: 'Trans'^ /* Clipped */ '('^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ')'^ /* Clipped */ ','^ /* Clipped */;
     Production {
         lhs: 10,
-        production: &[],
-    },
-    // 8 - TransList: TransListList /* Vec */;
-    Production {
-        lhs: 7,
-        production: &[ParseType::N(8)],
-    },
-    // 9 - TransListList: TransEntry TransListList;
-    Production {
-        lhs: 8,
-        production: &[ParseType::N(8), ParseType::N(6)],
-    },
-    // 10 - TransListList: ;
-    Production {
-        lhs: 8,
-        production: &[],
-    },
-    // 11 - TransEntry: 'Trans' '(' Integer ',' Integer ',' Integer ',' Integer ')' ',';
-    Production {
-        lhs: 6,
         production: &[
             ParseType::T(8),
+            ParseType::T(19),
+            ParseType::N(1),
+            ParseType::T(8),
+            ParseType::N(1),
+            ParseType::T(8),
+            ParseType::N(1),
+            ParseType::T(8),
+            ParseType::N(1),
+            ParseType::T(18),
             ParseType::T(17),
-            ParseType::N(0),
-            ParseType::T(8),
-            ParseType::N(0),
-            ParseType::T(8),
-            ParseType::N(0),
-            ParseType::T(8),
-            ParseType::N(0),
-            ParseType::T(16),
-            ParseType::T(15),
         ],
     },
-    // 12 - K: 'k' ':' Integer ',';
+    // 13 - K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+    Production {
+        lhs: 2,
+        production: &[
+            ParseType::T(8),
+            ParseType::N(1),
+            ParseType::T(12),
+            ParseType::T(20),
+        ],
+    },
+    // 14 - ProdNum: Integer;
+    Production {
+        lhs: 9,
+        production: &[ParseType::N(1)],
+    },
+    // 15 - NtName: /"\w+?"/;
+    Production {
+        lhs: 5,
+        production: &[ParseType::T(21)],
+    },
+    // 16 - Integer: /-?\d+/;
     Production {
         lhs: 1,
-        production: &[
-            ParseType::T(8),
-            ParseType::N(0),
-            ParseType::T(10),
-            ParseType::T(18),
-        ],
+        production: &[ParseType::T(22)],
     },
-    // 13 - Integer: /-?\d+/;
+    // 17 - Dash: '-';
     Production {
         lhs: 0,
-        production: &[ParseType::T(19)],
+        production: &[ParseType::T(23)],
     },
 ];
 
@@ -306,7 +374,7 @@ where
     T: AsRef<Path>,
 {
     let mut llk_parser = LLKParser::new(
-        2,
+        3,
         LOOKAHEAD_AUTOMATA,
         PRODUCTIONS,
         TERMINAL_NAMES,

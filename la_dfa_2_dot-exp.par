@@ -2,21 +2,24 @@
 %title "LaDfa2Dot grammar"
 %comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
 %line_comment "//"
-%block_comment "/\*" "\*/"
 
 %%
 
-/*  0 */ LaDfa2Dot: 'LookaheadDFA'^ /* Clipped */ Parts;
-/*  1 */ Parts: '{' Prod0 Transitions K '}'^ /* Clipped */ PartsOpt /* Option */;
+/*  0 */ LaDfa2Dot: NamingComment 'LookaheadDFA'^ /* Clipped */ Parts;
+/*  1 */ Parts: '{'^ /* Clipped */ Prod0 Transitions K '}'^ /* Clipped */ PartsOpt /* Option */;
 /*  2 */ PartsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
 /*  3 */ PartsOpt /* `Option<T>::None` */: ;
-/*  4 */ Prod0: 'prod0' ':' Integer ',';
-/*  5 */ Transitions: 'transitions' ':' '&' '[' TransList ']' TransitionsOpt /* Option */;
-/*  6 */ TransitionsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
-/*  7 */ TransitionsOpt /* `Option<T>::None` */: ;
-/*  8 */ TransList: TransListList /* Vec */;
-/*  9 */ TransListList /* `Vec<T>::Push` */: TransEntry TransListList;
-/* 10 */ TransListList /* `Vec<T>::New` */: ;
-/* 11 */ TransEntry: 'Trans' '(' Integer ',' Integer ',' Integer ',' Integer ')' ',';
-/* 12 */ K: 'k' ':' Integer ',';
-/* 13 */ Integer: /-?\d+/;
+/*  4 */ NamingComment: '/'^ /* Clipped */ '*'^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName '*'^ /* Clipped */ '/'^ /* Clipped */;
+/*  5 */ Prod0: 'prod0'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+/*  6 */ Transitions: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */ TransList ']'^ /* Clipped */ TransitionsOpt /* Option */;
+/*  7 */ TransitionsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
+/*  8 */ TransitionsOpt /* `Option<T>::None` */: ;
+/*  9 */ TransList: TransListList /* Vec */;
+/* 10 */ TransListList /* `Vec<T>::Push` */: TransEntry TransListList;
+/* 11 */ TransListList /* `Vec<T>::New` */: ;
+/* 12 */ TransEntry: 'Trans'^ /* Clipped */ '('^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ')'^ /* Clipped */ ','^ /* Clipped */;
+/* 13 */ K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+/* 14 */ ProdNum: Integer;
+/* 15 */ NtName: /"\w+?"/;
+/* 16 */ Integer: /-?\d+/;
+/* 17 */ Dash: '-';

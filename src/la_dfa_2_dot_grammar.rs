@@ -1,7 +1,17 @@
 use crate::la_dfa_2_dot_grammar_trait::{LaDfa2Dot, LaDfa2DotGrammarTrait};
 #[allow(unused_imports)]
 use parol_runtime::Result;
-use std::fmt::{Debug, Display, Error, Formatter};
+use std::{fmt::{Debug, Display, Error, Formatter}, collections::HashSet};
+
+
+#[derive(Debug)]
+struct Transition {
+    id: usize,
+    term: usize,
+    to: usize,
+    prod_num: Option<usize>,
+}
+
 
 ///
 /// Data structure that implements the semantic actions for our LaDfa2Dot grammar
@@ -15,6 +25,54 @@ pub struct LaDfa2DotGrammar<'t> {
 impl LaDfa2DotGrammar<'_> {
     pub fn new() -> Self {
         LaDfa2DotGrammar::default()
+    }
+
+    fn get_transitions(data: &LaDfa2Dot) -> Vec<Transition> {
+        data.parts.transitions.trans_list.trans_list_list.iter().fold(vec![], |mut acc, t| {
+            let id = t.trans_entry.integer.integer.text().parse::<usize>().unwrap();
+            let term = t.trans_entry.integer0.integer.text().parse::<usize>().unwrap();
+            let to = t.trans_entry.integer1.integer.text().parse::<usize>().unwrap();
+            let p = t.trans_entry.integer2.integer.text().parse::<isize>().unwrap();
+            let prod_num = if p > 0 { Some(p as usize) } else {None};
+            acc.push(Transition { id, term, to, prod_num });
+            acc
+        })
+    }
+
+    fn generate_dot(&self) -> Result<()> {
+        if let Some(data) = &self.la_dfa_2_dot {
+            println!(r#"
+digraph G {{
+    rankdir=LR;"#);
+            println!("    label={};", data.naming_comment.nt_name.nt_name.text());
+            println!(r#"    node [shape=point, style=invis]; ""
+    node [shape=ellipse, color=cyan, style=solid];
+    "" -> 0;
+
+    node [shape=ellipse, color=cyan];
+            "#);
+            let mut printed_states = HashSet::<usize>::new();
+            for t in LaDfa2DotGrammar::get_transitions(data) {
+                if printed_states.contains(&t.id) {
+                    continue;
+                }
+                printed_states.insert(t.id);
+                if let Some(p) = t.prod_num {
+                    println!("    {} [label = \"Id({}, accepting), Pr({}))\"];", t.id, t.id, p);
+                } else {
+                    println!("    {} [label = \"Id({})\"];", t.id, t.id);
+                }
+            }
+
+            println!();
+
+            for t in LaDfa2DotGrammar::get_transitions(data) {
+                println!("    {} -> {} [label = \"{}\"];", t.id, t.to, t.term);
+            }
+
+            println!("    }}");
+        }
+        Ok(())
     }
 }
 
@@ -39,6 +97,7 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
     /// Semantic action for non-terminal 'LaDfa2Dot'
     fn la_dfa2_dot(&mut self, arg: &LaDfa2Dot<'t>) -> Result<()> {
         self.la_dfa_2_dot = Some(arg.clone());
+        self.generate_dot()?;
         Ok(())
     }
 }

@@ -35,7 +35,7 @@ fn main() -> Result<()> {
                 if args.len() > 2 && args[2] == "-q" {
                     Ok(())
                 } else {
-                    println!("Success!\n{}", la_dfa_2_dot_grammar);
+                    println!("Success!\n");
                     Ok(())
                 }
             }
