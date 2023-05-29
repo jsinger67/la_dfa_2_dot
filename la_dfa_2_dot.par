@@ -30,16 +30,35 @@ Prod0
     : 'prod0'^ ':'^ Integer ','^
     ;
 
+TransitionsPrefix
+    : 'transitions'^ ':'^ '&'^ '['^
+    ;
+
+TransitionsPostfix
+    : ']'^ [ ','^ ]
+    ;
+
 Transitions
-    : 'transitions'^ ':'^ '&'^ '['^ TransList ']'^ [ ','^ ]
+    : TransitionsPrefix^ TransList TransitionsPostfix^
     ;
 
 TransList
     : { TransEntry }
     ;
 
+TransEntryPrefix
+    : 'Trans'^ '('^
+    ;
+
+TransEntryPostfix
+    : ')'^ ','^
+    ;
+
+TransEntryValue:Integer [','^];
+
+
 TransEntry
-    : 'Trans'^ '('^ Integer ','^ Integer ','^ Integer ','^ Integer ')'^ ','^
+    : TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^
     ;
 
 K

@@ -50,6 +50,16 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
+    /// Semantic action for non-terminal 'TransitionsPrefix'
+    fn transitions_prefix(&mut self, _arg: &TransitionsPrefix) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'TransitionsPostfix'
+    fn transitions_postfix(&mut self, _arg: &TransitionsPostfix) -> Result<()> {
+        Ok(())
+    }
+
     /// Semantic action for non-terminal 'Transitions'
     fn transitions(&mut self, _arg: &Transitions<'t>) -> Result<()> {
         Ok(())
@@ -57,6 +67,21 @@ pub trait LaDfa2DotGrammarTrait<'t> {
 
     /// Semantic action for non-terminal 'TransList'
     fn trans_list(&mut self, _arg: &TransList<'t>) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'TransEntryPrefix'
+    fn trans_entry_prefix(&mut self, _arg: &TransEntryPrefix) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'TransEntryPostfix'
+    fn trans_entry_postfix(&mut self, _arg: &TransEntryPostfix) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'TransEntryValue'
+    fn trans_entry_value(&mut self, _arg: &TransEntryValue<'t>) -> Result<()> {
         Ok(())
     }
 
@@ -227,11 +252,47 @@ pub struct ProdNum<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TransEntry<'t> {
-    pub integer: Box<Integer<'t>>,
-    pub integer0: Box<Integer<'t>>,
-    pub integer1: Box<Integer<'t>>,
-    pub integer2: Box<Integer<'t>>,
+    pub trans_entry_prefix: Box<TransEntryPrefix>,
+    pub trans_entry_value: Box<TransEntryValue<'t>>,
+    pub trans_entry_value0: Box<TransEntryValue<'t>>,
+    pub trans_entry_value1: Box<TransEntryValue<'t>>,
+    pub trans_entry_value2: Box<TransEntryValue<'t>>,
 }
+
+///
+/// Type derived for non-terminal TransEntryPostfix
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransEntryPostfix {}
+
+///
+/// Type derived for non-terminal TransEntryPrefix
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransEntryPrefix {}
+
+///
+/// Type derived for non-terminal TransEntryValue
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransEntryValue<'t> {
+    pub integer: Box<Integer<'t>>,
+    pub trans_entry_value_opt: Option<Box<TransEntryValueOpt>>,
+}
+
+///
+/// Type derived for non-terminal TransEntryValueOpt
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransEntryValueOpt {}
 
 ///
 /// Type derived for non-terminal TransList
@@ -261,16 +322,33 @@ pub struct TransListList<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct Transitions<'t> {
     pub trans_list: Box<TransList<'t>>,
-    pub transitions_opt: Option<Box<TransitionsOpt>>,
 }
 
 ///
-/// Type derived for non-terminal TransitionsOpt
+/// Type derived for non-terminal TransitionsPostfix
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct TransitionsOpt {}
+pub struct TransitionsPostfix {
+    pub transitions_postfix_opt: Option<Box<TransitionsPostfixOpt>>,
+}
+
+///
+/// Type derived for non-terminal TransitionsPostfixOpt
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransitionsPostfixOpt {}
+
+///
+/// Type derived for non-terminal TransitionsPrefix
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransitionsPrefix {}
 
 // -------------------------------------------------------------------------------------------------
 
@@ -293,10 +371,16 @@ pub enum ASTType<'t> {
     Prod0(Prod0<'t>),
     ProdNum(ProdNum<'t>),
     TransEntry(TransEntry<'t>),
+    TransEntryPostfix(TransEntryPostfix),
+    TransEntryPrefix(TransEntryPrefix),
+    TransEntryValue(TransEntryValue<'t>),
+    TransEntryValueOpt(Option<Box<TransEntryValueOpt>>),
     TransList(TransList<'t>),
     TransListList(Vec<TransListList<'t>>),
     Transitions(Transitions<'t>),
-    TransitionsOpt(Option<Box<TransitionsOpt>>),
+    TransitionsPostfix(TransitionsPostfix),
+    TransitionsPostfixOpt(Option<Box<TransitionsPostfixOpt>>),
+    TransitionsPrefix(TransitionsPrefix),
 }
 
 /// Auto-implemented adapter grammar
@@ -553,51 +637,61 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 8:
     ///
-    /// Transitions: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */ TransList ']'^ /* Clipped */ TransitionsOpt /* Option */;
+    /// TransitionsPrefix: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
-    fn transitions(
+    fn transitions_prefix(
         &mut self,
         _transitions: &ParseTreeType<'t>,
         _colon: &ParseTreeType<'t>,
         _amp: &ParseTreeType<'t>,
         _l_bracket: &ParseTreeType<'t>,
-        _trans_list: &ParseTreeType<'t>,
-        _r_bracket: &ParseTreeType<'t>,
-        _transitions_opt: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let transitions_opt = pop_item!(self, transitions_opt, TransitionsOpt, context);
-        let trans_list = pop_item!(self, trans_list, TransList, context);
-        let transitions_built = Transitions {
-            // Ignore clipped member 'transitions'
-            // Ignore clipped member 'colon'
-            // Ignore clipped member 'amp'
-            // Ignore clipped member 'l_bracket'
-            trans_list: Box::new(trans_list),
-            // Ignore clipped member 'r_bracket'
-            transitions_opt,
+        let transitions_prefix_built = TransitionsPrefix {
+        // Ignore clipped member 'transitions'
+        // Ignore clipped member 'colon'
+        // Ignore clipped member 'amp'
+        // Ignore clipped member 'l_bracket'
         };
         // Calling user action here
-        self.user_grammar.transitions(&transitions_built)?;
-        self.push(ASTType::Transitions(transitions_built), context);
+        self.user_grammar
+            .transitions_prefix(&transitions_prefix_built)?;
+        self.push(
+            ASTType::TransitionsPrefix(transitions_prefix_built),
+            context,
+        );
         Ok(())
     }
 
     /// Semantic action for production 9:
     ///
-    /// TransitionsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
+    /// TransitionsPostfix: ']'^ /* Clipped */ TransitionsPostfixOpt /* Option */;
     ///
     #[parol_runtime::function_name::named]
-    fn transitions_opt_0(&mut self, _comma: &ParseTreeType<'t>) -> Result<()> {
+    fn transitions_postfix(
+        &mut self,
+        _r_bracket: &ParseTreeType<'t>,
+        _transitions_postfix_opt: &ParseTreeType<'t>,
+    ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let transitions_opt_0_built = TransitionsOpt {
-        // Ignore clipped member 'comma'
+        let transitions_postfix_opt = pop_item!(
+            self,
+            transitions_postfix_opt,
+            TransitionsPostfixOpt,
+            context
+        );
+        let transitions_postfix_built = TransitionsPostfix {
+            // Ignore clipped member 'r_bracket'
+            transitions_postfix_opt,
         };
+        // Calling user action here
+        self.user_grammar
+            .transitions_postfix(&transitions_postfix_built)?;
         self.push(
-            ASTType::TransitionsOpt(Some(Box::new(transitions_opt_0_built))),
+            ASTType::TransitionsPostfix(transitions_postfix_built),
             context,
         );
         Ok(())
@@ -605,17 +699,64 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 10:
     ///
-    /// TransitionsOpt /* `Option<T>::None` */: ;
+    /// TransitionsPostfixOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
-    fn transitions_opt_1(&mut self) -> Result<()> {
+    fn transitions_postfix_opt_0(&mut self, _comma: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        self.push(ASTType::TransitionsOpt(None), context);
+        let transitions_postfix_opt_0_built = TransitionsPostfixOpt {
+        // Ignore clipped member 'comma'
+        };
+        self.push(
+            ASTType::TransitionsPostfixOpt(Some(Box::new(transitions_postfix_opt_0_built))),
+            context,
+        );
         Ok(())
     }
 
     /// Semantic action for production 11:
+    ///
+    /// TransitionsPostfixOpt /* `Option<T>::None` */: ;
+    ///
+    #[parol_runtime::function_name::named]
+    fn transitions_postfix_opt_1(&mut self) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        self.push(ASTType::TransitionsPostfixOpt(None), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 12:
+    ///
+    /// Transitions: TransitionsPrefix^ /* Clipped */ TransList TransitionsPostfix^ /* Clipped */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn transitions(
+        &mut self,
+        _transitions_prefix: &ParseTreeType<'t>,
+        _trans_list: &ParseTreeType<'t>,
+        _transitions_postfix: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        // Ignore clipped member 'transitions_postfix'
+        self.pop(context);
+        let trans_list = pop_item!(self, trans_list, TransList, context);
+        // Ignore clipped member 'transitions_prefix'
+        self.pop(context);
+        let transitions_built = Transitions {
+            // Ignore clipped member 'transitions_prefix'
+            trans_list: Box::new(trans_list),
+            // Ignore clipped member 'transitions_postfix'
+        };
+        // Calling user action here
+        self.user_grammar.transitions(&transitions_built)?;
+        self.push(ASTType::Transitions(transitions_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 13:
     ///
     /// TransList: TransListList /* Vec */;
     ///
@@ -631,7 +772,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 12:
+    /// Semantic action for production 14:
     ///
     /// TransListList /* `Vec<T>::Push` */: TransEntry TransListList;
     ///
@@ -654,7 +795,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 13:
+    /// Semantic action for production 15:
     ///
     /// TransListList /* `Vec<T>::New` */: ;
     ///
@@ -667,43 +808,141 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 14:
+    /// Semantic action for production 16:
     ///
-    /// TransEntry: 'Trans'^ /* Clipped */ '('^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ')'^ /* Clipped */ ','^ /* Clipped */;
+    /// TransEntryPrefix: 'Trans'^ /* Clipped */ '('^ /* Clipped */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn trans_entry_prefix(
+        &mut self,
+        _trans: &ParseTreeType<'t>,
+        _l_paren: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let trans_entry_prefix_built = TransEntryPrefix {
+        // Ignore clipped member 'trans'
+        // Ignore clipped member 'l_paren'
+        };
+        // Calling user action here
+        self.user_grammar
+            .trans_entry_prefix(&trans_entry_prefix_built)?;
+        self.push(ASTType::TransEntryPrefix(trans_entry_prefix_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 17:
+    ///
+    /// TransEntryPostfix: ')'^ /* Clipped */ ','^ /* Clipped */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn trans_entry_postfix(
+        &mut self,
+        _r_paren: &ParseTreeType<'t>,
+        _comma: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let trans_entry_postfix_built = TransEntryPostfix {
+        // Ignore clipped member 'r_paren'
+        // Ignore clipped member 'comma'
+        };
+        // Calling user action here
+        self.user_grammar
+            .trans_entry_postfix(&trans_entry_postfix_built)?;
+        self.push(
+            ASTType::TransEntryPostfix(trans_entry_postfix_built),
+            context,
+        );
+        Ok(())
+    }
+
+    /// Semantic action for production 18:
+    ///
+    /// TransEntryValue: Integer TransEntryValueOpt /* Option */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn trans_entry_value(
+        &mut self,
+        _integer: &ParseTreeType<'t>,
+        _trans_entry_value_opt: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let trans_entry_value_opt =
+            pop_item!(self, trans_entry_value_opt, TransEntryValueOpt, context);
+        let integer = pop_item!(self, integer, Integer, context);
+        let trans_entry_value_built = TransEntryValue {
+            integer: Box::new(integer),
+            trans_entry_value_opt,
+        };
+        // Calling user action here
+        self.user_grammar
+            .trans_entry_value(&trans_entry_value_built)?;
+        self.push(ASTType::TransEntryValue(trans_entry_value_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 19:
+    ///
+    /// TransEntryValueOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn trans_entry_value_opt_0(&mut self, _comma: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let trans_entry_value_opt_0_built = TransEntryValueOpt {
+        // Ignore clipped member 'comma'
+        };
+        self.push(
+            ASTType::TransEntryValueOpt(Some(Box::new(trans_entry_value_opt_0_built))),
+            context,
+        );
+        Ok(())
+    }
+
+    /// Semantic action for production 20:
+    ///
+    /// TransEntryValueOpt /* `Option<T>::None` */: ;
+    ///
+    #[parol_runtime::function_name::named]
+    fn trans_entry_value_opt_1(&mut self) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        self.push(ASTType::TransEntryValueOpt(None), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 21:
+    ///
+    /// TransEntry: TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn trans_entry(
         &mut self,
-        _trans: &ParseTreeType<'t>,
-        _l_paren: &ParseTreeType<'t>,
-        _integer: &ParseTreeType<'t>,
-        _comma: &ParseTreeType<'t>,
-        _integer0: &ParseTreeType<'t>,
-        _comma0: &ParseTreeType<'t>,
-        _integer1: &ParseTreeType<'t>,
-        _comma1: &ParseTreeType<'t>,
-        _integer2: &ParseTreeType<'t>,
-        _r_paren: &ParseTreeType<'t>,
-        _comma2: &ParseTreeType<'t>,
+        _trans_entry_prefix: &ParseTreeType<'t>,
+        _trans_entry_value: &ParseTreeType<'t>,
+        _trans_entry_value0: &ParseTreeType<'t>,
+        _trans_entry_value1: &ParseTreeType<'t>,
+        _trans_entry_value2: &ParseTreeType<'t>,
+        _trans_entry_postfix: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let integer2 = pop_item!(self, integer2, Integer, context);
-        let integer1 = pop_item!(self, integer1, Integer, context);
-        let integer0 = pop_item!(self, integer0, Integer, context);
-        let integer = pop_item!(self, integer, Integer, context);
+        // Ignore clipped member 'trans_entry_postfix'
+        self.pop(context);
+        let trans_entry_value2 = pop_item!(self, trans_entry_value2, TransEntryValue, context);
+        let trans_entry_value1 = pop_item!(self, trans_entry_value1, TransEntryValue, context);
+        let trans_entry_value0 = pop_item!(self, trans_entry_value0, TransEntryValue, context);
+        let trans_entry_value = pop_item!(self, trans_entry_value, TransEntryValue, context);
+        let trans_entry_prefix = pop_item!(self, trans_entry_prefix, TransEntryPrefix, context);
         let trans_entry_built = TransEntry {
-            // Ignore clipped member 'trans'
-            // Ignore clipped member 'l_paren'
-            integer: Box::new(integer),
-            // Ignore clipped member 'comma'
-            integer0: Box::new(integer0),
-            // Ignore clipped member 'comma0'
-            integer1: Box::new(integer1),
-            // Ignore clipped member 'comma1'
-            integer2: Box::new(integer2),
-            // Ignore clipped member 'r_paren'
-            // Ignore clipped member 'comma2'
+            trans_entry_prefix: Box::new(trans_entry_prefix),
+            trans_entry_value: Box::new(trans_entry_value),
+            trans_entry_value0: Box::new(trans_entry_value0),
+            trans_entry_value1: Box::new(trans_entry_value1),
+            trans_entry_value2: Box::new(trans_entry_value2),
+            // Ignore clipped member 'trans_entry_postfix'
         };
         // Calling user action here
         self.user_grammar.trans_entry(&trans_entry_built)?;
@@ -711,7 +950,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 15:
+    /// Semantic action for production 22:
     ///
     /// K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
     ///
@@ -738,7 +977,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 16:
+    /// Semantic action for production 23:
     ///
     /// ProdNum: Integer;
     ///
@@ -756,7 +995,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 17:
+    /// Semantic action for production 24:
     ///
     /// NtName: /"\w+?"/;
     ///
@@ -772,7 +1011,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 18:
+    /// Semantic action for production 25:
     ///
     /// Integer: /-?\d+/;
     ///
@@ -788,7 +1027,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 19:
+    /// Semantic action for production 26:
     ///
     /// Dash: '-';
     ///
@@ -836,38 +1075,32 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
                 &children[4],
             ),
             7 => self.prod0(&children[0], &children[1], &children[2], &children[3]),
-            8 => self.transitions(
+            8 => self.transitions_prefix(&children[0], &children[1], &children[2], &children[3]),
+            9 => self.transitions_postfix(&children[0], &children[1]),
+            10 => self.transitions_postfix_opt_0(&children[0]),
+            11 => self.transitions_postfix_opt_1(),
+            12 => self.transitions(&children[0], &children[1], &children[2]),
+            13 => self.trans_list(&children[0]),
+            14 => self.trans_list_list_0(&children[0], &children[1]),
+            15 => self.trans_list_list_1(),
+            16 => self.trans_entry_prefix(&children[0], &children[1]),
+            17 => self.trans_entry_postfix(&children[0], &children[1]),
+            18 => self.trans_entry_value(&children[0], &children[1]),
+            19 => self.trans_entry_value_opt_0(&children[0]),
+            20 => self.trans_entry_value_opt_1(),
+            21 => self.trans_entry(
                 &children[0],
                 &children[1],
                 &children[2],
                 &children[3],
                 &children[4],
                 &children[5],
-                &children[6],
             ),
-            9 => self.transitions_opt_0(&children[0]),
-            10 => self.transitions_opt_1(),
-            11 => self.trans_list(&children[0]),
-            12 => self.trans_list_list_0(&children[0], &children[1]),
-            13 => self.trans_list_list_1(),
-            14 => self.trans_entry(
-                &children[0],
-                &children[1],
-                &children[2],
-                &children[3],
-                &children[4],
-                &children[5],
-                &children[6],
-                &children[7],
-                &children[8],
-                &children[9],
-                &children[10],
-            ),
-            15 => self.k(&children[0], &children[1], &children[2], &children[3]),
-            16 => self.prod_num(&children[0]),
-            17 => self.nt_name(&children[0]),
-            18 => self.integer(&children[0]),
-            19 => self.dash(&children[0]),
+            22 => self.k(&children[0], &children[1], &children[2], &children[3]),
+            23 => self.prod_num(&children[0]),
+            24 => self.nt_name(&children[0]),
+            25 => self.integer(&children[0]),
+            26 => self.dash(&children[0]),
             _ => Err(ParserError::InternalError(format!(
                 "Unhandled production number: {}",
                 prod_num

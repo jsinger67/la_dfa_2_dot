@@ -1,4 +1,4 @@
-use crate::la_dfa_2_dot_grammar_trait::{LaDfa2Dot, LaDfa2DotGrammarTrait};
+use crate::la_dfa_2_dot_grammar_trait::{LaDfa2Dot, LaDfa2DotGrammarTrait, TransEntryValue};
 #[allow(unused_imports)]
 use parol_runtime::Result;
 use std::{
@@ -27,6 +27,14 @@ impl LaDfa2DotGrammar<'_> {
         LaDfa2DotGrammar::default()
     }
 
+    fn extract_value(t: &TransEntryValue) -> usize {
+        t.integer.integer.text().parse::<usize>().unwrap()
+    }
+
+    fn extract_signed_value(t: &TransEntryValue) -> isize {
+        t.integer.integer.text().parse::<isize>().unwrap()
+    }
+
     fn get_transitions(data: &LaDfa2Dot) -> Vec<Transition> {
         data.parts
             .transitions
@@ -34,34 +42,11 @@ impl LaDfa2DotGrammar<'_> {
             .trans_list_list
             .iter()
             .fold(vec![], |mut acc, t| {
-                let id = t
-                    .trans_entry
-                    .integer
-                    .integer
-                    .text()
-                    .parse::<usize>()
-                    .unwrap();
-                let term = t
-                    .trans_entry
-                    .integer0
-                    .integer
-                    .text()
-                    .parse::<usize>()
-                    .unwrap();
-                let to = t
-                    .trans_entry
-                    .integer1
-                    .integer
-                    .text()
-                    .parse::<usize>()
-                    .unwrap();
-                let p = t
-                    .trans_entry
-                    .integer2
-                    .integer
-                    .text()
-                    .parse::<isize>()
-                    .unwrap();
+                let t = &t.trans_entry;
+                let id = LaDfa2DotGrammar::extract_value(&t.trans_entry_value);
+                let term = LaDfa2DotGrammar::extract_value(&t.trans_entry_value0);
+                let to = LaDfa2DotGrammar::extract_value(&t.trans_entry_value1);
+                let p = LaDfa2DotGrammar::extract_signed_value(&t.trans_entry_value2);
                 let prod_num = if p > 0 { Some(p as usize) } else { None };
                 acc.push(Transition {
                     id,
