@@ -14,8 +14,16 @@ Parts
     : '{'^ Prod0 Transitions K '}'^ [ ','^ ]
     ;
 
+CommentStart
+    : '/'^ '*'^
+    ;
+
+CommentEnd
+    : '*'^ '/'^
+    ;
+
 NamingComment
-    : '/'^ '*'^ ProdNum Dash^ NtName '*'^ '/'^
+    : CommentStart^ ProdNum Dash^ NtName CommentEnd^
     ;
 
 Prod0

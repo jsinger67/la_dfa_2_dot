@@ -30,6 +30,16 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
+    /// Semantic action for non-terminal 'CommentStart'
+    fn comment_start(&mut self, _arg: &CommentStart) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'CommentEnd'
+    fn comment_end(&mut self, _arg: &CommentEnd) -> Result<()> {
+        Ok(())
+    }
+
     /// Semantic action for non-terminal 'NamingComment'
     fn naming_comment(&mut self, _arg: &NamingComment<'t>) -> Result<()> {
         Ok(())
@@ -90,6 +100,22 @@ pub trait LaDfa2DotGrammarTrait<'t> {
 //
 // Types of non-terminals deduced from the structure of the transformed grammar
 //
+
+///
+/// Type derived for non-terminal CommentEnd
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct CommentEnd {}
+
+///
+/// Type derived for non-terminal CommentStart
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct CommentStart {}
 
 ///
 /// Type derived for non-terminal Dash
@@ -254,6 +280,8 @@ pub struct TransitionsOpt {}
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub enum ASTType<'t> {
+    CommentEnd(CommentEnd),
+    CommentStart(CommentStart),
     Dash(Dash<'t>),
     Integer(Integer<'t>),
     K(K<'t>),
@@ -422,33 +450,73 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 4:
     ///
-    /// NamingComment: '/'^ /* Clipped */ '*'^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName '*'^ /* Clipped */ '/'^ /* Clipped */;
+    /// CommentStart: '/'^ /* Clipped */ '*'^ /* Clipped */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn comment_start(
+        &mut self,
+        _slash: &ParseTreeType<'t>,
+        _star: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let comment_start_built = CommentStart {
+        // Ignore clipped member 'slash'
+        // Ignore clipped member 'star'
+        };
+        // Calling user action here
+        self.user_grammar.comment_start(&comment_start_built)?;
+        self.push(ASTType::CommentStart(comment_start_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 5:
+    ///
+    /// CommentEnd: '*'^ /* Clipped */ '/'^ /* Clipped */;
+    ///
+    #[parol_runtime::function_name::named]
+    fn comment_end(&mut self, _star: &ParseTreeType<'t>, _slash: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let comment_end_built = CommentEnd {
+        // Ignore clipped member 'star'
+        // Ignore clipped member 'slash'
+        };
+        // Calling user action here
+        self.user_grammar.comment_end(&comment_end_built)?;
+        self.push(ASTType::CommentEnd(comment_end_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 6:
+    ///
+    /// NamingComment: CommentStart^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName CommentEnd^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn naming_comment(
         &mut self,
-        _slash: &ParseTreeType<'t>,
-        _star: &ParseTreeType<'t>,
+        _comment_start: &ParseTreeType<'t>,
         _prod_num: &ParseTreeType<'t>,
         _dash: &ParseTreeType<'t>,
         _nt_name: &ParseTreeType<'t>,
-        _star0: &ParseTreeType<'t>,
-        _slash0: &ParseTreeType<'t>,
+        _comment_end: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
+        // Ignore clipped member 'comment_end'
+        self.pop(context);
         let nt_name = pop_item!(self, nt_name, NtName, context);
         // Ignore clipped member 'dash'
         self.pop(context);
         let prod_num = pop_item!(self, prod_num, ProdNum, context);
+        // Ignore clipped member 'comment_start'
+        self.pop(context);
         let naming_comment_built = NamingComment {
-            // Ignore clipped member 'slash'
-            // Ignore clipped member 'star'
+            // Ignore clipped member 'comment_start'
             prod_num: Box::new(prod_num),
             // Ignore clipped member 'dash'
             nt_name: Box::new(nt_name),
-            // Ignore clipped member 'star0'
-            // Ignore clipped member 'slash0'
+            // Ignore clipped member 'comment_end'
         };
         // Calling user action here
         self.user_grammar.naming_comment(&naming_comment_built)?;
@@ -456,7 +524,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 5:
+    /// Semantic action for production 7:
     ///
     /// Prod0: 'prod0'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
     ///
@@ -483,7 +551,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 6:
+    /// Semantic action for production 8:
     ///
     /// Transitions: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */ TransList ']'^ /* Clipped */ TransitionsOpt /* Option */;
     ///
@@ -517,7 +585,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 7:
+    /// Semantic action for production 9:
     ///
     /// TransitionsOpt /* `Option<T>::Some` */: ','^ /* Clipped */;
     ///
@@ -535,7 +603,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 8:
+    /// Semantic action for production 10:
     ///
     /// TransitionsOpt /* `Option<T>::None` */: ;
     ///
@@ -547,7 +615,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 9:
+    /// Semantic action for production 11:
     ///
     /// TransList: TransListList /* Vec */;
     ///
@@ -563,7 +631,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 10:
+    /// Semantic action for production 12:
     ///
     /// TransListList /* `Vec<T>::Push` */: TransEntry TransListList;
     ///
@@ -586,7 +654,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 11:
+    /// Semantic action for production 13:
     ///
     /// TransListList /* `Vec<T>::New` */: ;
     ///
@@ -599,7 +667,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 12:
+    /// Semantic action for production 14:
     ///
     /// TransEntry: 'Trans'^ /* Clipped */ '('^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ','^ /* Clipped */ Integer ')'^ /* Clipped */ ','^ /* Clipped */;
     ///
@@ -643,7 +711,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 13:
+    /// Semantic action for production 15:
     ///
     /// K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
     ///
@@ -670,7 +738,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 14:
+    /// Semantic action for production 16:
     ///
     /// ProdNum: Integer;
     ///
@@ -688,7 +756,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 15:
+    /// Semantic action for production 17:
     ///
     /// NtName: /"\w+?"/;
     ///
@@ -704,7 +772,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 16:
+    /// Semantic action for production 18:
     ///
     /// Integer: /-?\d+/;
     ///
@@ -720,7 +788,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 17:
+    /// Semantic action for production 19:
     ///
     /// Dash: '-';
     ///
@@ -758,7 +826,17 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
             ),
             2 => self.parts_opt_0(&children[0]),
             3 => self.parts_opt_1(),
-            4 => self.naming_comment(
+            4 => self.comment_start(&children[0], &children[1]),
+            5 => self.comment_end(&children[0], &children[1]),
+            6 => self.naming_comment(
+                &children[0],
+                &children[1],
+                &children[2],
+                &children[3],
+                &children[4],
+            ),
+            7 => self.prod0(&children[0], &children[1], &children[2], &children[3]),
+            8 => self.transitions(
                 &children[0],
                 &children[1],
                 &children[2],
@@ -767,22 +845,12 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
                 &children[5],
                 &children[6],
             ),
-            5 => self.prod0(&children[0], &children[1], &children[2], &children[3]),
-            6 => self.transitions(
-                &children[0],
-                &children[1],
-                &children[2],
-                &children[3],
-                &children[4],
-                &children[5],
-                &children[6],
-            ),
-            7 => self.transitions_opt_0(&children[0]),
-            8 => self.transitions_opt_1(),
-            9 => self.trans_list(&children[0]),
-            10 => self.trans_list_list_0(&children[0], &children[1]),
-            11 => self.trans_list_list_1(),
-            12 => self.trans_entry(
+            9 => self.transitions_opt_0(&children[0]),
+            10 => self.transitions_opt_1(),
+            11 => self.trans_list(&children[0]),
+            12 => self.trans_list_list_0(&children[0], &children[1]),
+            13 => self.trans_list_list_1(),
+            14 => self.trans_entry(
                 &children[0],
                 &children[1],
                 &children[2],
@@ -795,11 +863,11 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
                 &children[9],
                 &children[10],
             ),
-            13 => self.k(&children[0], &children[1], &children[2], &children[3]),
-            14 => self.prod_num(&children[0]),
-            15 => self.nt_name(&children[0]),
-            16 => self.integer(&children[0]),
-            17 => self.dash(&children[0]),
+            15 => self.k(&children[0], &children[1], &children[2], &children[3]),
+            16 => self.prod_num(&children[0]),
+            17 => self.nt_name(&children[0]),
+            18 => self.integer(&children[0]),
+            19 => self.dash(&children[0]),
             _ => Err(ParserError::InternalError(format!(
                 "Unhandled production number: {}",
                 prod_num

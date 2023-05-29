@@ -1,8 +1,10 @@
 use crate::la_dfa_2_dot_grammar_trait::{LaDfa2Dot, LaDfa2DotGrammarTrait};
 #[allow(unused_imports)]
 use parol_runtime::Result;
-use std::{fmt::{Debug, Display, Error, Formatter}, collections::HashSet};
-
+use std::{
+    collections::HashSet,
+    fmt::{Debug, Display, Error, Formatter},
+};
 
 #[derive(Debug)]
 struct Transition {
@@ -12,10 +14,8 @@ struct Transition {
     prod_num: Option<usize>,
 }
 
-
 ///
 /// Data structure that implements the semantic actions for our LaDfa2Dot grammar
-/// !Change this type as needed!
 ///
 #[derive(Debug, Default)]
 pub struct LaDfa2DotGrammar<'t> {
@@ -28,39 +28,80 @@ impl LaDfa2DotGrammar<'_> {
     }
 
     fn get_transitions(data: &LaDfa2Dot) -> Vec<Transition> {
-        data.parts.transitions.trans_list.trans_list_list.iter().fold(vec![], |mut acc, t| {
-            let id = t.trans_entry.integer.integer.text().parse::<usize>().unwrap();
-            let term = t.trans_entry.integer0.integer.text().parse::<usize>().unwrap();
-            let to = t.trans_entry.integer1.integer.text().parse::<usize>().unwrap();
-            let p = t.trans_entry.integer2.integer.text().parse::<isize>().unwrap();
-            let prod_num = if p > 0 { Some(p as usize) } else {None};
-            acc.push(Transition { id, term, to, prod_num });
-            acc
-        })
+        data.parts
+            .transitions
+            .trans_list
+            .trans_list_list
+            .iter()
+            .fold(vec![], |mut acc, t| {
+                let id = t
+                    .trans_entry
+                    .integer
+                    .integer
+                    .text()
+                    .parse::<usize>()
+                    .unwrap();
+                let term = t
+                    .trans_entry
+                    .integer0
+                    .integer
+                    .text()
+                    .parse::<usize>()
+                    .unwrap();
+                let to = t
+                    .trans_entry
+                    .integer1
+                    .integer
+                    .text()
+                    .parse::<usize>()
+                    .unwrap();
+                let p = t
+                    .trans_entry
+                    .integer2
+                    .integer
+                    .text()
+                    .parse::<isize>()
+                    .unwrap();
+                let prod_num = if p > 0 { Some(p as usize) } else { None };
+                acc.push(Transition {
+                    id,
+                    term,
+                    to,
+                    prod_num,
+                });
+                acc
+            })
     }
 
     fn generate_dot(&self) -> Result<()> {
         if let Some(data) = &self.la_dfa_2_dot {
-            println!(r#"
+            println!(
+                r#"
 digraph G {{
-    rankdir=LR;"#);
+    rankdir=LR;"#
+            );
             println!("    label={};", data.naming_comment.nt_name.nt_name.text());
-            println!(r#"    node [shape=point, style=invis]; ""
+            println!(
+                r#"    node [shape=point, style=invis]; ""
     node [shape=ellipse, color=cyan, style=solid];
     "" -> 0;
 
     node [shape=ellipse, color=cyan];
-            "#);
+            "#
+            );
             let mut printed_states = HashSet::<usize>::new();
             for t in LaDfa2DotGrammar::get_transitions(data) {
-                if printed_states.contains(&t.id) {
+                if printed_states.contains(&t.to) {
                     continue;
                 }
-                printed_states.insert(t.id);
+                printed_states.insert(t.to);
                 if let Some(p) = t.prod_num {
-                    println!("    {} [label = \"Id({}, accepting), Pr({}))\"];", t.id, t.id, p);
+                    println!(
+                        "    {} [label = \"Id({}, accepting), Pr({}))\"];",
+                        t.to, t.to, p
+                    );
                 } else {
-                    println!("    {} [label = \"Id({})\"];", t.id, t.id);
+                    println!("    {} [label = \"Id({})\"];", t.to, t.to);
                 }
             }
 
@@ -70,7 +111,7 @@ digraph G {{
                 println!("    {} -> {} [label = \"{}\"];", t.id, t.to, t.term);
             }
 
-            println!("    }}");
+            println!("}}");
         }
         Ok(())
     }

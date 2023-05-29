@@ -28,13 +28,7 @@ fn main() -> Result<()> {
             .with_context(|| format!("Can't read file {}", file_name))?;
         let mut la_dfa_2_dot_grammar = LaDfa2DotGrammar::new();
         match parse(&input, &file_name, &mut la_dfa_2_dot_grammar) {
-            Ok(_) => {
-                if args.len() > 2 && args[2] == "-q" {
-                    Ok(())
-                } else {
-                    Ok(())
-                }
-            }
+            Ok(_) => Ok(()),
             Err(e) => ErrorReporter::report_error(&e, file_name),
         }
     } else {
