@@ -11,7 +11,7 @@ LaDfa2Dot
     ;
 
 Parts
-    : '{'^ Prod0 Transitions K '}'^ [ ','^ ]
+    : '{'^ Prod0 Transitions K '}'^ CommaOpt^
     ;
 
 CommentStart
@@ -35,7 +35,7 @@ TransitionsPrefix
     ;
 
 TransitionsPostfix
-    : ']'^ [ ','^ ]
+    : ']'^ CommaOpt^
     ;
 
 Transitions
@@ -54,8 +54,9 @@ TransEntryPostfix
     : ')'^ ','^
     ;
 
-TransEntryValue:Integer [','^];
-
+TransEntryValue
+    : Integer CommaOpt^
+    ;
 
 TransEntry
     : TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^
@@ -79,4 +80,8 @@ Integer
 
 Dash
     : '-'
+    ;
+
+CommaOpt
+    : [ ','^ ]
     ;

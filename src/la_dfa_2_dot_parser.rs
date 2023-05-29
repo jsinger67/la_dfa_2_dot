@@ -28,11 +28,11 @@ pub const TERMINALS: &[&str; 25] = &[
     /*  5 */ r###"LookaheadDFA"###,
     /*  6 */ r###"\{"###,
     /*  7 */ r###"\}"###,
-    /*  8 */ r###","###,
-    /*  9 */ r###"/"###,
-    /* 10 */ r###"\*"###,
-    /* 11 */ r###"prod0"###,
-    /* 12 */ r###":"###,
+    /*  8 */ r###"/"###,
+    /*  9 */ r###"\*"###,
+    /* 10 */ r###"prod0"###,
+    /* 11 */ r###":"###,
+    /* 12 */ r###","###,
     /* 13 */ r###"transitions"###,
     /* 14 */ r###"\&"###,
     /* 15 */ r###"\["###,
@@ -56,11 +56,11 @@ pub const TERMINAL_NAMES: &[&str; 25] = &[
     /*  5 */ "LookaheadDFA",
     /*  6 */ "LBrace",
     /*  7 */ "RBrace",
-    /*  8 */ "Comma",
-    /*  9 */ "Slash",
-    /* 10 */ "Star",
-    /* 11 */ "Prod0",
-    /* 12 */ "Colon",
+    /*  8 */ "Slash",
+    /*  9 */ "Star",
+    /* 10 */ "Prod0",
+    /* 11 */ "Colon",
+    /* 12 */ "Comma",
     /* 13 */ "Transitions",
     /* 14 */ "Amp",
     /* 15 */ "LBracket",
@@ -88,11 +88,11 @@ const SCANNER_0: (&[&str; 5], &[usize; 19]) = (
         5,  /* LookaheadDFA */
         6,  /* LBrace */
         7,  /* RBrace */
-        8,  /* Comma */
-        9,  /* Slash */
-        10, /* Star */
-        11, /* Prod0 */
-        12, /* Colon */
+        8,  /* Slash */
+        9,  /* Star */
+        10, /* Prod0 */
+        11, /* Colon */
+        12, /* Comma */
         13, /* Transitions */
         14, /* Amp */
         15, /* LBracket */
@@ -109,343 +109,327 @@ const SCANNER_0: (&[&str; 5], &[usize; 19]) = (
 
 const MAX_K: usize = 1;
 
-pub const NON_TERMINALS: &[&str; 23] = &[
-    /*  0 */ "CommentEnd",
-    /*  1 */ "CommentStart",
-    /*  2 */ "Dash",
-    /*  3 */ "Integer",
-    /*  4 */ "K",
-    /*  5 */ "LaDfa2Dot",
-    /*  6 */ "NamingComment",
-    /*  7 */ "NtName",
-    /*  8 */ "Parts",
-    /*  9 */ "PartsOpt",
-    /* 10 */ "Prod0",
-    /* 11 */ "ProdNum",
-    /* 12 */ "TransEntry",
-    /* 13 */ "TransEntryPostfix",
-    /* 14 */ "TransEntryPrefix",
-    /* 15 */ "TransEntryValue",
-    /* 16 */ "TransEntryValueOpt",
+pub const NON_TERMINALS: &[&str; 22] = &[
+    /*  0 */ "CommaOpt",
+    /*  1 */ "CommaOpt0",
+    /*  2 */ "CommentEnd",
+    /*  3 */ "CommentStart",
+    /*  4 */ "Dash",
+    /*  5 */ "Integer",
+    /*  6 */ "K",
+    /*  7 */ "LaDfa2Dot",
+    /*  8 */ "NamingComment",
+    /*  9 */ "NtName",
+    /* 10 */ "Parts",
+    /* 11 */ "Prod0",
+    /* 12 */ "ProdNum",
+    /* 13 */ "TransEntry",
+    /* 14 */ "TransEntryPostfix",
+    /* 15 */ "TransEntryPrefix",
+    /* 16 */ "TransEntryValue",
     /* 17 */ "TransList",
     /* 18 */ "TransListList",
     /* 19 */ "Transitions",
     /* 20 */ "TransitionsPostfix",
-    /* 21 */ "TransitionsPostfixOpt",
-    /* 22 */ "TransitionsPrefix",
+    /* 21 */ "TransitionsPrefix",
 ];
 
-pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 23] = &[
-    /* 0 - "CommentEnd" */
-    LookaheadDFA {
-        prod0: 5,
-        transitions: &[],
-        k: 0,
-    },
-    /* 1 - "CommentStart" */
-    LookaheadDFA {
-        prod0: 4,
-        transitions: &[],
-        k: 0,
-    },
-    /* 2 - "Dash" */
-    LookaheadDFA {
-        prod0: 26,
-        transitions: &[],
-        k: 0,
-    },
-    /* 3 - "Integer" */
-    LookaheadDFA {
-        prod0: 25,
-        transitions: &[],
-        k: 0,
-    },
-    /* 4 - "K" */
-    LookaheadDFA {
-        prod0: 22,
-        transitions: &[],
-        k: 0,
-    },
-    /* 5 - "LaDfa2Dot" */
-    LookaheadDFA {
-        prod0: 0,
-        transitions: &[],
-        k: 0,
-    },
-    /* 6 - "NamingComment" */
-    LookaheadDFA {
-        prod0: 6,
-        transitions: &[],
-        k: 0,
-    },
-    /* 7 - "NtName" */
-    LookaheadDFA {
-        prod0: 24,
-        transitions: &[],
-        k: 0,
-    },
-    /* 8 - "Parts" */
-    LookaheadDFA {
-        prod0: 1,
-        transitions: &[],
-        k: 0,
-    },
-    /* 9 - "PartsOpt" */
-    LookaheadDFA {
-        prod0: -1,
-        transitions: &[Trans(0, 0, 2, 3), Trans(0, 8, 1, 2)],
-        k: 1,
-    },
-    /* 10 - "Prod0" */
-    LookaheadDFA {
-        prod0: 7,
-        transitions: &[],
-        k: 0,
-    },
-    /* 11 - "ProdNum" */
-    LookaheadDFA {
-        prod0: 23,
-        transitions: &[],
-        k: 0,
-    },
-    /* 12 - "TransEntry" */
+pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 22] = &[
+    /* 0 - "CommaOpt" */
     LookaheadDFA {
         prod0: 21,
         transitions: &[],
         k: 0,
     },
-    /* 13 - "TransEntryPostfix" */
+    /* 1 - "CommaOpt0" */
     LookaheadDFA {
-        prod0: 17,
+        prod0: -1,
+        transitions: &[
+            Trans(0, 0, 2, 23),
+            Trans(0, 12, 1, 22),
+            Trans(0, 19, 2, 23),
+            Trans(0, 20, 2, 23),
+            Trans(0, 22, 2, 23),
+        ],
+        k: 1,
+    },
+    /* 2 - "CommentEnd" */
+    LookaheadDFA {
+        prod0: 3,
         transitions: &[],
         k: 0,
     },
-    /* 14 - "TransEntryPrefix" */
+    /* 3 - "CommentStart" */
+    LookaheadDFA {
+        prod0: 2,
+        transitions: &[],
+        k: 0,
+    },
+    /* 4 - "Dash" */
+    LookaheadDFA {
+        prod0: 20,
+        transitions: &[],
+        k: 0,
+    },
+    /* 5 - "Integer" */
+    LookaheadDFA {
+        prod0: 19,
+        transitions: &[],
+        k: 0,
+    },
+    /* 6 - "K" */
     LookaheadDFA {
         prod0: 16,
         transitions: &[],
         k: 0,
     },
-    /* 15 - "TransEntryValue" */
+    /* 7 - "LaDfa2Dot" */
+    LookaheadDFA {
+        prod0: 0,
+        transitions: &[],
+        k: 0,
+    },
+    /* 8 - "NamingComment" */
+    LookaheadDFA {
+        prod0: 4,
+        transitions: &[],
+        k: 0,
+    },
+    /* 9 - "NtName" */
     LookaheadDFA {
         prod0: 18,
         transitions: &[],
         k: 0,
     },
-    /* 16 - "TransEntryValueOpt" */
+    /* 10 - "Parts" */
     LookaheadDFA {
-        prod0: -1,
-        transitions: &[Trans(0, 8, 1, 19), Trans(0, 19, 2, 20), Trans(0, 22, 2, 20)],
-        k: 1,
+        prod0: 1,
+        transitions: &[],
+        k: 0,
+    },
+    /* 11 - "Prod0" */
+    LookaheadDFA {
+        prod0: 5,
+        transitions: &[],
+        k: 0,
+    },
+    /* 12 - "ProdNum" */
+    LookaheadDFA {
+        prod0: 17,
+        transitions: &[],
+        k: 0,
+    },
+    /* 13 - "TransEntry" */
+    LookaheadDFA {
+        prod0: 15,
+        transitions: &[],
+        k: 0,
+    },
+    /* 14 - "TransEntryPostfix" */
+    LookaheadDFA {
+        prod0: 13,
+        transitions: &[],
+        k: 0,
+    },
+    /* 15 - "TransEntryPrefix" */
+    LookaheadDFA {
+        prod0: 12,
+        transitions: &[],
+        k: 0,
+    },
+    /* 16 - "TransEntryValue" */
+    LookaheadDFA {
+        prod0: 14,
+        transitions: &[],
+        k: 0,
     },
     /* 17 - "TransList" */
     LookaheadDFA {
-        prod0: 13,
+        prod0: 9,
         transitions: &[],
         k: 0,
     },
     /* 18 - "TransListList" */
     LookaheadDFA {
         prod0: -1,
-        transitions: &[Trans(0, 16, 2, 15), Trans(0, 17, 1, 14)],
+        transitions: &[Trans(0, 16, 2, 11), Trans(0, 17, 1, 10)],
         k: 1,
     },
     /* 19 - "Transitions" */
-    LookaheadDFA {
-        prod0: 12,
-        transitions: &[],
-        k: 0,
-    },
-    /* 20 - "TransitionsPostfix" */
-    LookaheadDFA {
-        prod0: 9,
-        transitions: &[],
-        k: 0,
-    },
-    /* 21 - "TransitionsPostfixOpt" */
-    LookaheadDFA {
-        prod0: -1,
-        transitions: &[Trans(0, 8, 1, 10), Trans(0, 20, 2, 11)],
-        k: 1,
-    },
-    /* 22 - "TransitionsPrefix" */
     LookaheadDFA {
         prod0: 8,
         transitions: &[],
         k: 0,
     },
+    /* 20 - "TransitionsPostfix" */
+    LookaheadDFA {
+        prod0: 7,
+        transitions: &[],
+        k: 0,
+    },
+    /* 21 - "TransitionsPrefix" */
+    LookaheadDFA {
+        prod0: 6,
+        transitions: &[],
+        k: 0,
+    },
 ];
 
-pub const PRODUCTIONS: &[Production; 27] = &[
+pub const PRODUCTIONS: &[Production; 24] = &[
     // 0 - LaDfa2Dot: NamingComment 'LookaheadDFA'^ /* Clipped */ Parts;
     Production {
-        lhs: 5,
-        production: &[ParseType::N(8), ParseType::T(5), ParseType::N(6)],
+        lhs: 7,
+        production: &[ParseType::N(10), ParseType::T(5), ParseType::N(8)],
     },
-    // 1 - Parts: '{'^ /* Clipped */ Prod0 Transitions K '}'^ /* Clipped */ PartsOpt /* Option */;
-    Production {
-        lhs: 8,
-        production: &[
-            ParseType::N(9),
-            ParseType::T(7),
-            ParseType::N(4),
-            ParseType::N(19),
-            ParseType::N(10),
-            ParseType::T(6),
-        ],
-    },
-    // 2 - PartsOpt: ','^ /* Clipped */;
-    Production {
-        lhs: 9,
-        production: &[ParseType::T(8)],
-    },
-    // 3 - PartsOpt: ;
-    Production {
-        lhs: 9,
-        production: &[],
-    },
-    // 4 - CommentStart: '/'^ /* Clipped */ '*'^ /* Clipped */;
-    Production {
-        lhs: 1,
-        production: &[ParseType::T(10), ParseType::T(9)],
-    },
-    // 5 - CommentEnd: '*'^ /* Clipped */ '/'^ /* Clipped */;
-    Production {
-        lhs: 0,
-        production: &[ParseType::T(9), ParseType::T(10)],
-    },
-    // 6 - NamingComment: CommentStart^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName CommentEnd^ /* Clipped */;
-    Production {
-        lhs: 6,
-        production: &[
-            ParseType::N(0),
-            ParseType::N(7),
-            ParseType::N(2),
-            ParseType::N(11),
-            ParseType::N(1),
-        ],
-    },
-    // 7 - Prod0: 'prod0'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+    // 1 - Parts: '{'^ /* Clipped */ Prod0 Transitions K '}'^ /* Clipped */ CommaOpt^ /* Clipped */;
     Production {
         lhs: 10,
         production: &[
-            ParseType::T(8),
-            ParseType::N(3),
-            ParseType::T(12),
-            ParseType::T(11),
+            ParseType::N(0),
+            ParseType::T(7),
+            ParseType::N(6),
+            ParseType::N(19),
+            ParseType::N(11),
+            ParseType::T(6),
         ],
     },
-    // 8 - TransitionsPrefix: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */;
+    // 2 - CommentStart: '/'^ /* Clipped */ '*'^ /* Clipped */;
     Production {
-        lhs: 22,
+        lhs: 3,
+        production: &[ParseType::T(9), ParseType::T(8)],
+    },
+    // 3 - CommentEnd: '*'^ /* Clipped */ '/'^ /* Clipped */;
+    Production {
+        lhs: 2,
+        production: &[ParseType::T(8), ParseType::T(9)],
+    },
+    // 4 - NamingComment: CommentStart^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName CommentEnd^ /* Clipped */;
+    Production {
+        lhs: 8,
+        production: &[
+            ParseType::N(2),
+            ParseType::N(9),
+            ParseType::N(4),
+            ParseType::N(12),
+            ParseType::N(3),
+        ],
+    },
+    // 5 - Prod0: 'prod0'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+    Production {
+        lhs: 11,
+        production: &[
+            ParseType::T(12),
+            ParseType::N(5),
+            ParseType::T(11),
+            ParseType::T(10),
+        ],
+    },
+    // 6 - TransitionsPrefix: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */;
+    Production {
+        lhs: 21,
         production: &[
             ParseType::T(15),
             ParseType::T(14),
-            ParseType::T(12),
+            ParseType::T(11),
             ParseType::T(13),
         ],
     },
-    // 9 - TransitionsPostfix: ']'^ /* Clipped */ TransitionsPostfixOpt /* Option */;
+    // 7 - TransitionsPostfix: ']'^ /* Clipped */ CommaOpt^ /* Clipped */;
     Production {
         lhs: 20,
-        production: &[ParseType::N(21), ParseType::T(16)],
+        production: &[ParseType::N(0), ParseType::T(16)],
     },
-    // 10 - TransitionsPostfixOpt: ','^ /* Clipped */;
-    Production {
-        lhs: 21,
-        production: &[ParseType::T(8)],
-    },
-    // 11 - TransitionsPostfixOpt: ;
-    Production {
-        lhs: 21,
-        production: &[],
-    },
-    // 12 - Transitions: TransitionsPrefix^ /* Clipped */ TransList TransitionsPostfix^ /* Clipped */;
+    // 8 - Transitions: TransitionsPrefix^ /* Clipped */ TransList TransitionsPostfix^ /* Clipped */;
     Production {
         lhs: 19,
-        production: &[ParseType::N(20), ParseType::N(17), ParseType::N(22)],
+        production: &[ParseType::N(20), ParseType::N(17), ParseType::N(21)],
     },
-    // 13 - TransList: TransListList /* Vec */;
+    // 9 - TransList: TransListList /* Vec */;
     Production {
         lhs: 17,
         production: &[ParseType::N(18)],
     },
-    // 14 - TransListList: TransEntry TransListList;
+    // 10 - TransListList: TransEntry TransListList;
     Production {
         lhs: 18,
-        production: &[ParseType::N(18), ParseType::N(12)],
+        production: &[ParseType::N(18), ParseType::N(13)],
     },
-    // 15 - TransListList: ;
+    // 11 - TransListList: ;
     Production {
         lhs: 18,
         production: &[],
     },
-    // 16 - TransEntryPrefix: 'Trans'^ /* Clipped */ '('^ /* Clipped */;
-    Production {
-        lhs: 14,
-        production: &[ParseType::T(18), ParseType::T(17)],
-    },
-    // 17 - TransEntryPostfix: ')'^ /* Clipped */ ','^ /* Clipped */;
-    Production {
-        lhs: 13,
-        production: &[ParseType::T(8), ParseType::T(19)],
-    },
-    // 18 - TransEntryValue: Integer TransEntryValueOpt /* Option */;
+    // 12 - TransEntryPrefix: 'Trans'^ /* Clipped */ '('^ /* Clipped */;
     Production {
         lhs: 15,
-        production: &[ParseType::N(16), ParseType::N(3)],
+        production: &[ParseType::T(18), ParseType::T(17)],
     },
-    // 19 - TransEntryValueOpt: ','^ /* Clipped */;
+    // 13 - TransEntryPostfix: ')'^ /* Clipped */ ','^ /* Clipped */;
+    Production {
+        lhs: 14,
+        production: &[ParseType::T(12), ParseType::T(19)],
+    },
+    // 14 - TransEntryValue: Integer CommaOpt^ /* Clipped */;
     Production {
         lhs: 16,
-        production: &[ParseType::T(8)],
+        production: &[ParseType::N(0), ParseType::N(5)],
     },
-    // 20 - TransEntryValueOpt: ;
+    // 15 - TransEntry: TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^ /* Clipped */;
     Production {
-        lhs: 16,
-        production: &[],
-    },
-    // 21 - TransEntry: TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^ /* Clipped */;
-    Production {
-        lhs: 12,
+        lhs: 13,
         production: &[
-            ParseType::N(13),
-            ParseType::N(15),
-            ParseType::N(15),
-            ParseType::N(15),
-            ParseType::N(15),
             ParseType::N(14),
+            ParseType::N(16),
+            ParseType::N(16),
+            ParseType::N(16),
+            ParseType::N(16),
+            ParseType::N(15),
         ],
     },
-    // 22 - K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+    // 16 - K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
     Production {
-        lhs: 4,
+        lhs: 6,
         production: &[
-            ParseType::T(8),
-            ParseType::N(3),
             ParseType::T(12),
+            ParseType::N(5),
+            ParseType::T(11),
             ParseType::T(20),
         ],
     },
-    // 23 - ProdNum: Integer;
+    // 17 - ProdNum: Integer;
     Production {
-        lhs: 11,
-        production: &[ParseType::N(3)],
+        lhs: 12,
+        production: &[ParseType::N(5)],
     },
-    // 24 - NtName: /"\w+?"/;
+    // 18 - NtName: /"\w+?"/;
     Production {
-        lhs: 7,
+        lhs: 9,
         production: &[ParseType::T(21)],
     },
-    // 25 - Integer: /-?\d+/;
+    // 19 - Integer: /-?\d+/;
     Production {
-        lhs: 3,
+        lhs: 5,
         production: &[ParseType::T(22)],
     },
-    // 26 - Dash: '-';
+    // 20 - Dash: '-';
     Production {
-        lhs: 2,
+        lhs: 4,
         production: &[ParseType::T(23)],
+    },
+    // 21 - CommaOpt: CommaOpt0 /* Option */;
+    Production {
+        lhs: 0,
+        production: &[ParseType::N(1)],
+    },
+    // 22 - CommaOpt0: ','^ /* Clipped */;
+    Production {
+        lhs: 1,
+        production: &[ParseType::T(12)],
+    },
+    // 23 - CommaOpt0: ;
+    Production {
+        lhs: 1,
+        production: &[],
     },
 ];
 
@@ -465,7 +449,7 @@ where
     T: AsRef<Path>,
 {
     let mut llk_parser = LLKParser::new(
-        5,
+        7,
         LOOKAHEAD_AUTOMATA,
         PRODUCTIONS,
         TERMINAL_NAMES,
