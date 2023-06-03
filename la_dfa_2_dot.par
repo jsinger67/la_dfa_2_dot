@@ -14,16 +14,12 @@ Parts
     : '{'^ Prod0 Transitions K '}'^ CommaOpt^
     ;
 
-CommentStart
-    : "/\*"
-    ;
-
-CommentEnd
-    : "\*/"
+Integer
+    : /-?\d+/
     ;
 
 NamingComment
-    : CommentStart^ ProdNum Dash^ NtName CommentEnd^
+    : "/\*"^ Integer '-'^ NtName "\*/"^
     ;
 
 Prod0
@@ -70,20 +66,8 @@ K
     : 'k'^ ':'^ Integer ','^
     ;
 
-ProdNum
-    : Integer
-    ;
-
 NtName
     : /"\w+?"/
-    ;
-
-Integer
-    : /-?\d+/
-    ;
-
-Dash
-    : '-'
     ;
 
 CommaOpt
