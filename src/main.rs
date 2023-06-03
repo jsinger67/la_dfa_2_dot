@@ -1,4 +1,5 @@
 extern crate parol_runtime;
+extern crate tera;
 
 mod la_dfa_2_dot_grammar;
 // The output is version controlled

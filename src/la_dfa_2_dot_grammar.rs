@@ -1,10 +1,12 @@
 use crate::la_dfa_2_dot_grammar_trait::{LaDfa2Dot, LaDfa2DotGrammarTrait, TransEntryValue};
+use parol_runtime::ParolError;
 #[allow(unused_imports)]
 use parol_runtime::Result;
 use std::{
     collections::HashSet,
     fmt::{Debug, Display, Error, Formatter},
 };
+use tera::{Context, Tera};
 
 #[derive(Debug)]
 struct Transition {
@@ -42,7 +44,7 @@ impl LaDfa2DotGrammar<'_> {
             .trans_list_list
             .iter()
             .fold(vec![], |mut acc, t| {
-                let t = &t.trans_entry;
+                let t = &t.trans_entry.trans_values;
                 let id = LaDfa2DotGrammar::extract_value(&t.trans_entry_value);
                 let term = LaDfa2DotGrammar::extract_value(&t.trans_entry_value0);
                 let to = LaDfa2DotGrammar::extract_value(&t.trans_entry_value1);
@@ -60,43 +62,44 @@ impl LaDfa2DotGrammar<'_> {
 
     fn generate_dot(&self) -> Result<()> {
         if let Some(data) = &self.la_dfa_2_dot {
-            println!(
-                r#"
-digraph G {{
-    rankdir=LR;"#
+            let tera = Tera::new("templates/*.dot").map_err(|e| ParolError::UserError(e.into()))?;
+            let mut context = Context::new();
+            context.insert("title", data.naming_comment.nt_name.nt_name.text());
+            let states = LaDfa2DotGrammar::get_transitions(data)
+                .iter()
+                .fold(
+                    (vec![], HashSet::<usize>::new()),
+                    |(mut acc, mut printed_states), t| {
+                        if !printed_states.contains(&t.to) {
+                            printed_states.insert(t.to);
+                            if let Some(p) = t.prod_num {
+                                acc.push(format!(
+                                    "{} [label = \"Id({}, accepting), Pr({}))\"];",
+                                    t.to, t.to, p
+                                ));
+                            } else {
+                                acc.push(format!("{} [label = \"Id({})\"];", t.to, t.to));
+                            }
+                        }
+                        (acc, printed_states)
+                    },
+                )
+                .0;
+            context.insert("states", &states);
+            let transitions =
+                LaDfa2DotGrammar::get_transitions(data)
+                    .iter()
+                    .fold(vec![], |mut acc, t| {
+                        acc.push(format!("{} -> {} [label = \"{}\"];", t.id, t.to, t.term));
+                        acc
+                    });
+            context.insert("transitions", &transitions);
+
+            print!(
+                "{}",
+                tera.render("dfa.dot", &context)
+                    .map_err(|e| ParolError::UserError(e.into()))?
             );
-            println!("    label={};", data.naming_comment.nt_name.nt_name.text());
-            println!(
-                r#"    node [shape=point, style=invis]; ""
-    node [shape=ellipse, color=cyan, style=solid];
-    "" -> 0;
-
-    node [shape=ellipse, color=cyan];
-            "#
-            );
-            let mut printed_states = HashSet::<usize>::new();
-            for t in LaDfa2DotGrammar::get_transitions(data) {
-                if printed_states.contains(&t.to) {
-                    continue;
-                }
-                printed_states.insert(t.to);
-                if let Some(p) = t.prod_num {
-                    println!(
-                        "    {} [label = \"Id({}, accepting), Pr({}))\"];",
-                        t.to, t.to, p
-                    );
-                } else {
-                    println!("    {} [label = \"Id({})\"];", t.to, t.to);
-                }
-            }
-
-            println!();
-
-            for t in LaDfa2DotGrammar::get_transitions(data) {
-                println!("    {} -> {} [label = \"{}\"];", t.id, t.to, t.term);
-            }
-
-            println!("}}");
         }
         Ok(())
     }

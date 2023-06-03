@@ -15,11 +15,11 @@ Parts
     ;
 
 CommentStart
-    : '/'^ '*'^
+    : "/\*"
     ;
 
 CommentEnd
-    : '*'^ '/'^
+    : "\*/"
     ;
 
 NamingComment
@@ -58,8 +58,12 @@ TransEntryValue
     : Integer CommaOpt^
     ;
 
+TransValues
+    : TransEntryValue TransEntryValue TransEntryValue TransEntryValue
+    ;
+
 TransEntry
-    : TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^
+    : TransEntryPrefix^ TransValues TransEntryPostfix^
     ;
 
 K

@@ -31,12 +31,12 @@ pub trait LaDfa2DotGrammarTrait<'t> {
     }
 
     /// Semantic action for non-terminal 'CommentStart'
-    fn comment_start(&mut self, _arg: &CommentStart) -> Result<()> {
+    fn comment_start(&mut self, _arg: &CommentStart<'t>) -> Result<()> {
         Ok(())
     }
 
     /// Semantic action for non-terminal 'CommentEnd'
-    fn comment_end(&mut self, _arg: &CommentEnd) -> Result<()> {
+    fn comment_end(&mut self, _arg: &CommentEnd<'t>) -> Result<()> {
         Ok(())
     }
 
@@ -82,6 +82,11 @@ pub trait LaDfa2DotGrammarTrait<'t> {
 
     /// Semantic action for non-terminal 'TransEntryValue'
     fn trans_entry_value(&mut self, _arg: &TransEntryValue<'t>) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'TransValues'
+    fn trans_values(&mut self, _arg: &TransValues<'t>) -> Result<()> {
         Ok(())
     }
 
@@ -155,7 +160,9 @@ pub struct CommaOpt0 {}
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentEnd {}
+pub struct CommentEnd<'t> {
+    pub comment_end: Token<'t>, /* \*\/ */
+}
 
 ///
 /// Type derived for non-terminal CommentStart
@@ -163,7 +170,9 @@ pub struct CommentEnd {}
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentStart {}
+pub struct CommentStart<'t> {
+    pub comment_start: Token<'t>, /* /\* */
+}
 
 ///
 /// Type derived for non-terminal Dash
@@ -266,11 +275,7 @@ pub struct ProdNum<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TransEntry<'t> {
-    pub trans_entry_prefix: Box<TransEntryPrefix>,
-    pub trans_entry_value: Box<TransEntryValue<'t>>,
-    pub trans_entry_value0: Box<TransEntryValue<'t>>,
-    pub trans_entry_value1: Box<TransEntryValue<'t>>,
-    pub trans_entry_value2: Box<TransEntryValue<'t>>,
+    pub trans_values: Box<TransValues<'t>>,
 }
 
 ///
@@ -320,6 +325,19 @@ pub struct TransListList<'t> {
 }
 
 ///
+/// Type derived for non-terminal TransValues
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TransValues<'t> {
+    pub trans_entry_value: Box<TransEntryValue<'t>>,
+    pub trans_entry_value0: Box<TransEntryValue<'t>>,
+    pub trans_entry_value1: Box<TransEntryValue<'t>>,
+    pub trans_entry_value2: Box<TransEntryValue<'t>>,
+}
+
+///
 /// Type derived for non-terminal Transitions
 ///
 #[allow(dead_code)]
@@ -355,8 +373,8 @@ pub struct TransitionsPrefix {}
 pub enum ASTType<'t> {
     CommaOpt(CommaOpt),
     CommaOpt0(Option<Box<CommaOpt0>>),
-    CommentEnd(CommentEnd),
-    CommentStart(CommentStart),
+    CommentEnd(CommentEnd<'t>),
+    CommentStart(CommentStart<'t>),
     Dash(Dash<'t>),
     Integer(Integer<'t>),
     K(K<'t>),
@@ -372,6 +390,7 @@ pub enum ASTType<'t> {
     TransEntryValue(TransEntryValue<'t>),
     TransList(TransList<'t>),
     TransListList(Vec<TransListList<'t>>),
+    TransValues(TransValues<'t>),
     Transitions(Transitions<'t>),
     TransitionsPostfix(TransitionsPostfix),
     TransitionsPrefix(TransitionsPrefix),
@@ -499,20 +518,14 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 2:
     ///
-    /// CommentStart: '/'^ /* Clipped */ '*'^ /* Clipped */;
+    /// CommentStart: "/\*";
     ///
     #[parol_runtime::function_name::named]
-    fn comment_start(
-        &mut self,
-        _slash: &ParseTreeType<'t>,
-        _star: &ParseTreeType<'t>,
-    ) -> Result<()> {
+    fn comment_start(&mut self, comment_start: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comment_start_built = CommentStart {
-        // Ignore clipped member 'slash'
-        // Ignore clipped member 'star'
-        };
+        let comment_start = comment_start.token()?.clone();
+        let comment_start_built = CommentStart { comment_start };
         // Calling user action here
         self.user_grammar.comment_start(&comment_start_built)?;
         self.push(ASTType::CommentStart(comment_start_built), context);
@@ -521,16 +534,14 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 3:
     ///
-    /// CommentEnd: '*'^ /* Clipped */ '/'^ /* Clipped */;
+    /// CommentEnd: "\*/";
     ///
     #[parol_runtime::function_name::named]
-    fn comment_end(&mut self, _star: &ParseTreeType<'t>, _slash: &ParseTreeType<'t>) -> Result<()> {
+    fn comment_end(&mut self, comment_end: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comment_end_built = CommentEnd {
-        // Ignore clipped member 'star'
-        // Ignore clipped member 'slash'
-        };
+        let comment_end = comment_end.token()?.clone();
+        let comment_end_built = CommentEnd { comment_end };
         // Calling user action here
         self.user_grammar.comment_end(&comment_end_built)?;
         self.push(ASTType::CommentEnd(comment_end_built), context);
@@ -816,33 +827,55 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 15:
     ///
-    /// TransEntry: TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^ /* Clipped */;
+    /// TransValues: TransEntryValue TransEntryValue TransEntryValue TransEntryValue;
+    ///
+    #[parol_runtime::function_name::named]
+    fn trans_values(
+        &mut self,
+        _trans_entry_value: &ParseTreeType<'t>,
+        _trans_entry_value0: &ParseTreeType<'t>,
+        _trans_entry_value1: &ParseTreeType<'t>,
+        _trans_entry_value2: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let trans_entry_value2 = pop_item!(self, trans_entry_value2, TransEntryValue, context);
+        let trans_entry_value1 = pop_item!(self, trans_entry_value1, TransEntryValue, context);
+        let trans_entry_value0 = pop_item!(self, trans_entry_value0, TransEntryValue, context);
+        let trans_entry_value = pop_item!(self, trans_entry_value, TransEntryValue, context);
+        let trans_values_built = TransValues {
+            trans_entry_value: Box::new(trans_entry_value),
+            trans_entry_value0: Box::new(trans_entry_value0),
+            trans_entry_value1: Box::new(trans_entry_value1),
+            trans_entry_value2: Box::new(trans_entry_value2),
+        };
+        // Calling user action here
+        self.user_grammar.trans_values(&trans_values_built)?;
+        self.push(ASTType::TransValues(trans_values_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 16:
+    ///
+    /// TransEntry: TransEntryPrefix^ /* Clipped */ TransValues TransEntryPostfix^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn trans_entry(
         &mut self,
         _trans_entry_prefix: &ParseTreeType<'t>,
-        _trans_entry_value: &ParseTreeType<'t>,
-        _trans_entry_value0: &ParseTreeType<'t>,
-        _trans_entry_value1: &ParseTreeType<'t>,
-        _trans_entry_value2: &ParseTreeType<'t>,
+        _trans_values: &ParseTreeType<'t>,
         _trans_entry_postfix: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         // Ignore clipped member 'trans_entry_postfix'
         self.pop(context);
-        let trans_entry_value2 = pop_item!(self, trans_entry_value2, TransEntryValue, context);
-        let trans_entry_value1 = pop_item!(self, trans_entry_value1, TransEntryValue, context);
-        let trans_entry_value0 = pop_item!(self, trans_entry_value0, TransEntryValue, context);
-        let trans_entry_value = pop_item!(self, trans_entry_value, TransEntryValue, context);
-        let trans_entry_prefix = pop_item!(self, trans_entry_prefix, TransEntryPrefix, context);
+        let trans_values = pop_item!(self, trans_values, TransValues, context);
+        // Ignore clipped member 'trans_entry_prefix'
+        self.pop(context);
         let trans_entry_built = TransEntry {
-            trans_entry_prefix: Box::new(trans_entry_prefix),
-            trans_entry_value: Box::new(trans_entry_value),
-            trans_entry_value0: Box::new(trans_entry_value0),
-            trans_entry_value1: Box::new(trans_entry_value1),
-            trans_entry_value2: Box::new(trans_entry_value2),
+            // Ignore clipped member 'trans_entry_prefix'
+            trans_values: Box::new(trans_values),
             // Ignore clipped member 'trans_entry_postfix'
         };
         // Calling user action here
@@ -851,7 +884,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 16:
+    /// Semantic action for production 17:
     ///
     /// K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
     ///
@@ -878,7 +911,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 17:
+    /// Semantic action for production 18:
     ///
     /// ProdNum: Integer;
     ///
@@ -896,7 +929,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 18:
+    /// Semantic action for production 19:
     ///
     /// NtName: /"\w+?"/;
     ///
@@ -912,7 +945,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 19:
+    /// Semantic action for production 20:
     ///
     /// Integer: /-?\d+/;
     ///
@@ -928,7 +961,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 20:
+    /// Semantic action for production 21:
     ///
     /// Dash: '-';
     ///
@@ -944,7 +977,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 21:
+    /// Semantic action for production 22:
     ///
     /// CommaOpt: CommaOpt0 /* Option */;
     ///
@@ -960,7 +993,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 22:
+    /// Semantic action for production 23:
     ///
     /// CommaOpt0 /* `Option<T>::Some` */: ','^ /* Clipped */;
     ///
@@ -978,7 +1011,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 23:
+    /// Semantic action for production 24:
     ///
     /// CommaOpt0 /* `Option<T>::None` */: ;
     ///
@@ -1010,8 +1043,8 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
                 &children[4],
                 &children[5],
             ),
-            2 => self.comment_start(&children[0], &children[1]),
-            3 => self.comment_end(&children[0], &children[1]),
+            2 => self.comment_start(&children[0]),
+            3 => self.comment_end(&children[0]),
             4 => self.naming_comment(
                 &children[0],
                 &children[1],
@@ -1029,22 +1062,16 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
             12 => self.trans_entry_prefix(&children[0], &children[1]),
             13 => self.trans_entry_postfix(&children[0], &children[1]),
             14 => self.trans_entry_value(&children[0], &children[1]),
-            15 => self.trans_entry(
-                &children[0],
-                &children[1],
-                &children[2],
-                &children[3],
-                &children[4],
-                &children[5],
-            ),
-            16 => self.k(&children[0], &children[1], &children[2], &children[3]),
-            17 => self.prod_num(&children[0]),
-            18 => self.nt_name(&children[0]),
-            19 => self.integer(&children[0]),
-            20 => self.dash(&children[0]),
-            21 => self.comma_opt(&children[0]),
-            22 => self.comma_opt0_0(&children[0]),
-            23 => self.comma_opt0_1(),
+            15 => self.trans_values(&children[0], &children[1], &children[2], &children[3]),
+            16 => self.trans_entry(&children[0], &children[1], &children[2]),
+            17 => self.k(&children[0], &children[1], &children[2], &children[3]),
+            18 => self.prod_num(&children[0]),
+            19 => self.nt_name(&children[0]),
+            20 => self.integer(&children[0]),
+            21 => self.dash(&children[0]),
+            22 => self.comma_opt(&children[0]),
+            23 => self.comma_opt0_0(&children[0]),
+            24 => self.comma_opt0_1(),
             _ => Err(ParserError::InternalError(format!(
                 "Unhandled production number: {}",
                 prod_num

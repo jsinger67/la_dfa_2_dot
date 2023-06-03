@@ -1,0 +1,16 @@
+digraph G {
+    rankdir=LR;
+    label={{title}};
+
+    node [shape=point, style=invis];
+    "";
+    node [shape=ellipse, color=cyan, style=solid];
+    "" -> 0;
+
+    node [shape=ellipse, color=cyan];
+    {% for state in states %}
+    {{state}}{% endfor %}
+
+    {% for transition in transitions %}
+    {{transition}}{% endfor %}
+}

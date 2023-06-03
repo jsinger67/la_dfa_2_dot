@@ -7,8 +7,8 @@
 
 /*  0 */ LaDfa2Dot: NamingComment 'LookaheadDFA'^ /* Clipped */ Parts;
 /*  1 */ Parts: '{'^ /* Clipped */ Prod0 Transitions K '}'^ /* Clipped */ CommaOpt^ /* Clipped */;
-/*  2 */ CommentStart: '/'^ /* Clipped */ '*'^ /* Clipped */;
-/*  3 */ CommentEnd: '*'^ /* Clipped */ '/'^ /* Clipped */;
+/*  2 */ CommentStart: "/\*";
+/*  3 */ CommentEnd: "\*/";
 /*  4 */ NamingComment: CommentStart^ /* Clipped */ ProdNum Dash^ /* Clipped */ NtName CommentEnd^ /* Clipped */;
 /*  5 */ Prod0: 'prod0'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
 /*  6 */ TransitionsPrefix: 'transitions'^ /* Clipped */ ':'^ /* Clipped */ '&'^ /* Clipped */ '['^ /* Clipped */;
@@ -20,12 +20,13 @@
 /* 12 */ TransEntryPrefix: 'Trans'^ /* Clipped */ '('^ /* Clipped */;
 /* 13 */ TransEntryPostfix: ')'^ /* Clipped */ ','^ /* Clipped */;
 /* 14 */ TransEntryValue: Integer CommaOpt^ /* Clipped */;
-/* 15 */ TransEntry: TransEntryPrefix TransEntryValue TransEntryValue TransEntryValue TransEntryValue TransEntryPostfix^ /* Clipped */;
-/* 16 */ K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
-/* 17 */ ProdNum: Integer;
-/* 18 */ NtName: /"\w+?"/;
-/* 19 */ Integer: /-?\d+/;
-/* 20 */ Dash: '-';
-/* 21 */ CommaOpt: CommaOpt0 /* Option */;
-/* 22 */ CommaOpt0 /* `Option<T>::Some` */: ','^ /* Clipped */;
-/* 23 */ CommaOpt0 /* `Option<T>::None` */: ;
+/* 15 */ TransValues: TransEntryValue TransEntryValue TransEntryValue TransEntryValue;
+/* 16 */ TransEntry: TransEntryPrefix^ /* Clipped */ TransValues TransEntryPostfix^ /* Clipped */;
+/* 17 */ K: 'k'^ /* Clipped */ ':'^ /* Clipped */ Integer ','^ /* Clipped */;
+/* 18 */ ProdNum: Integer;
+/* 19 */ NtName: /"\w+?"/;
+/* 20 */ Integer: /-?\d+/;
+/* 21 */ Dash: '-';
+/* 22 */ CommaOpt: CommaOpt0 /* Option */;
+/* 23 */ CommaOpt0 /* `Option<T>::Some` */: ','^ /* Clipped */;
+/* 24 */ CommaOpt0 /* `Option<T>::None` */: ;

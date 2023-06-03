@@ -9,6 +9,7 @@ edition = "2021"
 anyhow = "1.0"
 env_logger = "0.10.0"
 parol_runtime = { version = "0.16.0", features = ["auto_generation"] }
+tera = "1.19.0"
 thiserror = "1.0"
 
 [build-dependencies]
