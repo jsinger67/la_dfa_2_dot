@@ -1,8 +1,9 @@
+extern crate clap;
 extern crate parol_runtime;
 extern crate tera;
 
+mod cli_args;
 mod la_dfa_2_dot_grammar;
-// The output is version controlled
 mod la_dfa_2_dot_grammar_trait;
 mod la_dfa_2_dot_parser;
 

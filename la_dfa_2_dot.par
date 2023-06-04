@@ -3,73 +3,215 @@
 %title "LaDfa2Dot grammar"
 %comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
 %line_comment '//'
+%block_comment "/\*" "\*/"
 
 %%
 
 LaDfa2Dot
-    : NamingComment 'LookaheadDFA'^ Parts
+    : { AttributeOpt^ Item }
     ;
 
-Parts
-    : '{'^ Prod0 Transitions K '}'^ CommaOpt^
+AttributeOpt
+    : [ Hash LBracket Ident AttributeArgOpt RBracket ]
     ;
 
-Integer
+AttributeArgOpt
+    : LParen Ident RParen
+    ;
+
+Item
+    : UseStatement^ 
+    | ConstDeclaration
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// UseStatement
+// -------------------------------------------------------------------------------------------------
+UseStatement
+    : 'use' ScopedQualifiedIdent Semicolon
+    ;
+
+QualifiedIdent
+    : Ident { DoubleColon Ident }
+    ;
+
+ScopedQualifiedIdent
+    : QualifiedIdent [ DoubleColon ScopedList ]
+    ;
+
+ScopedList
+    : LBrace ScopedListItems CommaOpt RBrace
+    ;
+
+ScopedListItems
+    : ScopedQualifiedIdent { Comma^ ScopedQualifiedIdent }
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// ConstDeclaration
+// -------------------------------------------------------------------------------------------------
+ConstDeclaration
+    : ConstPreamble TypeSpec Assign ConstVal Semicolon
+    | ConstPreamble Skip
+    ;
+
+ConstPreamble
+    : ConstQualifier ConstName Colon
+    ;
+
+ConstQualifier
+    : [ 'pub' ] 'const' 
+    | 'static'
+    ;
+
+ConstName
+    : Ident
+    ;
+
+ConstVal
+    : Number 
+    | String
+    | QualifiedVal
+    | ArrayVal
+    | TupleVal
+    ;
+
+ArrayVal
+    : Amb LBracket [ ConstValList ] CommaOpt RBracket
+    ;
+
+ConstValList
+    : ConstVal { Comma ConstVal }
+    ;
+
+TupleVal
+    : LParen [ TupleValues ] CommaOpt RParen
+    ;
+
+TupleValues
+    : ConstVal { Comma ConstVal }
+    ;
+
+QualifiedVal
+    : QualifiedIdent [ StructVal 
+    | TupleStructVal]
+    ;
+
+StructVal
+    : LBrace [ MemberValues ] RBrace
+    ;
+
+MemberValues
+    : MemberValue { Comma MemberValue } CommaOpt
+    ;
+
+MemberValue
+    : Ident Colon ConstVal
+    ;
+
+TupleStructVal
+    : TupleVal
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// TypeSpec
+// -------------------------------------------------------------------------------------------------
+TypeSpec
+    : QualifiedIdent 
+    | ArrayType
+    | TupleType
+    ;
+
+ArrayType
+    : Amb LBracket ArrayTypeSpec RBracket
+    ;
+
+ArrayTypeSpec
+    : [ Amb ] Ident Semicolon Number
+    ;
+
+TupleType
+    : LParen TupleItems CommaOpt RParen
+    ;
+
+TupleItems
+    : TypeSpec { Comma TypeSpec }
+    ;
+
+Skip
+    : /(?s)Lazy<Vec<.*(?-s)/
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// Optionals
+// -------------------------------------------------------------------------------------------------
+CommaOpt
+    : [ Comma ]
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// Token definitions
+// -------------------------------------------------------------------------------------------------
+Assign
+    : '='
+    ;
+
+Number
     : /-?\d+/
     ;
 
-NamingComment
-    : "/\*"^ Integer '-'^ NtName "\*/"^
+Amb
+    : '&'
     ;
 
-Prod0
-    : 'prod0'^ ':'^ Integer ','^
+Semicolon
+    : ';'
     ;
 
-TransitionsPrefix
-    : 'transitions'^ ':'^ '&'^ '['^
+Comma
+    : ','
     ;
 
-TransitionsPostfix
-    : ']'^ CommaOpt^
+String
+    : /(r#*)?"(\\.|[^\\])*?"#*/
     ;
 
-Transitions
-    : TransitionsPrefix^ TransList TransitionsPostfix^
+Ident
+    : /[a-zA-Z_][a-zA-Z0-9_]*/
     ;
 
-TransList
-    : { TransEntry }
+DoubleColon
+    : '::'
     ;
 
-TransEntryPrefix
-    : 'Trans'^ '('^
+Colon
+    : ':'
     ;
 
-TransEntryPostfix
-    : ')'^ ','^
+LBrace
+    : '{'
     ;
 
-TransEntryValue
-    : Integer CommaOpt^
+RBrace
+    : '}'
     ;
 
-TransValues
-    : TransEntryValue TransEntryValue TransEntryValue TransEntryValue
+LBracket
+    : '['
     ;
 
-TransEntry
-    : TransEntryPrefix^ TransValues TransEntryPostfix^
+RBracket
+    : ']'
     ;
 
-K
-    : 'k'^ ':'^ Integer ','^
+LParen
+    : '('
     ;
 
-NtName
-    : /"\w+?"/
+RParen
+    : ')'
     ;
 
-CommaOpt
-    : [ ','^ ]
+Hash
+    : /#/
     ;
