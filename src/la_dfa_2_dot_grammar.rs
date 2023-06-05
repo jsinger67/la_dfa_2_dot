@@ -2,6 +2,8 @@
 use parol_runtime::Result;
 
 use crate::la_dfa_2_dot_grammar_trait::LaDfa2DotGrammarTrait;
+
+#[allow(dead_code)]
 #[derive(Debug)]
 struct Transition {
     id: usize,

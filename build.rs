@@ -7,6 +7,8 @@ fn main() {
     // CLI equivalent is:
     // parol -f ./la_dfa_2_dot.par -e ./la_dfa_2_dot-exp.par -p ./src/la_dfa_2_dot_parser.rs -a ./src/la_dfa_2_dot_grammar_trait.rs -t LaDfa2DotGrammar -m la_dfa_2_dot_grammar -g
     if let Err(err) = Builder::with_explicit_output_dir("src")
+        .max_lookahead(7)
+        .unwrap()
         .grammar_file("la_dfa_2_dot.par")
         .expanded_grammar_output_file("../la_dfa_2_dot-exp.par")
         .parser_output_file("la_dfa_2_dot_parser.rs")

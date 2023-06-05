@@ -3,7 +3,6 @@
 %title "LaDfa2Dot grammar"
 %comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
 %line_comment '//'
-%block_comment "/\*" "\*/"
 
 %%
 
@@ -51,8 +50,8 @@ ScopedListItems
 // ConstDeclaration
 // -------------------------------------------------------------------------------------------------
 ConstDeclaration
-    : ConstPreamble TypeSpec Assign ConstVal Semicolon
-    | ConstPreamble Skip
+    : ConstPreamble TypeSpec Assign ConstVal Semicolon 
+    | ConstPreamble^ Skip^
     ;
 
 ConstPreamble
@@ -69,6 +68,10 @@ ConstName
     ;
 
 ConstVal
+    : CommentOpt InnerConstVal
+    ;
+
+InnerConstVal
     : Number 
     | String
     | QualifiedVal
@@ -77,24 +80,25 @@ ConstVal
     ;
 
 ArrayVal
-    : Amb LBracket [ ConstValList ] CommaOpt RBracket
+    : Amb LBracket [ ConstValList ] CommentOpt RBracket
     ;
 
 ConstValList
-    : ConstVal { Comma ConstVal }
+    : ConstVal { Comma ConstVal } 
+    | ConstVal Comma
     ;
 
 TupleVal
-    : LParen [ TupleValues ] CommaOpt RParen
-    ;
-
-TupleValues
-    : ConstVal { Comma ConstVal }
+    : LParen [ ConstValList ] RParen
     ;
 
 QualifiedVal
-    : QualifiedIdent [ StructVal 
-    | TupleStructVal]
+    : QualifiedIdent [ StructOrTupleVal ]
+    ;
+
+StructOrTupleVal
+    : StructVal 
+    | TupleStructVal
     ;
 
 StructVal
@@ -138,6 +142,7 @@ TupleItems
     : TypeSpec { Comma TypeSpec }
     ;
 
+// We ignore the rest of the file from here on because we have parsed all necessary information
 Skip
     : /(?s)Lazy<Vec<.*(?-s)/
     ;
@@ -150,8 +155,38 @@ CommaOpt
     ;
 
 // -------------------------------------------------------------------------------------------------
+// Comments
+// -------------------------------------------------------------------------------------------------
+CommentOpt
+    : [ CommentVariants ]
+    ;
+
+CommentVariants
+    : IgnoredComment^ 
+    | NamingComment
+    ;
+
+NamingComment
+    : BlockCommentStart^ Number Dash^ String BlockCommentEnd^ // /* 1 - "ArrayType" */
+    ;
+
+IgnoredComment
+    : BlockCommentStart^ Number^ BlockCommentEnd^ // /*  0 */ 
+    | BlockCommentStart^ Ident^ Colon^ String^ BlockCommentEnd^ // /* SCANNER_0: "INITIAL" */
+    | BlockCommentStart^ Ident^ BlockCommentEnd^ // /* Comma */
+    ;
+
+// -------------------------------------------------------------------------------------------------
 // Token definitions
 // -------------------------------------------------------------------------------------------------
+BlockCommentStart
+    : "/\*"^
+    ;
+
+BlockCommentEnd
+    : "\*/"^
+    ;
+
 Assign
     : '='
     ;
@@ -214,4 +249,8 @@ RParen
 
 Hash
     : /#/
+    ;
+
+Dash
+    : '-'
     ;
