@@ -9,13 +9,13 @@ edition = "2021"
 anyhow = "1.0"
 clap = { version = "4.3.1", features = ["derive", "cargo"] }
 env_logger = "0.10.0"
-parol_runtime = { version = "0.16.0", features = ["auto_generation"] }
+parol_runtime = { path = "../parol/crates/parol_runtime", version = "0.16.0", features = ["auto_generation"] }
 tera = "1.19.0"
 thiserror = "1.0"
 
 [build-dependencies]
-parol = "0.21.5"
-parol_runtime = { version = "0.16.0", features = ["auto_generation"] }
+parol = { path = "../parol/crates/parol", version = "0.21.5" }
+parol_runtime = { path = "../parol/crates/parol_runtime", version = "0.16.0", features = ["auto_generation"] }
 
 # For faster builds.
 [profile.dev.build-override]

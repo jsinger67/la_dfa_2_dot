@@ -7,7 +7,7 @@
 %%
 
 LaDfa2Dot
-    : { AttributeOpt^ Item }
+    : { AttributeOpt^ CommentOpt^ Item }
     ;
 
 AttributeOpt
@@ -15,7 +15,7 @@ AttributeOpt
     ;
 
 AttributeArgOpt
-    : LParen Ident RParen
+    : [ LParen Ident RParen ]
     ;
 
 Item
@@ -50,7 +50,7 @@ ScopedListItems
 // ConstDeclaration
 // -------------------------------------------------------------------------------------------------
 ConstDeclaration
-    : ConstPreamble TypeSpec Assign ConstVal Semicolon 
+    : ConstPreamble TypeSpec Assign CommentOptConstVal Semicolon 
     | ConstPreamble^ Skip^
     ;
 
@@ -67,12 +67,12 @@ ConstName
     : Ident
     ;
 
-ConstVal
+CommentOptConstVal
     : CommentOpt InnerConstVal
     ;
 
 InnerConstVal
-    : Number 
+    : Number
     | String
     | QualifiedVal
     | ArrayVal
@@ -80,16 +80,17 @@ InnerConstVal
     ;
 
 ArrayVal
-    : Amb LBracket [ ConstValList ] CommentOpt RBracket
+    // : Ref LBracket [ ConstValList CommentOpt Comma ] CommentOpt RBracket
+    : Ref LBracket [ ConstValList CommaOpt ] RBracket
     ;
 
 ConstValList
-    : ConstVal { Comma ConstVal } 
-    | ConstVal Comma
+    // : ConstVal CommentOpt { Comma ConstVal CommentOpt } 
+    : CommentOptConstVal { CommentOpt Comma CommentOptConstVal } CommentOpt
     ;
 
 TupleVal
-    : LParen [ ConstValList ] RParen
+    : LParen [ ConstValList CommaOpt CommentOpt ] RParen
     ;
 
 QualifiedVal
@@ -102,15 +103,15 @@ StructOrTupleVal
     ;
 
 StructVal
-    : LBrace [ MemberValues ] RBrace
+    : LBrace [ MemberValues Comma ] RBrace
     ;
 
 MemberValues
-    : MemberValue { Comma MemberValue } CommaOpt
+    : MemberValue { Comma MemberValue }
     ;
 
 MemberValue
-    : Ident Colon ConstVal
+    : Ident Colon CommentOptConstVal
     ;
 
 TupleStructVal
@@ -127,11 +128,11 @@ TypeSpec
     ;
 
 ArrayType
-    : Amb LBracket ArrayTypeSpec RBracket
+    : Ref LBracket ArrayTypeSpec RBracket
     ;
 
 ArrayTypeSpec
-    : [ Amb ] Ident Semicolon Number
+    : [ Ref ] Ident Semicolon Number
     ;
 
 TupleType
@@ -144,7 +145,7 @@ TupleItems
 
 // We ignore the rest of the file from here on because we have parsed all necessary information
 Skip
-    : /(?s)Lazy<Vec<.*(?-s)/
+    : /(?s)&\[Production; \d+\] = &\[.*(?-s)/
     ;
 
 // -------------------------------------------------------------------------------------------------
@@ -195,7 +196,7 @@ Number
     : /-?\d+/
     ;
 
-Amb
+Ref
     : '&'
     ;
 
