@@ -10,12 +10,11 @@
 #![allow(clippy::upper_case_acronyms)]
 
 use parol_runtime::derive_builder::Builder;
-use parol_runtime::lexer::Token;
 use parol_runtime::log::trace;
 #[allow(unused_imports)]
 use parol_runtime::parol_macros::{pop_and_reverse_item, pop_item};
 use parol_runtime::parser::{ParseTreeType, UserActionsTrait};
-use parol_runtime::{ParserError, Result};
+use parol_runtime::{ParserError, Result, Token};
 
 /// Semantic actions trait generated for the user grammar
 /// All functions have default implementations.
@@ -85,13 +84,8 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
-    /// Semantic action for non-terminal 'CommentOptConstVal'
-    fn comment_opt_const_val(&mut self, _arg: &CommentOptConstVal<'t>) -> Result<()> {
-        Ok(())
-    }
-
-    /// Semantic action for non-terminal 'InnerConstVal'
-    fn inner_const_val(&mut self, _arg: &InnerConstVal<'t>) -> Result<()> {
+    /// Semantic action for non-terminal 'ConstVal'
+    fn const_val(&mut self, _arg: &ConstVal<'t>) -> Result<()> {
         Ok(())
     }
 
@@ -175,36 +169,6 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
-    /// Semantic action for non-terminal 'CommentOpt'
-    fn comment_opt(&mut self, _arg: &CommentOpt<'t>) -> Result<()> {
-        Ok(())
-    }
-
-    /// Semantic action for non-terminal 'CommentVariants'
-    fn comment_variants(&mut self, _arg: &CommentVariants<'t>) -> Result<()> {
-        Ok(())
-    }
-
-    /// Semantic action for non-terminal 'NamingComment'
-    fn naming_comment(&mut self, _arg: &NamingComment<'t>) -> Result<()> {
-        Ok(())
-    }
-
-    /// Semantic action for non-terminal 'IgnoredComment'
-    fn ignored_comment(&mut self, _arg: &IgnoredComment) -> Result<()> {
-        Ok(())
-    }
-
-    /// Semantic action for non-terminal 'BlockCommentStart'
-    fn block_comment_start(&mut self, _arg: &BlockCommentStart) -> Result<()> {
-        Ok(())
-    }
-
-    /// Semantic action for non-terminal 'BlockCommentEnd'
-    fn block_comment_end(&mut self, _arg: &BlockCommentEnd) -> Result<()> {
-        Ok(())
-    }
-
     /// Semantic action for non-terminal 'Assign'
     fn assign(&mut self, _arg: &Assign<'t>) -> Result<()> {
         Ok(())
@@ -284,11 +248,7 @@ pub trait LaDfa2DotGrammarTrait<'t> {
     fn hash(&mut self, _arg: &Hash<'t>) -> Result<()> {
         Ok(())
     }
-
-    /// Semantic action for non-terminal 'Dash'
-    fn dash(&mut self, _arg: &Dash<'t>) -> Result<()> {
-        Ok(())
-    }
+    fn on_comment_parsed(&mut self, _token: Token<'t>) {}
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -321,16 +281,16 @@ pub struct ItemConstDeclaration<'t> {
 ///
 /// Type derived for production 22
 ///
-/// ConstDeclaration: ConstPreamble TypeSpec Assign CommentOptConstVal Semicolon;
+/// ConstDeclaration: ConstPreamble TypeSpec Assign ConstVal Semicolon;
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct ConstDeclarationConstPreambleTypeSpecAssignCommentOptConstValSemicolon<'t> {
+pub struct ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon<'t> {
     pub const_preamble: Box<ConstPreamble<'t>>,
     pub type_spec: Box<TypeSpec<'t>>,
     pub assign: Box<Assign<'t>>,
-    pub comment_opt_const_val: Box<CommentOptConstVal<'t>>,
+    pub const_val: Box<ConstVal<'t>>,
     pub semicolon: Box<Semicolon<'t>>,
 }
 
@@ -370,67 +330,67 @@ pub struct ConstQualifierStatic<'t> {
 }
 
 ///
-/// Type derived for production 31
+/// Type derived for production 30
 ///
-/// InnerConstVal: Number;
+/// ConstVal: Number;
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct InnerConstValNumber<'t> {
+pub struct ConstValNumber<'t> {
     pub number: Box<Number<'t>>,
+}
+
+///
+/// Type derived for production 31
+///
+/// ConstVal: String;
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct ConstValString<'t> {
+    pub string: Box<String<'t>>,
 }
 
 ///
 /// Type derived for production 32
 ///
-/// InnerConstVal: String;
+/// ConstVal: QualifiedVal;
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct InnerConstValString<'t> {
-    pub string: Box<String<'t>>,
+pub struct ConstValQualifiedVal<'t> {
+    pub qualified_val: Box<QualifiedVal<'t>>,
 }
 
 ///
 /// Type derived for production 33
 ///
-/// InnerConstVal: QualifiedVal;
+/// ConstVal: ArrayVal;
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct InnerConstValQualifiedVal<'t> {
-    pub qualified_val: Box<QualifiedVal<'t>>,
+pub struct ConstValArrayVal<'t> {
+    pub array_val: Box<ArrayVal<'t>>,
 }
 
 ///
 /// Type derived for production 34
 ///
-/// InnerConstVal: ArrayVal;
+/// ConstVal: TupleVal;
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
-pub struct InnerConstValArrayVal<'t> {
-    pub array_val: Box<ArrayVal<'t>>,
-}
-
-///
-/// Type derived for production 35
-///
-/// InnerConstVal: TupleVal;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct InnerConstValTupleVal<'t> {
+pub struct ConstValTupleVal<'t> {
     pub tuple_val: Box<TupleVal<'t>>,
 }
 
 ///
-/// Type derived for production 48
+/// Type derived for production 47
 ///
 /// StructOrTupleVal: StructVal;
 ///
@@ -442,7 +402,7 @@ pub struct StructOrTupleValStructVal<'t> {
 }
 
 ///
-/// Type derived for production 49
+/// Type derived for production 48
 ///
 /// StructOrTupleVal: TupleStructVal;
 ///
@@ -454,7 +414,7 @@ pub struct StructOrTupleValTupleStructVal<'t> {
 }
 
 ///
-/// Type derived for production 58
+/// Type derived for production 57
 ///
 /// TypeSpec: QualifiedIdent;
 ///
@@ -466,7 +426,7 @@ pub struct TypeSpecQualifiedIdent<'t> {
 }
 
 ///
-/// Type derived for production 59
+/// Type derived for production 58
 ///
 /// TypeSpec: ArrayType;
 ///
@@ -478,7 +438,7 @@ pub struct TypeSpecArrayType<'t> {
 }
 
 ///
-/// Type derived for production 60
+/// Type derived for production 59
 ///
 /// TypeSpec: TupleType;
 ///
@@ -488,70 +448,6 @@ pub struct TypeSpecArrayType<'t> {
 pub struct TypeSpecTupleType<'t> {
     pub tuple_type: Box<TupleType<'t>>,
 }
-
-///
-/// Type derived for production 76
-///
-/// CommentVariants: IgnoredComment^ /* Clipped */;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentVariantsIgnoredComment {}
-
-///
-/// Type derived for production 77
-///
-/// CommentVariants: NamingComment;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentVariantsNamingComment<'t> {
-    pub naming_comment: Box<NamingComment<'t>>,
-}
-
-///
-/// Type derived for production 80
-///
-/// IgnoredCommentSuffix0: Ident^ /* Clipped */ IgnoredCommentSuffix;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct IgnoredCommentSuffix0IdentIgnoredCommentSuffix {
-    pub ignored_comment_suffix: Box<IgnoredCommentSuffix>,
-}
-
-///
-/// Type derived for production 81
-///
-/// IgnoredCommentSuffix0: Number^ /* Clipped */ BlockCommentEnd^ /* Clipped */;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct IgnoredCommentSuffix0NumberBlockCommentEnd {}
-
-///
-/// Type derived for production 82
-///
-/// IgnoredCommentSuffix: Colon^ /* Clipped */ String^ /* Clipped */ BlockCommentEnd^ /* Clipped */;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct IgnoredCommentSuffixColonStringBlockCommentEnd {}
-
-///
-/// Type derived for production 83
-///
-/// IgnoredCommentSuffix: BlockCommentEnd^ /* Clipped */;
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct IgnoredCommentSuffixBlockCommentEnd {}
 
 // -------------------------------------------------------------------------------------------------
 //
@@ -675,22 +571,6 @@ pub struct AttributeOpt0<'t> {
 }
 
 ///
-/// Type derived for non-terminal BlockCommentEnd
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct BlockCommentEnd {}
-
-///
-/// Type derived for non-terminal BlockCommentStart
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct BlockCommentStart {}
-
-///
 /// Type derived for non-terminal Colon
 ///
 #[allow(dead_code)]
@@ -731,54 +611,13 @@ pub struct CommaOpt0<'t> {
 }
 
 ///
-/// Type derived for non-terminal CommentOpt
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentOpt<'t> {
-    pub comment_opt0: Option<Box<CommentOpt0<'t>>>,
-}
-
-///
-/// Type derived for non-terminal CommentOpt0
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentOpt0<'t> {
-    pub comment_variants: Box<CommentVariants<'t>>,
-}
-
-///
-/// Type derived for non-terminal CommentOptConstVal
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct CommentOptConstVal<'t> {
-    pub comment_opt: Box<CommentOpt<'t>>,
-    pub inner_const_val: Box<InnerConstVal<'t>>,
-}
-
-///
-/// Type derived for non-terminal CommentVariants
-///
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-pub enum CommentVariants<'t> {
-    IgnoredComment(CommentVariantsIgnoredComment),
-    NamingComment(CommentVariantsNamingComment<'t>),
-}
-
-///
 /// Type derived for non-terminal ConstDeclaration
 ///
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub enum ConstDeclaration<'t> {
-    ConstPreambleTypeSpecAssignCommentOptConstValSemicolon(
-        ConstDeclarationConstPreambleTypeSpecAssignCommentOptConstValSemicolon<'t>,
+    ConstPreambleTypeSpecAssignConstValSemicolon(
+        ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon<'t>,
     ),
     ConstPreambleSkip(ConstDeclarationConstPreambleSkip),
 }
@@ -826,15 +665,27 @@ pub struct ConstQualifierOpt<'t> {
 }
 
 ///
+/// Type derived for non-terminal ConstVal
+///
+#[allow(dead_code)]
+#[derive(Debug, Clone)]
+pub enum ConstVal<'t> {
+    Number(ConstValNumber<'t>),
+    String(ConstValString<'t>),
+    QualifiedVal(ConstValQualifiedVal<'t>),
+    ArrayVal(ConstValArrayVal<'t>),
+    TupleVal(ConstValTupleVal<'t>),
+}
+
+///
 /// Type derived for non-terminal ConstValList
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValList<'t> {
-    pub comment_opt_const_val: Box<CommentOptConstVal<'t>>,
+    pub const_val: Box<ConstVal<'t>>,
     pub const_val_list_list: Vec<ConstValListList<'t>>,
-    pub comment_opt: Box<CommentOpt<'t>>,
 }
 
 ///
@@ -844,19 +695,8 @@ pub struct ConstValList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValListList<'t> {
-    pub comment_opt: Box<CommentOpt<'t>>,
     pub comma: Box<Comma<'t>>,
-    pub comment_opt_const_val: Box<CommentOptConstVal<'t>>,
-}
-
-///
-/// Type derived for non-terminal Dash
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct Dash<'t> {
-    pub dash: Token<'t>, /* - */
+    pub const_val: Box<ConstVal<'t>>,
 }
 
 ///
@@ -887,49 +727,6 @@ pub struct Hash<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct Ident<'t> {
     pub ident: Token<'t>, /* [a-zA-Z_][a-zA-Z0-9_]* */
-}
-
-///
-/// Type derived for non-terminal IgnoredComment
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct IgnoredComment {
-    pub ignored_comment_suffix0: Box<IgnoredCommentSuffix0>,
-}
-
-///
-/// Type derived for non-terminal IgnoredCommentSuffix
-///
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-pub enum IgnoredCommentSuffix {
-    ColonStringBlockCommentEnd(IgnoredCommentSuffixColonStringBlockCommentEnd),
-    BlockCommentEnd(IgnoredCommentSuffixBlockCommentEnd),
-}
-
-///
-/// Type derived for non-terminal IgnoredCommentSuffix0
-///
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-pub enum IgnoredCommentSuffix0 {
-    IdentIgnoredCommentSuffix(IgnoredCommentSuffix0IdentIgnoredCommentSuffix),
-    NumberBlockCommentEnd(IgnoredCommentSuffix0NumberBlockCommentEnd),
-}
-
-///
-/// Type derived for non-terminal InnerConstVal
-///
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-pub enum InnerConstVal<'t> {
-    Number(InnerConstValNumber<'t>),
-    String(InnerConstValString<'t>),
-    QualifiedVal(InnerConstValQualifiedVal<'t>),
-    ArrayVal(InnerConstValArrayVal<'t>),
-    TupleVal(InnerConstValTupleVal<'t>),
 }
 
 ///
@@ -1001,7 +798,7 @@ pub struct LaDfa2DotList<'t> {
 pub struct MemberValue<'t> {
     pub ident: Box<Ident<'t>>,
     pub colon: Box<Colon<'t>>,
-    pub comment_opt_const_val: Box<CommentOptConstVal<'t>>,
+    pub const_val: Box<ConstVal<'t>>,
 }
 
 ///
@@ -1024,17 +821,6 @@ pub struct MemberValues<'t> {
 pub struct MemberValuesList<'t> {
     pub comma: Box<Comma<'t>>,
     pub member_value: Box<MemberValue<'t>>,
-}
-
-///
-/// Type derived for non-terminal NamingComment
-///
-#[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct NamingComment<'t> {
-    pub number: Box<Number<'t>>,
-    pub string: Box<String<'t>>,
 }
 
 ///
@@ -1358,31 +1144,21 @@ pub enum ASTType<'t> {
     AttributeArgOpt0(Option<Box<AttributeArgOpt0<'t>>>),
     AttributeOpt(AttributeOpt<'t>),
     AttributeOpt0(Option<Box<AttributeOpt0<'t>>>),
-    BlockCommentEnd(BlockCommentEnd),
-    BlockCommentStart(BlockCommentStart),
     Colon(Colon<'t>),
     Comma(Comma<'t>),
     CommaOpt(CommaOpt<'t>),
     CommaOpt0(Option<Box<CommaOpt0<'t>>>),
-    CommentOpt(CommentOpt<'t>),
-    CommentOpt0(Option<Box<CommentOpt0<'t>>>),
-    CommentOptConstVal(CommentOptConstVal<'t>),
-    CommentVariants(CommentVariants<'t>),
     ConstDeclaration(ConstDeclaration<'t>),
     ConstName(ConstName<'t>),
     ConstPreamble(ConstPreamble<'t>),
     ConstQualifier(ConstQualifier<'t>),
     ConstQualifierOpt(Option<Box<ConstQualifierOpt<'t>>>),
+    ConstVal(ConstVal<'t>),
     ConstValList(ConstValList<'t>),
     ConstValListList(Vec<ConstValListList<'t>>),
-    Dash(Dash<'t>),
     DoubleColon(DoubleColon<'t>),
     Hash(Hash<'t>),
     Ident(Ident<'t>),
-    IgnoredComment(IgnoredComment),
-    IgnoredCommentSuffix(IgnoredCommentSuffix),
-    IgnoredCommentSuffix0(IgnoredCommentSuffix0),
-    InnerConstVal(InnerConstVal<'t>),
     Item(Item<'t>),
     LBrace(LBrace<'t>),
     LBracket(LBracket<'t>),
@@ -1392,7 +1168,6 @@ pub enum ASTType<'t> {
     MemberValue(MemberValue<'t>),
     MemberValues(MemberValues<'t>),
     MemberValuesList(Vec<MemberValuesList<'t>>),
-    NamingComment(NamingComment<'t>),
     Number(Number<'t>),
     QualifiedIdent(QualifiedIdent<'t>),
     QualifiedIdentList(Vec<QualifiedIdentList<'t>>),
@@ -1501,13 +1276,12 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 1:
     ///
-    /// LaDfa2DotList /* `Vec<T>::Push` */: AttributeOpt^ /* Clipped */ CommentOpt^ /* Clipped */ Item LaDfa2DotList;
+    /// LaDfa2DotList /* `Vec<T>::Push` */: AttributeOpt^ /* Clipped */ Item LaDfa2DotList;
     ///
     #[parol_runtime::function_name::named]
     fn la_dfa2_dot_list_0(
         &mut self,
         _attribute_opt: &ParseTreeType<'t>,
-        _comment_opt: &ParseTreeType<'t>,
         _item: &ParseTreeType<'t>,
         _la_dfa2_dot_list: &ParseTreeType<'t>,
     ) -> Result<()> {
@@ -1515,13 +1289,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let mut la_dfa2_dot_list = pop_item!(self, la_dfa2_dot_list, LaDfa2DotList, context);
         let item = pop_item!(self, item, Item, context);
-        // Ignore clipped member 'comment_opt'
-        self.pop(context);
         // Ignore clipped member 'attribute_opt'
         self.pop(context);
         let la_dfa2_dot_list_0_built = LaDfa2DotList {
             item: Box::new(item),
-            // Ignore clipped member 'comment_opt'
             // Ignore clipped member 'attribute_opt'
         };
         // Add an element to the vector
@@ -1974,7 +1745,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 22:
     ///
-    /// ConstDeclaration: ConstPreamble TypeSpec Assign CommentOptConstVal Semicolon;
+    /// ConstDeclaration: ConstPreamble TypeSpec Assign ConstVal Semicolon;
     ///
     #[parol_runtime::function_name::named]
     fn const_declaration_0(
@@ -1982,27 +1753,26 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         _const_preamble: &ParseTreeType<'t>,
         _type_spec: &ParseTreeType<'t>,
         _assign: &ParseTreeType<'t>,
-        _comment_opt_const_val: &ParseTreeType<'t>,
+        _const_val: &ParseTreeType<'t>,
         _semicolon: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let semicolon = pop_item!(self, semicolon, Semicolon, context);
-        let comment_opt_const_val =
-            pop_item!(self, comment_opt_const_val, CommentOptConstVal, context);
+        let const_val = pop_item!(self, const_val, ConstVal, context);
         let assign = pop_item!(self, assign, Assign, context);
         let type_spec = pop_item!(self, type_spec, TypeSpec, context);
         let const_preamble = pop_item!(self, const_preamble, ConstPreamble, context);
         let const_declaration_0_built =
-            ConstDeclarationConstPreambleTypeSpecAssignCommentOptConstValSemicolon {
+            ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon {
                 const_preamble: Box::new(const_preamble),
                 type_spec: Box::new(type_spec),
                 assign: Box::new(assign),
-                comment_opt_const_val: Box::new(comment_opt_const_val),
+                const_val: Box::new(const_val),
                 semicolon: Box::new(semicolon),
             };
         let const_declaration_0_built =
-            ConstDeclaration::ConstPreambleTypeSpecAssignCommentOptConstValSemicolon(
+            ConstDeclaration::ConstPreambleTypeSpecAssignConstValSemicolon(
                 const_declaration_0_built,
             );
         // Calling user action here
@@ -2168,133 +1938,100 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 30:
     ///
-    /// CommentOptConstVal: CommentOpt InnerConstVal;
+    /// ConstVal: Number;
     ///
     #[parol_runtime::function_name::named]
-    fn comment_opt_const_val(
-        &mut self,
-        _comment_opt: &ParseTreeType<'t>,
-        _inner_const_val: &ParseTreeType<'t>,
-    ) -> Result<()> {
+    fn const_val_0(&mut self, _number: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let inner_const_val = pop_item!(self, inner_const_val, InnerConstVal, context);
-        let comment_opt = pop_item!(self, comment_opt, CommentOpt, context);
-        let comment_opt_const_val_built = CommentOptConstVal {
-            comment_opt: Box::new(comment_opt),
-            inner_const_val: Box::new(inner_const_val),
+        let number = pop_item!(self, number, Number, context);
+        let const_val_0_built = ConstValNumber {
+            number: Box::new(number),
         };
+        let const_val_0_built = ConstVal::Number(const_val_0_built);
         // Calling user action here
-        self.user_grammar
-            .comment_opt_const_val(&comment_opt_const_val_built)?;
-        self.push(
-            ASTType::CommentOptConstVal(comment_opt_const_val_built),
-            context,
-        );
+        self.user_grammar.const_val(&const_val_0_built)?;
+        self.push(ASTType::ConstVal(const_val_0_built), context);
         Ok(())
     }
 
     /// Semantic action for production 31:
     ///
-    /// InnerConstVal: Number;
+    /// ConstVal: String;
     ///
     #[parol_runtime::function_name::named]
-    fn inner_const_val_0(&mut self, _number: &ParseTreeType<'t>) -> Result<()> {
+    fn const_val_1(&mut self, _string: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let number = pop_item!(self, number, Number, context);
-        let inner_const_val_0_built = InnerConstValNumber {
-            number: Box::new(number),
+        let string = pop_item!(self, string, String, context);
+        let const_val_1_built = ConstValString {
+            string: Box::new(string),
         };
-        let inner_const_val_0_built = InnerConstVal::Number(inner_const_val_0_built);
+        let const_val_1_built = ConstVal::String(const_val_1_built);
         // Calling user action here
-        self.user_grammar
-            .inner_const_val(&inner_const_val_0_built)?;
-        self.push(ASTType::InnerConstVal(inner_const_val_0_built), context);
+        self.user_grammar.const_val(&const_val_1_built)?;
+        self.push(ASTType::ConstVal(const_val_1_built), context);
         Ok(())
     }
 
     /// Semantic action for production 32:
     ///
-    /// InnerConstVal: String;
+    /// ConstVal: QualifiedVal;
     ///
     #[parol_runtime::function_name::named]
-    fn inner_const_val_1(&mut self, _string: &ParseTreeType<'t>) -> Result<()> {
+    fn const_val_2(&mut self, _qualified_val: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let string = pop_item!(self, string, String, context);
-        let inner_const_val_1_built = InnerConstValString {
-            string: Box::new(string),
+        let qualified_val = pop_item!(self, qualified_val, QualifiedVal, context);
+        let const_val_2_built = ConstValQualifiedVal {
+            qualified_val: Box::new(qualified_val),
         };
-        let inner_const_val_1_built = InnerConstVal::String(inner_const_val_1_built);
+        let const_val_2_built = ConstVal::QualifiedVal(const_val_2_built);
         // Calling user action here
-        self.user_grammar
-            .inner_const_val(&inner_const_val_1_built)?;
-        self.push(ASTType::InnerConstVal(inner_const_val_1_built), context);
+        self.user_grammar.const_val(&const_val_2_built)?;
+        self.push(ASTType::ConstVal(const_val_2_built), context);
         Ok(())
     }
 
     /// Semantic action for production 33:
     ///
-    /// InnerConstVal: QualifiedVal;
+    /// ConstVal: ArrayVal;
     ///
     #[parol_runtime::function_name::named]
-    fn inner_const_val_2(&mut self, _qualified_val: &ParseTreeType<'t>) -> Result<()> {
+    fn const_val_3(&mut self, _array_val: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let qualified_val = pop_item!(self, qualified_val, QualifiedVal, context);
-        let inner_const_val_2_built = InnerConstValQualifiedVal {
-            qualified_val: Box::new(qualified_val),
+        let array_val = pop_item!(self, array_val, ArrayVal, context);
+        let const_val_3_built = ConstValArrayVal {
+            array_val: Box::new(array_val),
         };
-        let inner_const_val_2_built = InnerConstVal::QualifiedVal(inner_const_val_2_built);
+        let const_val_3_built = ConstVal::ArrayVal(const_val_3_built);
         // Calling user action here
-        self.user_grammar
-            .inner_const_val(&inner_const_val_2_built)?;
-        self.push(ASTType::InnerConstVal(inner_const_val_2_built), context);
+        self.user_grammar.const_val(&const_val_3_built)?;
+        self.push(ASTType::ConstVal(const_val_3_built), context);
         Ok(())
     }
 
     /// Semantic action for production 34:
     ///
-    /// InnerConstVal: ArrayVal;
+    /// ConstVal: TupleVal;
     ///
     #[parol_runtime::function_name::named]
-    fn inner_const_val_3(&mut self, _array_val: &ParseTreeType<'t>) -> Result<()> {
+    fn const_val_4(&mut self, _tuple_val: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let array_val = pop_item!(self, array_val, ArrayVal, context);
-        let inner_const_val_3_built = InnerConstValArrayVal {
-            array_val: Box::new(array_val),
+        let tuple_val = pop_item!(self, tuple_val, TupleVal, context);
+        let const_val_4_built = ConstValTupleVal {
+            tuple_val: Box::new(tuple_val),
         };
-        let inner_const_val_3_built = InnerConstVal::ArrayVal(inner_const_val_3_built);
+        let const_val_4_built = ConstVal::TupleVal(const_val_4_built);
         // Calling user action here
-        self.user_grammar
-            .inner_const_val(&inner_const_val_3_built)?;
-        self.push(ASTType::InnerConstVal(inner_const_val_3_built), context);
+        self.user_grammar.const_val(&const_val_4_built)?;
+        self.push(ASTType::ConstVal(const_val_4_built), context);
         Ok(())
     }
 
     /// Semantic action for production 35:
-    ///
-    /// InnerConstVal: TupleVal;
-    ///
-    #[parol_runtime::function_name::named]
-    fn inner_const_val_4(&mut self, _tuple_val: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let tuple_val = pop_item!(self, tuple_val, TupleVal, context);
-        let inner_const_val_4_built = InnerConstValTupleVal {
-            tuple_val: Box::new(tuple_val),
-        };
-        let inner_const_val_4_built = InnerConstVal::TupleVal(inner_const_val_4_built);
-        // Calling user action here
-        self.user_grammar
-            .inner_const_val(&inner_const_val_4_built)?;
-        self.push(ASTType::InnerConstVal(inner_const_val_4_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 36:
     ///
     /// ArrayVal: Ref LBracket ArrayValOpt /* Option */ RBracket;
     ///
@@ -2324,7 +2061,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 37:
+    /// Semantic action for production 36:
     ///
     /// ArrayValOpt /* `Option<T>::Some` */: ConstValList CommaOpt;
     ///
@@ -2349,7 +2086,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 38:
+    /// Semantic action for production 37:
     ///
     /// ArrayValOpt /* `Option<T>::None` */: ;
     ///
@@ -2361,28 +2098,24 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 39:
+    /// Semantic action for production 38:
     ///
-    /// ConstValList: CommentOptConstVal ConstValListList /* Vec */ CommentOpt;
+    /// ConstValList: ConstVal ConstValListList /* Vec */;
     ///
     #[parol_runtime::function_name::named]
     fn const_val_list(
         &mut self,
-        _comment_opt_const_val: &ParseTreeType<'t>,
+        _const_val: &ParseTreeType<'t>,
         _const_val_list_list: &ParseTreeType<'t>,
-        _comment_opt: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comment_opt = pop_item!(self, comment_opt, CommentOpt, context);
         let const_val_list_list =
             pop_and_reverse_item!(self, const_val_list_list, ConstValListList, context);
-        let comment_opt_const_val =
-            pop_item!(self, comment_opt_const_val, CommentOptConstVal, context);
+        let const_val = pop_item!(self, const_val, ConstVal, context);
         let const_val_list_built = ConstValList {
-            comment_opt_const_val: Box::new(comment_opt_const_val),
+            const_val: Box::new(const_val),
             const_val_list_list,
-            comment_opt: Box::new(comment_opt),
         };
         // Calling user action here
         self.user_grammar.const_val_list(&const_val_list_built)?;
@@ -2390,30 +2123,26 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 40:
+    /// Semantic action for production 39:
     ///
-    /// ConstValListList /* `Vec<T>::Push` */: CommentOpt Comma CommentOptConstVal ConstValListList;
+    /// ConstValListList /* `Vec<T>::Push` */: Comma ConstVal ConstValListList;
     ///
     #[parol_runtime::function_name::named]
     fn const_val_list_list_0(
         &mut self,
-        _comment_opt: &ParseTreeType<'t>,
         _comma: &ParseTreeType<'t>,
-        _comment_opt_const_val: &ParseTreeType<'t>,
+        _const_val: &ParseTreeType<'t>,
         _const_val_list_list: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let mut const_val_list_list =
             pop_item!(self, const_val_list_list, ConstValListList, context);
-        let comment_opt_const_val =
-            pop_item!(self, comment_opt_const_val, CommentOptConstVal, context);
+        let const_val = pop_item!(self, const_val, ConstVal, context);
         let comma = pop_item!(self, comma, Comma, context);
-        let comment_opt = pop_item!(self, comment_opt, CommentOpt, context);
         let const_val_list_list_0_built = ConstValListList {
-            comment_opt_const_val: Box::new(comment_opt_const_val),
+            const_val: Box::new(const_val),
             comma: Box::new(comma),
-            comment_opt: Box::new(comment_opt),
         };
         // Add an element to the vector
         const_val_list_list.push(const_val_list_list_0_built);
@@ -2421,7 +2150,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 41:
+    /// Semantic action for production 40:
     ///
     /// ConstValListList /* `Vec<T>::New` */: ;
     ///
@@ -2437,7 +2166,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 42:
+    /// Semantic action for production 41:
     ///
     /// TupleVal: LParen TupleValOpt /* Option */ RParen;
     ///
@@ -2464,7 +2193,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 43:
+    /// Semantic action for production 42:
     ///
     /// TupleValOpt /* `Option<T>::Some` */: ConstValList CommaOpt;
     ///
@@ -2489,7 +2218,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 44:
+    /// Semantic action for production 43:
     ///
     /// TupleValOpt /* `Option<T>::None` */: ;
     ///
@@ -2501,7 +2230,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 45:
+    /// Semantic action for production 44:
     ///
     /// QualifiedVal: QualifiedIdent QualifiedValOpt /* Option */;
     ///
@@ -2525,7 +2254,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 46:
+    /// Semantic action for production 45:
     ///
     /// QualifiedValOpt /* `Option<T>::Some` */: StructOrTupleVal;
     ///
@@ -2544,7 +2273,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 47:
+    /// Semantic action for production 46:
     ///
     /// QualifiedValOpt /* `Option<T>::None` */: ;
     ///
@@ -2556,7 +2285,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 48:
+    /// Semantic action for production 47:
     ///
     /// StructOrTupleVal: StructVal;
     ///
@@ -2579,7 +2308,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 49:
+    /// Semantic action for production 48:
     ///
     /// StructOrTupleVal: TupleStructVal;
     ///
@@ -2603,7 +2332,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 50:
+    /// Semantic action for production 49:
     ///
     /// StructVal: LBrace StructValOpt /* Option */ RBrace;
     ///
@@ -2630,7 +2359,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 51:
+    /// Semantic action for production 50:
     ///
     /// StructValOpt /* `Option<T>::Some` */: MemberValues Comma;
     ///
@@ -2655,7 +2384,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 52:
+    /// Semantic action for production 51:
     ///
     /// StructValOpt /* `Option<T>::None` */: ;
     ///
@@ -2667,7 +2396,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 53:
+    /// Semantic action for production 52:
     ///
     /// MemberValues: MemberValue MemberValuesList /* Vec */;
     ///
@@ -2692,7 +2421,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 54:
+    /// Semantic action for production 53:
     ///
     /// MemberValuesList /* `Vec<T>::Push` */: Comma MemberValue MemberValuesList;
     ///
@@ -2718,7 +2447,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 55:
+    /// Semantic action for production 54:
     ///
     /// MemberValuesList /* `Vec<T>::New` */: ;
     ///
@@ -2734,27 +2463,26 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 56:
+    /// Semantic action for production 55:
     ///
-    /// MemberValue: Ident Colon CommentOptConstVal;
+    /// MemberValue: Ident Colon ConstVal;
     ///
     #[parol_runtime::function_name::named]
     fn member_value(
         &mut self,
         _ident: &ParseTreeType<'t>,
         _colon: &ParseTreeType<'t>,
-        _comment_opt_const_val: &ParseTreeType<'t>,
+        _const_val: &ParseTreeType<'t>,
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comment_opt_const_val =
-            pop_item!(self, comment_opt_const_val, CommentOptConstVal, context);
+        let const_val = pop_item!(self, const_val, ConstVal, context);
         let colon = pop_item!(self, colon, Colon, context);
         let ident = pop_item!(self, ident, Ident, context);
         let member_value_built = MemberValue {
             ident: Box::new(ident),
             colon: Box::new(colon),
-            comment_opt_const_val: Box::new(comment_opt_const_val),
+            const_val: Box::new(const_val),
         };
         // Calling user action here
         self.user_grammar.member_value(&member_value_built)?;
@@ -2762,7 +2490,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 57:
+    /// Semantic action for production 56:
     ///
     /// TupleStructVal: TupleVal;
     ///
@@ -2781,7 +2509,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 58:
+    /// Semantic action for production 57:
     ///
     /// TypeSpec: QualifiedIdent;
     ///
@@ -2800,7 +2528,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 59:
+    /// Semantic action for production 58:
     ///
     /// TypeSpec: ArrayType;
     ///
@@ -2819,7 +2547,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 60:
+    /// Semantic action for production 59:
     ///
     /// TypeSpec: TupleType;
     ///
@@ -2838,7 +2566,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 61:
+    /// Semantic action for production 60:
     ///
     /// ArrayType: Ref LBracket ArrayTypeSpec RBracket;
     ///
@@ -2868,7 +2596,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 62:
+    /// Semantic action for production 61:
     ///
     /// ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ Ident Semicolon Number;
     ///
@@ -2898,7 +2626,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 63:
+    /// Semantic action for production 62:
     ///
     /// ArrayTypeSpecOpt /* `Option<T>::Some` */: Ref;
     ///
@@ -2917,7 +2645,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 64:
+    /// Semantic action for production 63:
     ///
     /// ArrayTypeSpecOpt /* `Option<T>::None` */: ;
     ///
@@ -2929,7 +2657,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 65:
+    /// Semantic action for production 64:
     ///
     /// TupleType: LParen TupleItems CommaOpt RParen;
     ///
@@ -2959,7 +2687,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 66:
+    /// Semantic action for production 65:
     ///
     /// TupleItems: TypeSpec TupleItemsList /* Vec */;
     ///
@@ -2984,7 +2712,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 67:
+    /// Semantic action for production 66:
     ///
     /// TupleItemsList /* `Vec<T>::Push` */: Comma TypeSpec TupleItemsList;
     ///
@@ -3010,7 +2738,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 68:
+    /// Semantic action for production 67:
     ///
     /// TupleItemsList /* `Vec<T>::New` */: ;
     ///
@@ -3023,7 +2751,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 69:
+    /// Semantic action for production 68:
     ///
     /// Skip: /(?s)&\[Production; \d+\] = &\[.*(?-s)/;
     ///
@@ -3039,7 +2767,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 70:
+    /// Semantic action for production 69:
     ///
     /// CommaOpt: CommaOpt0 /* Option */;
     ///
@@ -3055,7 +2783,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 71:
+    /// Semantic action for production 70:
     ///
     /// CommaOpt0 /* `Option<T>::Some` */: Comma;
     ///
@@ -3074,7 +2802,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 72:
+    /// Semantic action for production 71:
     ///
     /// CommaOpt0 /* `Option<T>::None` */: ;
     ///
@@ -3086,313 +2814,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 73:
-    ///
-    /// CommentOpt: CommentOpt0 /* Option */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn comment_opt(&mut self, _comment_opt0: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let comment_opt0 = pop_item!(self, comment_opt0, CommentOpt0, context);
-        let comment_opt_built = CommentOpt { comment_opt0 };
-        // Calling user action here
-        self.user_grammar.comment_opt(&comment_opt_built)?;
-        self.push(ASTType::CommentOpt(comment_opt_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 74:
-    ///
-    /// CommentOpt0 /* `Option<T>::Some` */: CommentVariants;
-    ///
-    #[parol_runtime::function_name::named]
-    fn comment_opt0_0(&mut self, _comment_variants: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let comment_variants = pop_item!(self, comment_variants, CommentVariants, context);
-        let comment_opt0_0_built = CommentOpt0 {
-            comment_variants: Box::new(comment_variants),
-        };
-        self.push(
-            ASTType::CommentOpt0(Some(Box::new(comment_opt0_0_built))),
-            context,
-        );
-        Ok(())
-    }
-
-    /// Semantic action for production 75:
-    ///
-    /// CommentOpt0 /* `Option<T>::None` */: ;
-    ///
-    #[parol_runtime::function_name::named]
-    fn comment_opt0_1(&mut self) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        self.push(ASTType::CommentOpt0(None), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 76:
-    ///
-    /// CommentVariants: IgnoredComment^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn comment_variants_0(&mut self, _ignored_comment: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'ignored_comment'
-        self.pop(context);
-        let comment_variants_0_built = CommentVariantsIgnoredComment {
-        // Ignore clipped member 'ignored_comment'
-        };
-        let comment_variants_0_built = CommentVariants::IgnoredComment(comment_variants_0_built);
-        // Calling user action here
-        self.user_grammar
-            .comment_variants(&comment_variants_0_built)?;
-        self.push(ASTType::CommentVariants(comment_variants_0_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 77:
-    ///
-    /// CommentVariants: NamingComment;
-    ///
-    #[parol_runtime::function_name::named]
-    fn comment_variants_1(&mut self, _naming_comment: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let naming_comment = pop_item!(self, naming_comment, NamingComment, context);
-        let comment_variants_1_built = CommentVariantsNamingComment {
-            naming_comment: Box::new(naming_comment),
-        };
-        let comment_variants_1_built = CommentVariants::NamingComment(comment_variants_1_built);
-        // Calling user action here
-        self.user_grammar
-            .comment_variants(&comment_variants_1_built)?;
-        self.push(ASTType::CommentVariants(comment_variants_1_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 78:
-    ///
-    /// NamingComment: BlockCommentStart^ /* Clipped */ Number Dash^ /* Clipped */ String BlockCommentEnd^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn naming_comment(
-        &mut self,
-        _block_comment_start: &ParseTreeType<'t>,
-        _number: &ParseTreeType<'t>,
-        _dash: &ParseTreeType<'t>,
-        _string: &ParseTreeType<'t>,
-        _block_comment_end: &ParseTreeType<'t>,
-    ) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'block_comment_end'
-        self.pop(context);
-        let string = pop_item!(self, string, String, context);
-        // Ignore clipped member 'dash'
-        self.pop(context);
-        let number = pop_item!(self, number, Number, context);
-        // Ignore clipped member 'block_comment_start'
-        self.pop(context);
-        let naming_comment_built = NamingComment {
-            // Ignore clipped member 'block_comment_start'
-            number: Box::new(number),
-            // Ignore clipped member 'dash'
-            string: Box::new(string),
-            // Ignore clipped member 'block_comment_end'
-        };
-        // Calling user action here
-        self.user_grammar.naming_comment(&naming_comment_built)?;
-        self.push(ASTType::NamingComment(naming_comment_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 79:
-    ///
-    /// IgnoredComment: BlockCommentStart^ /* Clipped */ IgnoredCommentSuffix0;
-    ///
-    #[parol_runtime::function_name::named]
-    fn ignored_comment(
-        &mut self,
-        _block_comment_start: &ParseTreeType<'t>,
-        _ignored_comment_suffix0: &ParseTreeType<'t>,
-    ) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let ignored_comment_suffix0 = pop_item!(
-            self,
-            ignored_comment_suffix0,
-            IgnoredCommentSuffix0,
-            context
-        );
-        // Ignore clipped member 'block_comment_start'
-        self.pop(context);
-        let ignored_comment_built = IgnoredComment {
-            // Ignore clipped member 'block_comment_start'
-            ignored_comment_suffix0: Box::new(ignored_comment_suffix0),
-        };
-        // Calling user action here
-        self.user_grammar.ignored_comment(&ignored_comment_built)?;
-        self.push(ASTType::IgnoredComment(ignored_comment_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 80:
-    ///
-    /// IgnoredCommentSuffix0: Ident^ /* Clipped */ IgnoredCommentSuffix;
-    ///
-    #[parol_runtime::function_name::named]
-    fn ignored_comment_suffix0_0(
-        &mut self,
-        _ident: &ParseTreeType<'t>,
-        _ignored_comment_suffix: &ParseTreeType<'t>,
-    ) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let ignored_comment_suffix =
-            pop_item!(self, ignored_comment_suffix, IgnoredCommentSuffix, context);
-        // Ignore clipped member 'ident'
-        self.pop(context);
-        let ignored_comment_suffix0_0_built = IgnoredCommentSuffix0IdentIgnoredCommentSuffix {
-            // Ignore clipped member 'ident'
-            ignored_comment_suffix: Box::new(ignored_comment_suffix),
-        };
-        let ignored_comment_suffix0_0_built =
-            IgnoredCommentSuffix0::IdentIgnoredCommentSuffix(ignored_comment_suffix0_0_built);
-        self.push(
-            ASTType::IgnoredCommentSuffix0(ignored_comment_suffix0_0_built),
-            context,
-        );
-        Ok(())
-    }
-
-    /// Semantic action for production 81:
-    ///
-    /// IgnoredCommentSuffix0: Number^ /* Clipped */ BlockCommentEnd^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn ignored_comment_suffix0_1(
-        &mut self,
-        _number: &ParseTreeType<'t>,
-        _block_comment_end: &ParseTreeType<'t>,
-    ) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'block_comment_end'
-        self.pop(context);
-        // Ignore clipped member 'number'
-        self.pop(context);
-        let ignored_comment_suffix0_1_built = IgnoredCommentSuffix0NumberBlockCommentEnd {
-        // Ignore clipped member 'number'
-        // Ignore clipped member 'block_comment_end'
-        };
-        let ignored_comment_suffix0_1_built =
-            IgnoredCommentSuffix0::NumberBlockCommentEnd(ignored_comment_suffix0_1_built);
-        self.push(
-            ASTType::IgnoredCommentSuffix0(ignored_comment_suffix0_1_built),
-            context,
-        );
-        Ok(())
-    }
-
-    /// Semantic action for production 82:
-    ///
-    /// IgnoredCommentSuffix: Colon^ /* Clipped */ String^ /* Clipped */ BlockCommentEnd^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn ignored_comment_suffix_0(
-        &mut self,
-        _colon: &ParseTreeType<'t>,
-        _string: &ParseTreeType<'t>,
-        _block_comment_end: &ParseTreeType<'t>,
-    ) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'block_comment_end'
-        self.pop(context);
-        // Ignore clipped member 'string'
-        self.pop(context);
-        // Ignore clipped member 'colon'
-        self.pop(context);
-        let ignored_comment_suffix_0_built = IgnoredCommentSuffixColonStringBlockCommentEnd {
-        // Ignore clipped member 'colon'
-        // Ignore clipped member 'string'
-        // Ignore clipped member 'block_comment_end'
-        };
-        let ignored_comment_suffix_0_built =
-            IgnoredCommentSuffix::ColonStringBlockCommentEnd(ignored_comment_suffix_0_built);
-        self.push(
-            ASTType::IgnoredCommentSuffix(ignored_comment_suffix_0_built),
-            context,
-        );
-        Ok(())
-    }
-
-    /// Semantic action for production 83:
-    ///
-    /// IgnoredCommentSuffix: BlockCommentEnd^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn ignored_comment_suffix_1(&mut self, _block_comment_end: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'block_comment_end'
-        self.pop(context);
-        let ignored_comment_suffix_1_built = IgnoredCommentSuffixBlockCommentEnd {
-        // Ignore clipped member 'block_comment_end'
-        };
-        let ignored_comment_suffix_1_built =
-            IgnoredCommentSuffix::BlockCommentEnd(ignored_comment_suffix_1_built);
-        self.push(
-            ASTType::IgnoredCommentSuffix(ignored_comment_suffix_1_built),
-            context,
-        );
-        Ok(())
-    }
-
-    /// Semantic action for production 84:
-    ///
-    /// BlockCommentStart: "/\*"^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn block_comment_start(&mut self, _block_comment_start: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let block_comment_start_built = BlockCommentStart {
-        // Ignore clipped member 'block_comment_start'
-        };
-        // Calling user action here
-        self.user_grammar
-            .block_comment_start(&block_comment_start_built)?;
-        self.push(
-            ASTType::BlockCommentStart(block_comment_start_built),
-            context,
-        );
-        Ok(())
-    }
-
-    /// Semantic action for production 85:
-    ///
-    /// BlockCommentEnd: "\*/"^ /* Clipped */;
-    ///
-    #[parol_runtime::function_name::named]
-    fn block_comment_end(&mut self, _block_comment_end: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let block_comment_end_built = BlockCommentEnd {
-        // Ignore clipped member 'block_comment_end'
-        };
-        // Calling user action here
-        self.user_grammar
-            .block_comment_end(&block_comment_end_built)?;
-        self.push(ASTType::BlockCommentEnd(block_comment_end_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 86:
+    /// Semantic action for production 72:
     ///
     /// Assign: '=';
     ///
@@ -3408,7 +2830,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 87:
+    /// Semantic action for production 73:
     ///
     /// Number: /-?\d+/;
     ///
@@ -3424,7 +2846,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 88:
+    /// Semantic action for production 74:
     ///
     /// Ref: '&';
     ///
@@ -3440,7 +2862,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 89:
+    /// Semantic action for production 75:
     ///
     /// Semicolon: ';';
     ///
@@ -3456,7 +2878,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 90:
+    /// Semantic action for production 76:
     ///
     /// Comma: ',';
     ///
@@ -3472,7 +2894,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 91:
+    /// Semantic action for production 77:
     ///
     /// String: /(r#*)?"(\\.|[^\\])*?"#*/;
     ///
@@ -3488,7 +2910,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 92:
+    /// Semantic action for production 78:
     ///
     /// Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;
     ///
@@ -3504,7 +2926,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 93:
+    /// Semantic action for production 79:
     ///
     /// DoubleColon: '::';
     ///
@@ -3520,7 +2942,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 94:
+    /// Semantic action for production 80:
     ///
     /// Colon: ':';
     ///
@@ -3536,7 +2958,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 95:
+    /// Semantic action for production 81:
     ///
     /// LBrace: '{';
     ///
@@ -3552,7 +2974,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 96:
+    /// Semantic action for production 82:
     ///
     /// RBrace: '}';
     ///
@@ -3568,7 +2990,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 97:
+    /// Semantic action for production 83:
     ///
     /// LBracket: '[';
     ///
@@ -3584,7 +3006,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 98:
+    /// Semantic action for production 84:
     ///
     /// RBracket: ']';
     ///
@@ -3600,7 +3022,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 99:
+    /// Semantic action for production 85:
     ///
     /// LParen: '(';
     ///
@@ -3616,7 +3038,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 100:
+    /// Semantic action for production 86:
     ///
     /// RParen: ')';
     ///
@@ -3632,7 +3054,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 101:
+    /// Semantic action for production 87:
     ///
     /// Hash: /#/;
     ///
@@ -3645,22 +3067,6 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         // Calling user action here
         self.user_grammar.hash(&hash_built)?;
         self.push(ASTType::Hash(hash_built), context);
-        Ok(())
-    }
-
-    /// Semantic action for production 102:
-    ///
-    /// Dash: '-';
-    ///
-    #[parol_runtime::function_name::named]
-    fn dash(&mut self, dash: &ParseTreeType<'t>) -> Result<()> {
-        let context = function_name!();
-        trace!("{}", self.trace_item_stack(context));
-        let dash = dash.token()?.clone();
-        let dash_built = Dash { dash };
-        // Calling user action here
-        self.user_grammar.dash(&dash_built)?;
-        self.push(ASTType::Dash(dash_built), context);
         Ok(())
     }
 }
@@ -3676,7 +3082,7 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
     ) -> Result<()> {
         match prod_num {
             0 => self.la_dfa2_dot(&children[0]),
-            1 => self.la_dfa2_dot_list_0(&children[0], &children[1], &children[2], &children[3]),
+            1 => self.la_dfa2_dot_list_0(&children[0], &children[1], &children[2]),
             2 => self.la_dfa2_dot_list_1(),
             3 => self.attribute_opt(&children[0]),
             4 => self.attribute_opt0_0(
@@ -3717,92 +3123,73 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
             27 => self.const_qualifier_opt_0(&children[0]),
             28 => self.const_qualifier_opt_1(),
             29 => self.const_name(&children[0]),
-            30 => self.comment_opt_const_val(&children[0], &children[1]),
-            31 => self.inner_const_val_0(&children[0]),
-            32 => self.inner_const_val_1(&children[0]),
-            33 => self.inner_const_val_2(&children[0]),
-            34 => self.inner_const_val_3(&children[0]),
-            35 => self.inner_const_val_4(&children[0]),
-            36 => self.array_val(&children[0], &children[1], &children[2], &children[3]),
-            37 => self.array_val_opt_0(&children[0], &children[1]),
-            38 => self.array_val_opt_1(),
-            39 => self.const_val_list(&children[0], &children[1], &children[2]),
-            40 => {
-                self.const_val_list_list_0(&children[0], &children[1], &children[2], &children[3])
-            }
-            41 => self.const_val_list_list_1(),
-            42 => self.tuple_val(&children[0], &children[1], &children[2]),
-            43 => self.tuple_val_opt_0(&children[0], &children[1]),
-            44 => self.tuple_val_opt_1(),
-            45 => self.qualified_val(&children[0], &children[1]),
-            46 => self.qualified_val_opt_0(&children[0]),
-            47 => self.qualified_val_opt_1(),
-            48 => self.struct_or_tuple_val_0(&children[0]),
-            49 => self.struct_or_tuple_val_1(&children[0]),
-            50 => self.struct_val(&children[0], &children[1], &children[2]),
-            51 => self.struct_val_opt_0(&children[0], &children[1]),
-            52 => self.struct_val_opt_1(),
-            53 => self.member_values(&children[0], &children[1]),
-            54 => self.member_values_list_0(&children[0], &children[1], &children[2]),
-            55 => self.member_values_list_1(),
-            56 => self.member_value(&children[0], &children[1], &children[2]),
-            57 => self.tuple_struct_val(&children[0]),
-            58 => self.type_spec_0(&children[0]),
-            59 => self.type_spec_1(&children[0]),
-            60 => self.type_spec_2(&children[0]),
-            61 => self.array_type(&children[0], &children[1], &children[2], &children[3]),
-            62 => self.array_type_spec(&children[0], &children[1], &children[2], &children[3]),
-            63 => self.array_type_spec_opt_0(&children[0]),
-            64 => self.array_type_spec_opt_1(),
-            65 => self.tuple_type(&children[0], &children[1], &children[2], &children[3]),
-            66 => self.tuple_items(&children[0], &children[1]),
-            67 => self.tuple_items_list_0(&children[0], &children[1], &children[2]),
-            68 => self.tuple_items_list_1(),
-            69 => self.skip(&children[0]),
-            70 => self.comma_opt(&children[0]),
-            71 => self.comma_opt0_0(&children[0]),
-            72 => self.comma_opt0_1(),
-            73 => self.comment_opt(&children[0]),
-            74 => self.comment_opt0_0(&children[0]),
-            75 => self.comment_opt0_1(),
-            76 => self.comment_variants_0(&children[0]),
-            77 => self.comment_variants_1(&children[0]),
-            78 => self.naming_comment(
-                &children[0],
-                &children[1],
-                &children[2],
-                &children[3],
-                &children[4],
-            ),
-            79 => self.ignored_comment(&children[0], &children[1]),
-            80 => self.ignored_comment_suffix0_0(&children[0], &children[1]),
-            81 => self.ignored_comment_suffix0_1(&children[0], &children[1]),
-            82 => self.ignored_comment_suffix_0(&children[0], &children[1], &children[2]),
-            83 => self.ignored_comment_suffix_1(&children[0]),
-            84 => self.block_comment_start(&children[0]),
-            85 => self.block_comment_end(&children[0]),
-            86 => self.assign(&children[0]),
-            87 => self.number(&children[0]),
-            88 => self.r#ref(&children[0]),
-            89 => self.semicolon(&children[0]),
-            90 => self.comma(&children[0]),
-            91 => self.string(&children[0]),
-            92 => self.ident(&children[0]),
-            93 => self.double_colon(&children[0]),
-            94 => self.colon(&children[0]),
-            95 => self.l_brace(&children[0]),
-            96 => self.r_brace(&children[0]),
-            97 => self.l_bracket(&children[0]),
-            98 => self.r_bracket(&children[0]),
-            99 => self.l_paren(&children[0]),
-            100 => self.r_paren(&children[0]),
-            101 => self.hash(&children[0]),
-            102 => self.dash(&children[0]),
+            30 => self.const_val_0(&children[0]),
+            31 => self.const_val_1(&children[0]),
+            32 => self.const_val_2(&children[0]),
+            33 => self.const_val_3(&children[0]),
+            34 => self.const_val_4(&children[0]),
+            35 => self.array_val(&children[0], &children[1], &children[2], &children[3]),
+            36 => self.array_val_opt_0(&children[0], &children[1]),
+            37 => self.array_val_opt_1(),
+            38 => self.const_val_list(&children[0], &children[1]),
+            39 => self.const_val_list_list_0(&children[0], &children[1], &children[2]),
+            40 => self.const_val_list_list_1(),
+            41 => self.tuple_val(&children[0], &children[1], &children[2]),
+            42 => self.tuple_val_opt_0(&children[0], &children[1]),
+            43 => self.tuple_val_opt_1(),
+            44 => self.qualified_val(&children[0], &children[1]),
+            45 => self.qualified_val_opt_0(&children[0]),
+            46 => self.qualified_val_opt_1(),
+            47 => self.struct_or_tuple_val_0(&children[0]),
+            48 => self.struct_or_tuple_val_1(&children[0]),
+            49 => self.struct_val(&children[0], &children[1], &children[2]),
+            50 => self.struct_val_opt_0(&children[0], &children[1]),
+            51 => self.struct_val_opt_1(),
+            52 => self.member_values(&children[0], &children[1]),
+            53 => self.member_values_list_0(&children[0], &children[1], &children[2]),
+            54 => self.member_values_list_1(),
+            55 => self.member_value(&children[0], &children[1], &children[2]),
+            56 => self.tuple_struct_val(&children[0]),
+            57 => self.type_spec_0(&children[0]),
+            58 => self.type_spec_1(&children[0]),
+            59 => self.type_spec_2(&children[0]),
+            60 => self.array_type(&children[0], &children[1], &children[2], &children[3]),
+            61 => self.array_type_spec(&children[0], &children[1], &children[2], &children[3]),
+            62 => self.array_type_spec_opt_0(&children[0]),
+            63 => self.array_type_spec_opt_1(),
+            64 => self.tuple_type(&children[0], &children[1], &children[2], &children[3]),
+            65 => self.tuple_items(&children[0], &children[1]),
+            66 => self.tuple_items_list_0(&children[0], &children[1], &children[2]),
+            67 => self.tuple_items_list_1(),
+            68 => self.skip(&children[0]),
+            69 => self.comma_opt(&children[0]),
+            70 => self.comma_opt0_0(&children[0]),
+            71 => self.comma_opt0_1(),
+            72 => self.assign(&children[0]),
+            73 => self.number(&children[0]),
+            74 => self.r#ref(&children[0]),
+            75 => self.semicolon(&children[0]),
+            76 => self.comma(&children[0]),
+            77 => self.string(&children[0]),
+            78 => self.ident(&children[0]),
+            79 => self.double_colon(&children[0]),
+            80 => self.colon(&children[0]),
+            81 => self.l_brace(&children[0]),
+            82 => self.r_brace(&children[0]),
+            83 => self.l_bracket(&children[0]),
+            84 => self.r_bracket(&children[0]),
+            85 => self.l_paren(&children[0]),
+            86 => self.r_paren(&children[0]),
+            87 => self.hash(&children[0]),
             _ => Err(ParserError::InternalError(format!(
                 "Unhandled production number: {}",
                 prod_num
             ))
             .into()),
         }
+    }
+
+    fn on_comment_parsed(&mut self, token: Token<'t>) {
+        self.user_grammar.on_comment_parsed(token)
     }
 }

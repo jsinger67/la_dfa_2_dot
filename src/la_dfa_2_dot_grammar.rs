@@ -1,7 +1,8 @@
 #[allow(unused_imports)]
-use parol_runtime::Result;
+use parol_runtime::{Result, Token};
+use regex::Regex;
 
-use crate::la_dfa_2_dot_grammar_trait::LaDfa2DotGrammarTrait;
+use crate::la_dfa_2_dot_grammar_trait::{LaDfa2Dot, LaDfa2DotGrammarTrait};
 
 #[allow(dead_code)]
 #[derive(Debug)]
@@ -15,15 +16,21 @@ struct Transition {
 ///
 /// Data structure that implements the semantic actions for our LaDfa2Dot grammar
 ///
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct LaDfa2DotGrammar<'t> {
-    //     pub la_dfa_2_dot: Option<LaDfa2Dot<'t>>,
-    _x: &'t str,
+    pub la_dfa_2_dot: Option<LaDfa2Dot<'t>>,
+    comments: Vec<(usize, String)>,
+    // comments: Vec<Token<'t>>,
+    naming_comment_matcher: Regex,
 }
 
 impl LaDfa2DotGrammar<'_> {
     pub fn new() -> Self {
-        LaDfa2DotGrammar::default()
+        LaDfa2DotGrammar {
+            la_dfa_2_dot: None,
+            comments: Vec::new(),
+            naming_comment_matcher: Regex::new(r#"/\* (\d+) - ("\w+") \*/"#).unwrap(),
+        }
     }
 
     // fn extract_value(t: &TransEntryValue) -> usize {
@@ -118,12 +125,25 @@ impl LaDfa2DotGrammar<'_> {
 // }
 
 impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
-    // !Adjust your implementation as needed!
-
-    // / Semantic action for non-terminal 'LaDfa2Dot'
-    // fn la_dfa2_dot(&mut self, arg: &LaDfa2Dot<'t>) -> Result<()> {
-    //     self.la_dfa_2_dot = Some(arg.clone());
-    //     // self.generate_dot()?;
-    //     Ok(())
-    // }
+    /// Semantic action for non-terminal 'LaDfa2Dot'
+    fn la_dfa2_dot(&mut self, arg: &LaDfa2Dot<'t>) -> Result<()> {
+        self.la_dfa_2_dot = Some(arg.clone());
+        println!(
+            "{}",
+            self.comments
+                .iter()
+                .map(|(i, n)| format!("{} - {}", i, n))
+                .collect::<Vec<String>>()
+                .join("\n")
+        );
+        // self.generate_dot()?;
+        Ok(())
+    }
+    fn on_comment_parsed(&mut self, token: Token<'t>) {
+        if let Some(caps) = self.naming_comment_matcher.captures(token.text()) {
+            let nt_id = caps.get(1).unwrap().as_str().parse::<usize>().unwrap();
+            let nt_name = caps.get(2).unwrap().as_str().to_owned();
+            self.comments.push((nt_id, nt_name));
+        }
+    }
 }
