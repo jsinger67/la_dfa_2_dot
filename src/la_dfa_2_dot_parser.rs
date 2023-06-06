@@ -287,34 +287,34 @@ pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 62] = &[
     LookaheadDFA {
         prod0: -1,
         transitions: &[
-            Trans(0, 6, 2, -1),
-            Trans(0, 7, 2, -1),
+            Trans(0, 6, 5, -1),
+            Trans(0, 7, 5, -1),
             Trans(0, 8, 8, -1),
-            Trans(2, 16, 3, -1),
-            Trans(3, 18, 4, -1),
-            Trans(4, 9, 13, -1),
-            Trans(4, 12, 5, -1),
-            Trans(4, 16, 6, -1),
-            Trans(4, 23, 7, -1),
-            Trans(5, 21, 1, 22),
-            Trans(6, 10, 1, 22),
-            Trans(6, 17, 1, 22),
-            Trans(7, 12, 1, 22),
-            Trans(7, 16, 1, 22),
-            Trans(7, 23, 1, 22),
+            Trans(1, 18, 6, -1),
+            Trans(3, 10, 2, 22),
+            Trans(3, 17, 2, 22),
+            Trans(4, 12, 2, 22),
+            Trans(4, 16, 2, 22),
+            Trans(4, 23, 2, 22),
+            Trans(5, 16, 1, -1),
+            Trans(6, 9, 12, -1),
+            Trans(6, 12, 7, -1),
+            Trans(6, 16, 3, -1),
+            Trans(6, 23, 4, -1),
+            Trans(7, 21, 2, 22),
             Trans(8, 6, 9, -1),
             Trans(9, 16, 10, -1),
             Trans(10, 18, 11, -1),
-            Trans(11, 9, 12, 23),
-            Trans(11, 12, 1, 22),
-            Trans(11, 16, 1, 22),
-            Trans(11, 23, 1, 22),
-            Trans(13, 0, 12, 23),
-            Trans(13, 5, 12, 23),
-            Trans(13, 6, 12, 23),
-            Trans(13, 7, 12, 23),
-            Trans(13, 8, 12, 23),
-            Trans(13, 25, 12, 23),
+            Trans(11, 9, 13, 23),
+            Trans(11, 12, 2, 22),
+            Trans(11, 16, 2, 22),
+            Trans(11, 23, 2, 22),
+            Trans(12, 0, 13, 23),
+            Trans(12, 5, 13, 23),
+            Trans(12, 6, 13, 23),
+            Trans(12, 7, 13, 23),
+            Trans(12, 8, 13, 23),
+            Trans(12, 25, 13, 23),
         ],
         k: 5,
     },
@@ -853,7 +853,7 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 45,
         production: &[],
     },
-    // 22 - ConstDeclaration: ConstPreamble TypeSpec Assign ConstVal Semicolon;
+    // 22 - ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
     Production {
         lhs: 14,
         production: &[
@@ -869,7 +869,7 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 14,
         production: &[ParseType::N(49), ParseType::N(16)],
     },
-    // 24 - ConstPreamble: ConstQualifier ConstName Colon;
+    // 24 - ConstPreamble: ConstQualifier^ /* Clipped */ ConstName Colon^ /* Clipped */;
     Production {
         lhs: 16,
         production: &[ParseType::N(10), ParseType::N(15), ParseType::N(17)],
@@ -924,7 +924,7 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 19,
         production: &[ParseType::N(58)],
     },
-    // 35 - ArrayVal: Ref LBracket ArrayValOpt /* Option */ RBracket;
+    // 35 - ArrayVal: Ref^ /* Clipped */ LBracket^ /* Clipped */ ArrayValOpt /* Option */ RBracket^ /* Clipped */;
     Production {
         lhs: 3,
         production: &[
@@ -934,7 +934,7 @@ pub const PRODUCTIONS: &[Production; 88] = &[
             ParseType::N(42),
         ],
     },
-    // 36 - ArrayValOpt: ConstValList CommaOpt;
+    // 36 - ArrayValOpt: ConstValList CommaOpt^ /* Clipped */;
     Production {
         lhs: 4,
         production: &[ParseType::N(12), ParseType::N(20)],
@@ -949,7 +949,7 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 20,
         production: &[ParseType::N(21), ParseType::N(19)],
     },
-    // 39 - ConstValListList: Comma ConstVal ConstValListList;
+    // 39 - ConstValListList: Comma^ /* Clipped */ ConstVal ConstValListList;
     Production {
         lhs: 21,
         production: &[ParseType::N(21), ParseType::N(19), ParseType::N(11)],
@@ -959,12 +959,12 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 21,
         production: &[],
     },
-    // 41 - TupleVal: LParen TupleValOpt /* Option */ RParen;
+    // 41 - TupleVal: LParen^ /* Clipped */ TupleValOpt /* Option */ RParen^ /* Clipped */;
     Production {
         lhs: 58,
         production: &[ParseType::N(41), ParseType::N(59), ParseType::N(28)],
     },
-    // 42 - TupleValOpt: ConstValList CommaOpt;
+    // 42 - TupleValOpt: ConstValList CommaOpt^ /* Clipped */;
     Production {
         lhs: 59,
         production: &[ParseType::N(12), ParseType::N(20)],
@@ -999,12 +999,12 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 51,
         production: &[ParseType::N(56)],
     },
-    // 49 - StructVal: LBrace StructValOpt /* Option */ RBrace;
+    // 49 - StructVal: LBrace^ /* Clipped */ StructValOpt /* Option */ RBrace^ /* Clipped */;
     Production {
         lhs: 52,
         production: &[ParseType::N(39), ParseType::N(53), ParseType::N(26)],
     },
-    // 50 - StructValOpt: MemberValues Comma;
+    // 50 - StructValOpt: MemberValues Comma^ /* Clipped */;
     Production {
         lhs: 53,
         production: &[ParseType::N(11), ParseType::N(32)],
@@ -1019,7 +1019,7 @@ pub const PRODUCTIONS: &[Production; 88] = &[
         lhs: 32,
         production: &[ParseType::N(33), ParseType::N(31)],
     },
-    // 53 - MemberValuesList: Comma MemberValue MemberValuesList;
+    // 53 - MemberValuesList: Comma^ /* Clipped */ MemberValue MemberValuesList;
     Production {
         lhs: 33,
         production: &[ParseType::N(33), ParseType::N(31), ParseType::N(11)],

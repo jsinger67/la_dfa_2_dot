@@ -51,12 +51,12 @@ ScopedListItems
 // ConstDeclaration
 // -------------------------------------------------------------------------------------------------
 ConstDeclaration
-    : ConstPreamble TypeSpec Assign ConstVal Semicolon 
+    : ConstPreamble TypeSpec^ Assign^ ConstVal Semicolon^ 
     | ConstPreamble^ Skip^
     ;
 
 ConstPreamble
-    : ConstQualifier ConstName Colon
+    : ConstQualifier^ ConstName Colon^
     ;
 
 ConstQualifier
@@ -77,15 +77,15 @@ ConstVal
     ;
 
 ArrayVal
-    : Ref LBracket [ ConstValList CommaOpt ] RBracket
+    : Ref^ LBracket^ [ ConstValList CommaOpt^ ] RBracket^
     ;
 
 ConstValList
-    : ConstVal { Comma ConstVal }
+    : ConstVal { Comma^ ConstVal }
     ;
 
 TupleVal
-    : LParen [ ConstValList CommaOpt ] RParen
+    : LParen^ [ ConstValList CommaOpt^ ] RParen^
     ;
 
 QualifiedVal
@@ -98,11 +98,11 @@ StructOrTupleVal
     ;
 
 StructVal
-    : LBrace [ MemberValues Comma ] RBrace
+    : LBrace^ [ MemberValues Comma^ ] RBrace^
     ;
 
 MemberValues
-    : MemberValue { Comma MemberValue }
+    : MemberValue { Comma^ MemberValue }
     ;
 
 MemberValue

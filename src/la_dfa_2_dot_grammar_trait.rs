@@ -281,17 +281,14 @@ pub struct ItemConstDeclaration<'t> {
 ///
 /// Type derived for production 22
 ///
-/// ConstDeclaration: ConstPreamble TypeSpec Assign ConstVal Semicolon;
+/// ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon<'t> {
     pub const_preamble: Box<ConstPreamble<'t>>,
-    pub type_spec: Box<TypeSpec<'t>>,
-    pub assign: Box<Assign<'t>>,
     pub const_val: Box<ConstVal<'t>>,
-    pub semicolon: Box<Semicolon<'t>>,
 }
 
 ///
@@ -497,10 +494,7 @@ pub struct ArrayTypeSpecOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayVal<'t> {
-    pub r#ref: Box<Ref<'t>>,
-    pub l_bracket: Box<LBracket<'t>>,
     pub array_val_opt: Option<Box<ArrayValOpt<'t>>>,
-    pub r_bracket: Box<RBracket<'t>>,
 }
 
 ///
@@ -511,7 +505,6 @@ pub struct ArrayVal<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayValOpt<'t> {
     pub const_val_list: Box<ConstValList<'t>>,
-    pub comma_opt: Box<CommaOpt<'t>>,
 }
 
 ///
@@ -639,9 +632,7 @@ pub struct ConstName<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstPreamble<'t> {
-    pub const_qualifier: Box<ConstQualifier<'t>>,
     pub const_name: Box<ConstName<'t>>,
-    pub colon: Box<Colon<'t>>,
 }
 
 ///
@@ -695,7 +686,6 @@ pub struct ConstValList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValListList<'t> {
-    pub comma: Box<Comma<'t>>,
     pub const_val: Box<ConstVal<'t>>,
 }
 
@@ -819,7 +809,6 @@ pub struct MemberValues<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct MemberValuesList<'t> {
-    pub comma: Box<Comma<'t>>,
     pub member_value: Box<MemberValue<'t>>,
 }
 
@@ -1019,9 +1008,7 @@ pub enum StructOrTupleVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StructVal<'t> {
-    pub l_brace: Box<LBrace<'t>>,
     pub struct_val_opt: Option<Box<StructValOpt<'t>>>,
-    pub r_brace: Box<RBrace<'t>>,
 }
 
 ///
@@ -1032,7 +1019,6 @@ pub struct StructVal<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StructValOpt<'t> {
     pub member_values: Box<MemberValues<'t>>,
-    pub comma: Box<Comma<'t>>,
 }
 
 ///
@@ -1087,9 +1073,7 @@ pub struct TupleType<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleVal<'t> {
-    pub l_paren: Box<LParen<'t>>,
     pub tuple_val_opt: Option<Box<TupleValOpt<'t>>>,
-    pub r_paren: Box<RParen<'t>>,
 }
 
 ///
@@ -1100,7 +1084,6 @@ pub struct TupleVal<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleValOpt<'t> {
     pub const_val_list: Box<ConstValList<'t>>,
-    pub comma_opt: Box<CommaOpt<'t>>,
 }
 
 ///
@@ -1745,7 +1728,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 22:
     ///
-    /// ConstDeclaration: ConstPreamble TypeSpec Assign ConstVal Semicolon;
+    /// ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn const_declaration_0(
@@ -1758,18 +1741,21 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let semicolon = pop_item!(self, semicolon, Semicolon, context);
+        // Ignore clipped member 'semicolon'
+        self.pop(context);
         let const_val = pop_item!(self, const_val, ConstVal, context);
-        let assign = pop_item!(self, assign, Assign, context);
-        let type_spec = pop_item!(self, type_spec, TypeSpec, context);
+        // Ignore clipped member 'assign'
+        self.pop(context);
+        // Ignore clipped member 'type_spec'
+        self.pop(context);
         let const_preamble = pop_item!(self, const_preamble, ConstPreamble, context);
         let const_declaration_0_built =
             ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon {
                 const_preamble: Box::new(const_preamble),
-                type_spec: Box::new(type_spec),
-                assign: Box::new(assign),
+                // Ignore clipped member 'type_spec'
+                // Ignore clipped member 'assign'
                 const_val: Box::new(const_val),
-                semicolon: Box::new(semicolon),
+                // Ignore clipped member 'semicolon'
             };
         let const_declaration_0_built =
             ConstDeclaration::ConstPreambleTypeSpecAssignConstValSemicolon(
@@ -1819,7 +1805,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 24:
     ///
-    /// ConstPreamble: ConstQualifier ConstName Colon;
+    /// ConstPreamble: ConstQualifier^ /* Clipped */ ConstName Colon^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn const_preamble(
@@ -1830,13 +1816,15 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let colon = pop_item!(self, colon, Colon, context);
+        // Ignore clipped member 'colon'
+        self.pop(context);
         let const_name = pop_item!(self, const_name, ConstName, context);
-        let const_qualifier = pop_item!(self, const_qualifier, ConstQualifier, context);
+        // Ignore clipped member 'const_qualifier'
+        self.pop(context);
         let const_preamble_built = ConstPreamble {
-            const_qualifier: Box::new(const_qualifier),
+            // Ignore clipped member 'const_qualifier'
             const_name: Box::new(const_name),
-            colon: Box::new(colon),
+            // Ignore clipped member 'colon'
         };
         // Calling user action here
         self.user_grammar.const_preamble(&const_preamble_built)?;
@@ -2033,7 +2021,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 35:
     ///
-    /// ArrayVal: Ref LBracket ArrayValOpt /* Option */ RBracket;
+    /// ArrayVal: Ref^ /* Clipped */ LBracket^ /* Clipped */ ArrayValOpt /* Option */ RBracket^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn array_val(
@@ -2045,15 +2033,18 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let r_bracket = pop_item!(self, r_bracket, RBracket, context);
+        // Ignore clipped member 'r_bracket'
+        self.pop(context);
         let array_val_opt = pop_item!(self, array_val_opt, ArrayValOpt, context);
-        let l_bracket = pop_item!(self, l_bracket, LBracket, context);
-        let r#ref = pop_item!(self, r#ref, Ref, context);
+        // Ignore clipped member 'l_bracket'
+        self.pop(context);
+        // Ignore clipped member 'r#ref'
+        self.pop(context);
         let array_val_built = ArrayVal {
-            r#ref: Box::new(r#ref),
-            l_bracket: Box::new(l_bracket),
+            // Ignore clipped member 'r#ref'
+            // Ignore clipped member 'l_bracket'
             array_val_opt,
-            r_bracket: Box::new(r_bracket),
+            // Ignore clipped member 'r_bracket'
         };
         // Calling user action here
         self.user_grammar.array_val(&array_val_built)?;
@@ -2063,7 +2054,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 36:
     ///
-    /// ArrayValOpt /* `Option<T>::Some` */: ConstValList CommaOpt;
+    /// ArrayValOpt /* `Option<T>::Some` */: ConstValList CommaOpt^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn array_val_opt_0(
@@ -2073,11 +2064,12 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comma_opt = pop_item!(self, comma_opt, CommaOpt, context);
+        // Ignore clipped member 'comma_opt'
+        self.pop(context);
         let const_val_list = pop_item!(self, const_val_list, ConstValList, context);
         let array_val_opt_0_built = ArrayValOpt {
             const_val_list: Box::new(const_val_list),
-            comma_opt: Box::new(comma_opt),
+            // Ignore clipped member 'comma_opt'
         };
         self.push(
             ASTType::ArrayValOpt(Some(Box::new(array_val_opt_0_built))),
@@ -2125,7 +2117,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 39:
     ///
-    /// ConstValListList /* `Vec<T>::Push` */: Comma ConstVal ConstValListList;
+    /// ConstValListList /* `Vec<T>::Push` */: Comma^ /* Clipped */ ConstVal ConstValListList;
     ///
     #[parol_runtime::function_name::named]
     fn const_val_list_list_0(
@@ -2139,10 +2131,11 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let mut const_val_list_list =
             pop_item!(self, const_val_list_list, ConstValListList, context);
         let const_val = pop_item!(self, const_val, ConstVal, context);
-        let comma = pop_item!(self, comma, Comma, context);
+        // Ignore clipped member 'comma'
+        self.pop(context);
         let const_val_list_list_0_built = ConstValListList {
             const_val: Box::new(const_val),
-            comma: Box::new(comma),
+            // Ignore clipped member 'comma'
         };
         // Add an element to the vector
         const_val_list_list.push(const_val_list_list_0_built);
@@ -2168,7 +2161,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 41:
     ///
-    /// TupleVal: LParen TupleValOpt /* Option */ RParen;
+    /// TupleVal: LParen^ /* Clipped */ TupleValOpt /* Option */ RParen^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn tuple_val(
@@ -2179,13 +2172,15 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let r_paren = pop_item!(self, r_paren, RParen, context);
+        // Ignore clipped member 'r_paren'
+        self.pop(context);
         let tuple_val_opt = pop_item!(self, tuple_val_opt, TupleValOpt, context);
-        let l_paren = pop_item!(self, l_paren, LParen, context);
+        // Ignore clipped member 'l_paren'
+        self.pop(context);
         let tuple_val_built = TupleVal {
-            l_paren: Box::new(l_paren),
+            // Ignore clipped member 'l_paren'
             tuple_val_opt,
-            r_paren: Box::new(r_paren),
+            // Ignore clipped member 'r_paren'
         };
         // Calling user action here
         self.user_grammar.tuple_val(&tuple_val_built)?;
@@ -2195,7 +2190,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 42:
     ///
-    /// TupleValOpt /* `Option<T>::Some` */: ConstValList CommaOpt;
+    /// TupleValOpt /* `Option<T>::Some` */: ConstValList CommaOpt^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn tuple_val_opt_0(
@@ -2205,11 +2200,12 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comma_opt = pop_item!(self, comma_opt, CommaOpt, context);
+        // Ignore clipped member 'comma_opt'
+        self.pop(context);
         let const_val_list = pop_item!(self, const_val_list, ConstValList, context);
         let tuple_val_opt_0_built = TupleValOpt {
             const_val_list: Box::new(const_val_list),
-            comma_opt: Box::new(comma_opt),
+            // Ignore clipped member 'comma_opt'
         };
         self.push(
             ASTType::TupleValOpt(Some(Box::new(tuple_val_opt_0_built))),
@@ -2334,7 +2330,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 49:
     ///
-    /// StructVal: LBrace StructValOpt /* Option */ RBrace;
+    /// StructVal: LBrace^ /* Clipped */ StructValOpt /* Option */ RBrace^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn struct_val(
@@ -2345,13 +2341,15 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let r_brace = pop_item!(self, r_brace, RBrace, context);
+        // Ignore clipped member 'r_brace'
+        self.pop(context);
         let struct_val_opt = pop_item!(self, struct_val_opt, StructValOpt, context);
-        let l_brace = pop_item!(self, l_brace, LBrace, context);
+        // Ignore clipped member 'l_brace'
+        self.pop(context);
         let struct_val_built = StructVal {
-            l_brace: Box::new(l_brace),
+            // Ignore clipped member 'l_brace'
             struct_val_opt,
-            r_brace: Box::new(r_brace),
+            // Ignore clipped member 'r_brace'
         };
         // Calling user action here
         self.user_grammar.struct_val(&struct_val_built)?;
@@ -2361,7 +2359,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 50:
     ///
-    /// StructValOpt /* `Option<T>::Some` */: MemberValues Comma;
+    /// StructValOpt /* `Option<T>::Some` */: MemberValues Comma^ /* Clipped */;
     ///
     #[parol_runtime::function_name::named]
     fn struct_val_opt_0(
@@ -2371,11 +2369,12 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let comma = pop_item!(self, comma, Comma, context);
+        // Ignore clipped member 'comma'
+        self.pop(context);
         let member_values = pop_item!(self, member_values, MemberValues, context);
         let struct_val_opt_0_built = StructValOpt {
             member_values: Box::new(member_values),
-            comma: Box::new(comma),
+            // Ignore clipped member 'comma'
         };
         self.push(
             ASTType::StructValOpt(Some(Box::new(struct_val_opt_0_built))),
@@ -2423,7 +2422,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 53:
     ///
-    /// MemberValuesList /* `Vec<T>::Push` */: Comma MemberValue MemberValuesList;
+    /// MemberValuesList /* `Vec<T>::Push` */: Comma^ /* Clipped */ MemberValue MemberValuesList;
     ///
     #[parol_runtime::function_name::named]
     fn member_values_list_0(
@@ -2436,10 +2435,11 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let mut member_values_list = pop_item!(self, member_values_list, MemberValuesList, context);
         let member_value = pop_item!(self, member_value, MemberValue, context);
-        let comma = pop_item!(self, comma, Comma, context);
+        // Ignore clipped member 'comma'
+        self.pop(context);
         let member_values_list_0_built = MemberValuesList {
             member_value: Box::new(member_value),
-            comma: Box::new(comma),
+            // Ignore clipped member 'comma'
         };
         // Add an element to the vector
         member_values_list.push(member_values_list_0_built);
