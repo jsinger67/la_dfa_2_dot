@@ -787,7 +787,6 @@ pub struct LaDfa2DotList<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct MemberValue<'t> {
     pub ident: Box<Ident<'t>>,
-    pub colon: Box<Colon<'t>>,
     pub const_val: Box<ConstVal<'t>>,
 }
 
@@ -2465,7 +2464,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 55:
     ///
-    /// MemberValue: Ident Colon ConstVal;
+    /// MemberValue: Ident Colon^ /* Clipped */ ConstVal;
     ///
     #[parol_runtime::function_name::named]
     fn member_value(
@@ -2477,11 +2476,12 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let const_val = pop_item!(self, const_val, ConstVal, context);
-        let colon = pop_item!(self, colon, Colon, context);
+        // Ignore clipped member 'colon'
+        self.pop(context);
         let ident = pop_item!(self, ident, Ident, context);
         let member_value_built = MemberValue {
             ident: Box::new(ident),
-            colon: Box::new(colon),
+            // Ignore clipped member 'colon'
             const_val: Box::new(const_val),
         };
         // Calling user action here

@@ -6,13 +6,14 @@ use std::{
     collections::VecDeque,
     // collections::HashSet,
     fmt::{Debug, Display, Error, Formatter},
+    mem::swap,
     path::PathBuf,
 };
 // use tera::{Context, Tera};
 
 use crate::la_dfa_2_dot_grammar_trait::{
-    ConstName, ConstVal, ConstValList, ConstValNumber, LaDfa2Dot, LaDfa2DotGrammarTrait,
-    QualifiedVal, StructOrTupleVal, StructVal, TupleVal,
+    ConstName, ConstVal, ConstValList, ConstValNumber, Ident, LaDfa2Dot, LaDfa2DotGrammarTrait,
+    MemberValues, QualifiedVal, StructOrTupleVal, StructVal, TupleVal,
 };
 
 #[allow(dead_code)]
@@ -22,6 +23,36 @@ struct Transition {
     term: usize,
     to: usize,
     prod_num: Option<usize>,
+}
+
+#[allow(dead_code)]
+#[derive(Debug)]
+struct LaDFA {
+    prod0: Option<usize>,
+    non_terminal: String,
+    transitions: Vec<Transition>,
+}
+
+impl<'t> Ident<'t> {
+    fn text(&'t self) -> &'t str {
+        self.ident.text()
+    }
+}
+
+impl<'t> MemberValues<'t> {
+    fn get_member(&self, ident: &str) -> Option<&ConstVal<'t>> {
+        if self.member_value.ident.text() == ident {
+            Some(self.member_value.const_val.as_ref())
+        } else {
+            self.member_values_list.iter().find_map(|m| {
+                if m.member_value.ident.text() == ident {
+                    Some(m.member_value.const_val.as_ref())
+                } else {
+                    None
+                }
+            })
+        }
+    }
 }
 
 ///
@@ -35,7 +66,8 @@ pub struct LaDfa2DotGrammar<'t> {
     naming_comment_matcher: Regex,
     _out_folder: Option<PathBuf>,
     parsed_const_names: Vec<String>,
-    transitions: Vec<Transition>,
+    current_transitions: Vec<Transition>,
+    dfas: Vec<LaDFA>,
 }
 
 impl LaDfa2DotGrammar<'_> {
@@ -47,16 +79,14 @@ impl LaDfa2DotGrammar<'_> {
             naming_comment_matcher: Regex::new(r#"/\* \d+ - ("\w+") \*/"#).unwrap(),
             _out_folder: out_folder,
             parsed_const_names: Vec::new(),
-            transitions: Vec::new(),
+            current_transitions: Vec::new(),
+            dfas: Vec::new(),
         }
     }
 
     fn generate_dots(&self) -> Result<()> {
-        if let Some(_la_dfa_2_dot) = self.la_dfa_2_dot.as_ref() {
-            Ok(())
-        } else {
-            Err(parol!("No valid parse result!"))
-        }
+        self.dfas.iter().for_each(|d| println!("DFA: {:?}", d));
+        Ok(())
     }
 
     fn extract_transition(cv_list: &ConstValList<'_>) -> Result<Transition> {
@@ -89,23 +119,19 @@ impl LaDfa2DotGrammar<'_> {
     }
 
     fn process_lookahead_struct(&mut self, strct: &StructVal<'_>) -> Result<()> {
-        println!(
-            "Member count: {}",
-            strct
-                .struct_val_opt
-                .as_ref()
-                .unwrap()
-                .member_values
-                .member_values_list
-                .len()
-                + 1
-        );
-        if let Some(non_terminal_name) = self.non_terminal_names.pop_front() {
-            println!("LookaheadDFA for non-terminal {non_terminal_name}");
+        if let Some(non_terminal) = self.non_terminal_names.pop_front() {
+            let prod0 = Self::extract_prod0(strct);
+            let mut transitions = Vec::new();
+            swap(&mut transitions, &mut self.current_transitions);
+            let dfa = LaDFA {
+                prod0,
+                non_terminal,
+                transitions,
+            };
+            self.dfas.push(dfa);
         } else {
             bail!("Inconsistent non-terminal name count");
         }
-        // TODO: Fill struct value
         Ok(())
     }
 
@@ -114,8 +140,7 @@ impl LaDfa2DotGrammar<'_> {
         if let Some(tuple) = tuple.tuple_val_opt.as_ref() {
             if tuple.const_val_list.const_val_list_list.len() == 3 {
                 let transition = Self::extract_transition(&tuple.const_val_list)?;
-                println!("{transition:?}");
-                self.transitions.push(transition);
+                self.current_transitions.push(transition);
             }
         }
         Ok(())
@@ -127,6 +152,23 @@ impl LaDfa2DotGrammar<'_> {
 
     fn extract_signed_value(n: &ConstValNumber) -> isize {
         n.number.number.text().parse::<isize>().unwrap()
+    }
+
+    fn extract_prod0(strct: &StructVal<'_>) -> Option<usize> {
+        if let Some(struct_val) = strct.struct_val_opt.as_ref() {
+            if let Some(ConstVal::Number(number)) = struct_val.member_values.get_member("prod0") {
+                let prod0 = Self::extract_signed_value(number);
+                if prod0 > 0 {
+                    Some(prod0 as usize)
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        } else {
+            None
+        }
     }
 
     // fn generate_dot(&self) -> Result<()> {
@@ -193,14 +235,6 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
     /// Semantic action for non-terminal 'LaDfa2Dot'
     fn la_dfa2_dot(&mut self, arg: &LaDfa2Dot<'t>) -> Result<()> {
         self.la_dfa_2_dot = Some(arg.clone());
-        println!(
-            "{}",
-            self.non_terminal_names
-                .iter()
-                .cloned()
-                .collect::<Vec<String>>()
-                .join("\n")
-        );
         self.generate_dots()?;
         Ok(())
     }
@@ -209,7 +243,6 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
     fn const_name(&mut self, const_name: &ConstName<'t>) -> Result<()> {
         self.parsed_const_names
             .push(const_name.ident.ident.text().to_owned());
-        println!("parsed_const_names += {0}", const_name.ident.ident.text());
         Ok(())
     }
 
@@ -239,7 +272,6 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
     fn string(&mut self, str: &crate::la_dfa_2_dot_grammar_trait::String<'t>) -> Result<()> {
         if self.parsed_const_names.last().as_ref().unwrap().as_str() == "TERMINAL_NAMES" {
             self.terminal_names.push(str.string.text().to_owned());
-            println!("{}", str.string.text());
         }
         Ok(())
     }

@@ -106,7 +106,7 @@ MemberValues
     ;
 
 MemberValue
-    : Ident Colon ConstVal
+    : Ident Colon^ ConstVal
     ;
 
 TupleStructVal

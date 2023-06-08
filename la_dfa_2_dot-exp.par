@@ -61,7 +61,7 @@
 /* 52 */ MemberValues: MemberValue MemberValuesList /* Vec */;
 /* 53 */ MemberValuesList /* `Vec<T>::Push` */: Comma^ /* Clipped */ MemberValue MemberValuesList;
 /* 54 */ MemberValuesList /* `Vec<T>::New` */: ;
-/* 55 */ MemberValue: Ident Colon ConstVal;
+/* 55 */ MemberValue: Ident Colon^ /* Clipped */ ConstVal;
 /* 56 */ TupleStructVal: TupleVal;
 /* 57 */ TypeSpec: QualifiedIdent;
 /* 58 */ TypeSpec: ArrayType;
