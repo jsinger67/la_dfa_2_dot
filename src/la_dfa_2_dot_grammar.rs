@@ -3,20 +3,20 @@ use parol_runtime::parol_macros::{bail, parol};
 use parol_runtime::{ParolError, Result, Token};
 use regex::Regex;
 use std::{
+    collections::HashSet,
     collections::VecDeque,
-    // collections::HashSet,
     fmt::{Debug, Display, Error, Formatter},
+    fs,
     mem::swap,
     path::PathBuf,
 };
-// use tera::{Context, Tera};
+use tera::{Context, Tera};
 
 use crate::la_dfa_2_dot_grammar_trait::{
     ConstName, ConstVal, ConstValList, ConstValNumber, Ident, LaDfa2Dot, LaDfa2DotGrammarTrait,
     MemberValues, QualifiedVal, StructOrTupleVal, StructVal, TupleVal,
 };
 
-#[allow(dead_code)]
 #[derive(Debug)]
 struct Transition {
     id: usize,
@@ -25,12 +25,12 @@ struct Transition {
     prod_num: Option<usize>,
 }
 
-#[allow(dead_code)]
 #[derive(Debug)]
 struct LaDFA {
     prod0: Option<usize>,
     non_terminal: String,
     transitions: Vec<Transition>,
+    k: usize,
 }
 
 impl<'t> Ident<'t> {
@@ -55,6 +55,18 @@ impl<'t> MemberValues<'t> {
     }
 }
 
+impl<'t> crate::la_dfa_2_dot_grammar_trait::String<'t> {
+    fn text(&'t self) -> &'t str {
+        match self {
+            crate::la_dfa_2_dot_grammar_trait::String::QuotedString(q) => {
+                q.quoted_string.quoted_string.text()
+            }
+            crate::la_dfa_2_dot_grammar_trait::String::RawString(r) => {
+                r.raw_string.raw_string.text()
+            }
+        }
+    }
+}
 ///
 /// Data structure that implements the semantic actions for our LaDfa2Dot grammar
 ///
@@ -64,20 +76,20 @@ pub struct LaDfa2DotGrammar<'t> {
     terminal_names: Vec<String>,
     non_terminal_names: VecDeque<String>,
     naming_comment_matcher: Regex,
-    _out_folder: Option<PathBuf>,
+    out_folder: PathBuf,
     parsed_const_names: Vec<String>,
     current_transitions: Vec<Transition>,
     dfas: Vec<LaDFA>,
 }
 
 impl LaDfa2DotGrammar<'_> {
-    pub fn new(out_folder: Option<PathBuf>) -> Self {
+    pub fn new(out_folder: PathBuf) -> Self {
         LaDfa2DotGrammar {
             la_dfa_2_dot: None,
             terminal_names: Vec::new(),
             non_terminal_names: VecDeque::new(),
-            naming_comment_matcher: Regex::new(r#"/\* \d+ - ("\w+") \*/"#).unwrap(),
-            _out_folder: out_folder,
+            naming_comment_matcher: Regex::new(r#"/\* \d+ - "(\w+)" \*/"#).unwrap(),
+            out_folder,
             parsed_const_names: Vec::new(),
             current_transitions: Vec::new(),
             dfas: Vec::new(),
@@ -85,7 +97,10 @@ impl LaDfa2DotGrammar<'_> {
     }
 
     fn generate_dots(&self) -> Result<()> {
-        self.dfas.iter().for_each(|d| println!("DFA: {:?}", d));
+        for d in &self.dfas {
+            // println!("DFA: {:?}", d);
+            self.generate_dot(d)?;
+        }
         Ok(())
     }
 
@@ -121,12 +136,14 @@ impl LaDfa2DotGrammar<'_> {
     fn process_lookahead_struct(&mut self, strct: &StructVal<'_>) -> Result<()> {
         if let Some(non_terminal) = self.non_terminal_names.pop_front() {
             let prod0 = Self::extract_prod0(strct);
+            let k = Self::extract_k(strct).unwrap_or_default();
             let mut transitions = Vec::new();
             swap(&mut transitions, &mut self.current_transitions);
             let dfa = LaDFA {
                 prod0,
                 non_terminal,
                 transitions,
+                k,
             };
             self.dfas.push(dfa);
         } else {
@@ -171,49 +188,74 @@ impl LaDfa2DotGrammar<'_> {
         }
     }
 
-    // fn generate_dot(&self) -> Result<()> {
-    //     if let Some(data) = &self.la_dfa_2_dot {
-    //         let tera = Tera::new("templates/*.dot").map_err(|e| ParolError::UserError(e.into()))?;
-    //         let mut context = Context::new();
-    //         context.insert("title", data.naming_comment.nt_name.nt_name.text());
-    //         let states = LaDfa2DotGrammar::get_transitions(data)
-    //             .iter()
-    //             .fold(
-    //                 (vec![], HashSet::<usize>::new()),
-    //                 |(mut acc, mut printed_states), t| {
-    //                     if !printed_states.contains(&t.to) {
-    //                         printed_states.insert(t.to);
-    //                         if let Some(p) = t.prod_num {
-    //                             acc.push(format!(
-    //                                 "{} [label = \"Id({}, accepting), Pr({}))\"];",
-    //                                 t.to, t.to, p
-    //                             ));
-    //                         } else {
-    //                             acc.push(format!("{} [label = \"Id({})\"];", t.to, t.to));
-    //                         }
-    //                     }
-    //                     (acc, printed_states)
-    //                 },
-    //             )
-    //             .0;
-    //         context.insert("states", &states);
-    //         let transitions =
-    //             LaDfa2DotGrammar::get_transitions(data)
-    //                 .iter()
-    //                 .fold(vec![], |mut acc, t| {
-    //                     acc.push(format!("{} -> {} [label = \"{}\"];", t.id, t.to, t.term));
-    //                     acc
-    //                 });
-    //         context.insert("transitions", &transitions);
+    fn extract_k(strct: &StructVal<'_>) -> Option<usize> {
+        if let Some(struct_val) = strct.struct_val_opt.as_ref() {
+            if let Some(ConstVal::Number(number)) = struct_val.member_values.get_member("k") {
+                let prod0 = Self::extract_value(number);
+                Some(prod0)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
 
-    //         print!(
-    //             "{}",
-    //             tera.render("dfa.dot", &context)
-    //                 .map_err(|e| ParolError::UserError(e.into()))?
-    //         );
-    //     }
-    //     Ok(())
-    // }
+    fn generate_dot(&self, dfa: &LaDFA) -> Result<()> {
+        let tera = Tera::new("templates/*.dot").map_err(|e| ParolError::UserError(e.into()))?;
+        let mut context = Context::new();
+        let title = format!("{} (k={})", dfa.non_terminal, dfa.k);
+        context.insert("title", &title);
+        let state0 = if let Some(prod0) = dfa.prod0 {
+            format!(
+                "0 [label=\"Id(0) , accepting, Pr({}))\", color=red];",
+                prod0
+            )
+        } else {
+            "0 [label = \"Id(0)\"];".to_owned()
+        };
+        let states = dfa
+            .transitions
+            .iter()
+            .fold(
+                (vec![state0], HashSet::<usize>::new()),
+                |(mut acc, mut printed_states), t| {
+                    if !printed_states.contains(&t.to) {
+                        printed_states.insert(t.to);
+                        if let Some(p) = t.prod_num {
+                            acc.push(format!(
+                                "{} [label = \"Id({}, accepting, Pr({}))\", color=red];",
+                                t.to, t.to, p
+                            ));
+                        } else {
+                            acc.push(format!("{} [label = \"Id({})\"];", t.to, t.to));
+                        }
+                    }
+                    (acc, printed_states)
+                },
+            )
+            .0;
+        context.insert("states", &states);
+        let transitions = dfa.transitions.iter().fold(vec![], |mut acc, t| {
+            acc.push(format!(
+                "{} -> {} [label = {}];",
+                t.id, t.to, self.terminal_names[t.term]
+            ));
+            acc
+        });
+        context.insert("transitions", &transitions);
+
+        let mut file_name = self.out_folder.clone();
+        file_name.push(&dfa.non_terminal);
+        file_name.set_extension("dot");
+        fs::write(
+            file_name,
+            tera.render("dfa.dot", &context)
+                .map_err(|e| ParolError::UserError(e.into()))?,
+        )
+        .map_err(|e| ParolError::UserError(e.into()))?;
+        Ok(())
+    }
 }
 
 impl Display for LaDfa2Dot<'_> {
@@ -271,7 +313,7 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
     /// Semantic action for non-terminal 'String'
     fn string(&mut self, str: &crate::la_dfa_2_dot_grammar_trait::String<'t>) -> Result<()> {
         if self.parsed_const_names.last().as_ref().unwrap().as_str() == "TERMINAL_NAMES" {
-            self.terminal_names.push(str.string.text().to_owned());
+            self.terminal_names.push(str.text().to_owned());
         }
         Ok(())
     }

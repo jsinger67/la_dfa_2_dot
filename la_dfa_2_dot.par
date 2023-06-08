@@ -174,7 +174,16 @@ Comma
     ;
 
 String
-    : /(r#*)?"(\\.|[^\\])*?"#*/
+    : QuotedString 
+    | RawString
+    ;
+
+QuotedString
+    : /r#{3}?".*?"#{3}/
+    ;
+
+RawString
+    : /"(\\.|[^\\])*?"/
     ;
 
 Ident

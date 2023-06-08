@@ -1,0 +1,45 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'la_dfa_2_dot'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=la_dfa_2_dot",
+                    "--package=la_dfa_2_dot"
+                ],
+                "filter": {
+                    "name": "la_dfa_2_dot",
+                    "kind": "bin"
+                }
+            },
+            "args": ["-f", "./test.txt", "-o", "C:/Users/joerg/AppData/Local/Temp/test"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'la_dfa_2_dot'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=la_dfa_2_dot",
+                    "--package=la_dfa_2_dot"
+                ],
+                "filter": {
+                    "name": "la_dfa_2_dot",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

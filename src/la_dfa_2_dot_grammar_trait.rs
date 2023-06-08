@@ -199,6 +199,16 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
+    /// Semantic action for non-terminal 'QuotedString'
+    fn quoted_string(&mut self, _arg: &QuotedString<'t>) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'RawString'
+    fn raw_string(&mut self, _arg: &RawString<'t>) -> Result<()> {
+        Ok(())
+    }
+
     /// Semantic action for non-terminal 'Ident'
     fn ident(&mut self, _arg: &Ident<'t>) -> Result<()> {
         Ok(())
@@ -444,6 +454,30 @@ pub struct TypeSpecArrayType<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TypeSpecTupleType<'t> {
     pub tuple_type: Box<TupleType<'t>>,
+}
+
+///
+/// Type derived for production 77
+///
+/// String: QuotedString;
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct StringQuotedString<'t> {
+    pub quoted_string: Box<QuotedString<'t>>,
+}
+
+///
+/// Type derived for production 78
+///
+/// String: RawString;
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct StringRawString<'t> {
+    pub raw_string: Box<RawString<'t>>,
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -865,6 +899,16 @@ pub struct QualifiedValOpt<'t> {
 }
 
 ///
+/// Type derived for non-terminal QuotedString
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct QuotedString<'t> {
+    pub quoted_string: Token<'t>, /* r#{3}?".*?"#{3} */
+}
+
+///
 /// Type derived for non-terminal RBrace
 ///
 #[allow(dead_code)]
@@ -892,6 +936,16 @@ pub struct RBracket<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct RParen<'t> {
     pub r_paren: Token<'t>, /* ) */
+}
+
+///
+/// Type derived for non-terminal RawString
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct RawString<'t> {
+    pub raw_string: Token<'t>, /* "(\\.|[^\\])*?" */
 }
 
 ///
@@ -984,10 +1038,10 @@ pub struct Skip<'t> {
 /// Type derived for non-terminal String
 ///
 #[allow(dead_code)]
-#[derive(Builder, Debug, Clone)]
-#[builder(crate = "parol_runtime::derive_builder")]
-pub struct String<'t> {
-    pub string: Token<'t>, /* (r#*)?"(\\.|[^\\])*?"#* */
+#[derive(Debug, Clone)]
+pub enum String<'t> {
+    QuotedString(StringQuotedString<'t>),
+    RawString(StringRawString<'t>),
 }
 
 ///
@@ -1155,9 +1209,11 @@ pub enum ASTType<'t> {
     QualifiedIdentList(Vec<QualifiedIdentList<'t>>),
     QualifiedVal(QualifiedVal<'t>),
     QualifiedValOpt(Option<Box<QualifiedValOpt<'t>>>),
+    QuotedString(QuotedString<'t>),
     RBrace(RBrace<'t>),
     RBracket(RBracket<'t>),
     RParen(RParen<'t>),
+    RawString(RawString<'t>),
     Ref(Ref<'t>),
     ScopedList(ScopedList<'t>),
     ScopedListItems(ScopedListItems<'t>),
@@ -2896,21 +2952,75 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 77:
     ///
-    /// String: /(r#*)?"(\\.|[^\\])*?"#*/;
+    /// String: QuotedString;
     ///
     #[parol_runtime::function_name::named]
-    fn string(&mut self, string: &ParseTreeType<'t>) -> Result<()> {
+    fn string_0(&mut self, _quoted_string: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        let string = string.token()?.clone();
-        let string_built = String { string };
+        let quoted_string = pop_item!(self, quoted_string, QuotedString, context);
+        let string_0_built = StringQuotedString {
+            quoted_string: Box::new(quoted_string),
+        };
+        let string_0_built = String::QuotedString(string_0_built);
         // Calling user action here
-        self.user_grammar.string(&string_built)?;
-        self.push(ASTType::String(string_built), context);
+        self.user_grammar.string(&string_0_built)?;
+        self.push(ASTType::String(string_0_built), context);
         Ok(())
     }
 
     /// Semantic action for production 78:
+    ///
+    /// String: RawString;
+    ///
+    #[parol_runtime::function_name::named]
+    fn string_1(&mut self, _raw_string: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let raw_string = pop_item!(self, raw_string, RawString, context);
+        let string_1_built = StringRawString {
+            raw_string: Box::new(raw_string),
+        };
+        let string_1_built = String::RawString(string_1_built);
+        // Calling user action here
+        self.user_grammar.string(&string_1_built)?;
+        self.push(ASTType::String(string_1_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 79:
+    ///
+    /// QuotedString: /r#{3}?".*?"#{3}/;
+    ///
+    #[parol_runtime::function_name::named]
+    fn quoted_string(&mut self, quoted_string: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let quoted_string = quoted_string.token()?.clone();
+        let quoted_string_built = QuotedString { quoted_string };
+        // Calling user action here
+        self.user_grammar.quoted_string(&quoted_string_built)?;
+        self.push(ASTType::QuotedString(quoted_string_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 80:
+    ///
+    /// RawString: /"(\\.|[^\\])*?"/;
+    ///
+    #[parol_runtime::function_name::named]
+    fn raw_string(&mut self, raw_string: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let raw_string = raw_string.token()?.clone();
+        let raw_string_built = RawString { raw_string };
+        // Calling user action here
+        self.user_grammar.raw_string(&raw_string_built)?;
+        self.push(ASTType::RawString(raw_string_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 81:
     ///
     /// Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;
     ///
@@ -2926,7 +3036,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 79:
+    /// Semantic action for production 82:
     ///
     /// DoubleColon: '::';
     ///
@@ -2942,7 +3052,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 80:
+    /// Semantic action for production 83:
     ///
     /// Colon: ':';
     ///
@@ -2958,7 +3068,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 81:
+    /// Semantic action for production 84:
     ///
     /// LBrace: '{';
     ///
@@ -2974,7 +3084,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 82:
+    /// Semantic action for production 85:
     ///
     /// RBrace: '}';
     ///
@@ -2990,7 +3100,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 83:
+    /// Semantic action for production 86:
     ///
     /// LBracket: '[';
     ///
@@ -3006,7 +3116,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 84:
+    /// Semantic action for production 87:
     ///
     /// RBracket: ']';
     ///
@@ -3022,7 +3132,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 85:
+    /// Semantic action for production 88:
     ///
     /// LParen: '(';
     ///
@@ -3038,7 +3148,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 86:
+    /// Semantic action for production 89:
     ///
     /// RParen: ')';
     ///
@@ -3054,7 +3164,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 87:
+    /// Semantic action for production 90:
     ///
     /// Hash: /#/;
     ///
@@ -3170,17 +3280,20 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
             74 => self.r#ref(&children[0]),
             75 => self.semicolon(&children[0]),
             76 => self.comma(&children[0]),
-            77 => self.string(&children[0]),
-            78 => self.ident(&children[0]),
-            79 => self.double_colon(&children[0]),
-            80 => self.colon(&children[0]),
-            81 => self.l_brace(&children[0]),
-            82 => self.r_brace(&children[0]),
-            83 => self.l_bracket(&children[0]),
-            84 => self.r_bracket(&children[0]),
-            85 => self.l_paren(&children[0]),
-            86 => self.r_paren(&children[0]),
-            87 => self.hash(&children[0]),
+            77 => self.string_0(&children[0]),
+            78 => self.string_1(&children[0]),
+            79 => self.quoted_string(&children[0]),
+            80 => self.raw_string(&children[0]),
+            81 => self.ident(&children[0]),
+            82 => self.double_colon(&children[0]),
+            83 => self.colon(&children[0]),
+            84 => self.l_brace(&children[0]),
+            85 => self.r_brace(&children[0]),
+            86 => self.l_bracket(&children[0]),
+            87 => self.r_bracket(&children[0]),
+            88 => self.l_paren(&children[0]),
+            89 => self.r_paren(&children[0]),
+            90 => self.hash(&children[0]),
             _ => Err(ParserError::InternalError(format!(
                 "Unhandled production number: {}",
                 prod_num

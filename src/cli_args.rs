@@ -11,5 +11,5 @@ pub(crate) struct CliArgs {
 
     /// Output folder for the generated dot files
     #[arg(short = 'o', long = "out_folder")]
-    pub out_folder: Option<PathBuf>,
+    pub out_folder: PathBuf,
 }

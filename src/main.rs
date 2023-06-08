@@ -27,6 +27,8 @@ fn main() -> Result<()> {
     let args = CliArgs::parse();
     let file_name = args.source;
 
+    fs::create_dir_all(&args.out_folder)?;
+
     let input = fs::read_to_string(file_name.clone())
         .with_context(|| format!("Can't read file {}", file_name.display()))?;
     let mut la_dfa_2_dot_grammar = LaDfa2DotGrammar::new(args.out_folder);

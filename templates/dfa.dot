@@ -1,6 +1,6 @@
 digraph G {
     rankdir=LR;
-    label={{title}};
+    label="{{title}}";
 
     node [shape=point, style=invis];
     "";
