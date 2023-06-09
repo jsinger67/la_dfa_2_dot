@@ -12,6 +12,9 @@ use std::{
 };
 use tera::{Context, Tera};
 
+/// We generate the template into the binary to make it easier to install
+const TEMPLATE: &str = include_str!("../templates/dfa.dot");
+
 use crate::la_dfa_2_dot_grammar_trait::{
     ConstName, ConstVal, ConstValList, ConstValNumber, Ident, LaDfa2Dot, LaDfa2DotGrammarTrait,
     MemberValues, QualifiedVal, StructOrTupleVal, StructVal, TupleVal,
@@ -202,7 +205,7 @@ impl LaDfa2DotGrammar<'_> {
     }
 
     fn generate_dot(&self, dfa: &LaDFA) -> Result<()> {
-        let tera = Tera::new("templates/*.dot").map_err(|e| ParolError::UserError(e.into()))?;
+        let mut tera = Tera::default();
         let mut context = Context::new();
         let title = format!("{} (k={})", dfa.non_terminal, dfa.k);
         context.insert("title", &title);
@@ -250,7 +253,7 @@ impl LaDfa2DotGrammar<'_> {
         file_name.set_extension("dot");
         fs::write(
             file_name,
-            tera.render("dfa.dot", &context)
+            tera.render_str(TEMPLATE, &context)
                 .map_err(|e| ParolError::UserError(e.into()))?,
         )
         .map_err(|e| ParolError::UserError(e.into()))?;
