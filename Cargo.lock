@@ -573,7 +573,7 @@ dependencies = [
 
 [[package]]
 name = "la_dfa_2_dot"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -654,7 +654,9 @@ checksum = "c1b04fb49957986fdce4d6ee7a65027d55d4b6d2265e5848bbb507b58ccfdb6f"
 
 [[package]]
 name = "parol"
-version = "0.21.5"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53357c4a62598905222349e0a5b69003587191f59f0e873b9dbaf65b49daa7e2"
 dependencies = [
  "anyhow",
  "bitflags 2.3.1",
@@ -684,10 +686,14 @@ dependencies = [
 [[package]]
 name = "parol-macros"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bdd646301a99589f85ed580e3807ee2f7aa6529b900fd703f5a14716b7426b28"
 
 [[package]]
 name = "parol_runtime"
-version = "0.16.0"
+version = "0.17.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec60e88e7573f614c9c21304b2ecb3abb0af0b6fe2a9441526e0c93e0387822b"
 dependencies = [
  "anyhow",
  "codespan-reporting",
