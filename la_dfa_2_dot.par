@@ -1,4 +1,9 @@
 
+// This grammar is made to only be able to parse generated parser sources.
+// No claim to parse full Rust.
+// It even skips parts of the file after all necessary information is gathered (see 'Skip' below).
+// The real new thing here is that we use the new comment preserving feature of
+// parol 0.22.0 and parol_runtime 0.17.0.
 %start LaDfa2Dot
 %title "LaDfa2Dot grammar"
 %comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
