@@ -15,7 +15,7 @@ This way changes in the resulting DFA could be evaluated much easier.
 Try
 
 ```shell
-la_dfa_to_dot --help
+la_dfa_2_dot --help
 ```
 
 to get help.
