@@ -85,7 +85,7 @@
 /* 76 */ Comma: ',';
 /* 77 */ String: QuotedString;
 /* 78 */ String: RawString;
-/* 79 */ QuotedString: /r#{3}?".*?"#{3}/;
+/* 79 */ QuotedString: /r#{0, 3}?".*?"#{0, 3}/;
 /* 80 */ RawString: /"(\\.|[^\\])*?"/;
 /* 81 */ Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;
 /* 82 */ DoubleColon: '::';

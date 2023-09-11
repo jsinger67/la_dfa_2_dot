@@ -184,7 +184,7 @@ String
     ;
 
 QuotedString
-    : /r#{3}?".*?"#{3}/
+    : /r#{0, 3}?".*?"#{0, 3}/
     ;
 
 RawString

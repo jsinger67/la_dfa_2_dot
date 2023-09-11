@@ -7,7 +7,7 @@
 use parol_runtime::once_cell::sync::Lazy;
 #[allow(unused_imports)]
 use parol_runtime::parser::{LLKParser, LookaheadDFA, ParseTreeType, ParseType, Production, Trans};
-use parol_runtime::{ParolError, ParseTree};
+use parol_runtime::{ParolError, ParseTree, TerminalIndex};
 use parol_runtime::{TokenStream, Tokenizer};
 use std::cell::RefCell;
 use std::path::Path;
@@ -25,28 +25,28 @@ pub const TERMINALS: &[&str; 28] = &[
     /*  2 */ UNMATCHABLE_TOKEN,
     /*  3 */ UNMATCHABLE_TOKEN,
     /*  4 */ UNMATCHABLE_TOKEN,
-    /*  5 */ r###"use"###,
-    /*  6 */ r###"const"###,
-    /*  7 */ r###"static"###,
-    /*  8 */ r###"pub"###,
-    /*  9 */ r###"(?s)&\[Production; \d+\] = &\[.*(?-s)"###,
-    /* 10 */ r###"="###,
-    /* 11 */ r###"-?\d+"###,
-    /* 12 */ r###"\&"###,
-    /* 13 */ r###";"###,
-    /* 14 */ r###","###,
-    /* 15 */ r###"r#{3}?".*?"#{3}"###,
-    /* 16 */ r###""(\\.|[^\\])*?""###,
-    /* 17 */ r###"[a-zA-Z_][a-zA-Z0-9_]*"###,
-    /* 18 */ r###"::"###,
-    /* 19 */ r###":"###,
-    /* 20 */ r###"\{"###,
-    /* 21 */ r###"\}"###,
-    /* 22 */ r###"\["###,
-    /* 23 */ r###"\]"###,
-    /* 24 */ r###"\("###,
-    /* 25 */ r###"\)"###,
-    /* 26 */ r###"#"###,
+    /*  5 */ r"use",
+    /*  6 */ r"const",
+    /*  7 */ r"static",
+    /*  8 */ r"pub",
+    /*  9 */ r"(?s)&\[Production; \d+\] = &\[.*(?-s)",
+    /* 10 */ r"=",
+    /* 11 */ r"-?\d+",
+    /* 12 */ r"\&",
+    /* 13 */ r";",
+    /* 14 */ r",",
+    /* 15 */ r##"r#{0, 3}?".*?"#{0, 3}"##,
+    /* 16 */ r#""(\\.|[^\\])*?""#,
+    /* 17 */ r"[a-zA-Z_][a-zA-Z0-9_]*",
+    /* 18 */ r"::",
+    /* 19 */ r":",
+    /* 20 */ r"\{",
+    /* 21 */ r"\}",
+    /* 22 */ r"\[",
+    /* 23 */ r"\]",
+    /* 24 */ r"\(",
+    /* 25 */ r"\)",
+    /* 26 */ r"#",
     /* 27 */ ERROR_TOKEN,
 ];
 
@@ -63,7 +63,7 @@ pub const TERMINAL_NAMES: &[&str; 28] = &[
     /*  9 */ "Skip",
     /* 10 */ "Assign",
     /* 11 */ "Number",
-    /* 12 */ "Amp",
+    /* 12 */ "Ref",
     /* 13 */ "Semicolon",
     /* 14 */ "Comma",
     /* 15 */ "QuotedString",
@@ -82,13 +82,13 @@ pub const TERMINAL_NAMES: &[&str; 28] = &[
 ];
 
 /* SCANNER_0: "INITIAL" */
-const SCANNER_0: (&[&str; 5], &[usize; 22]) = (
+const SCANNER_0: (&[&str; 5], &[TerminalIndex; 22]) = (
     &[
         /*  0 */ UNMATCHABLE_TOKEN,
         /*  1 */ NEW_LINE_TOKEN,
         /*  2 */ WHITESPACE_TOKEN,
-        /*  3 */ r###"(//.*(\r\n|\r|\n|$))"###,
-        /*  4 */ r###"((?ms)/\*.*?\*/)"###,
+        /*  3 */ r"(//.*(\r\n|\r|\n|$))",
+        /*  4 */ r"((?ms)/\*.*?\*/)",
     ],
     &[
         5,  /* Use */
@@ -98,7 +98,7 @@ const SCANNER_0: (&[&str; 5], &[usize; 22]) = (
         9,  /* Skip */
         10, /* Assign */
         11, /* Number */
-        12, /* Amp */
+        12, /* Ref */
         13, /* Semicolon */
         14, /* Comma */
         15, /* QuotedString */
@@ -293,34 +293,34 @@ pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 64] = &[
     LookaheadDFA {
         prod0: -1,
         transitions: &[
-            Trans(0, 6, 6, -1),
-            Trans(0, 7, 6, -1),
+            Trans(0, 6, 1, -1),
+            Trans(0, 7, 1, -1),
             Trans(0, 8, 8, -1),
-            Trans(1, 19, 7, -1),
-            Trans(2, 22, 3, 22),
-            Trans(4, 10, 3, 22),
-            Trans(4, 18, 3, 22),
-            Trans(5, 12, 3, 22),
-            Trans(5, 17, 3, 22),
-            Trans(5, 24, 3, 22),
-            Trans(6, 17, 1, -1),
-            Trans(7, 9, 13, -1),
-            Trans(7, 12, 2, -1),
-            Trans(7, 17, 4, -1),
-            Trans(7, 24, 5, -1),
+            Trans(1, 17, 2, -1),
+            Trans(2, 19, 3, -1),
+            Trans(3, 9, 12, -1),
+            Trans(3, 12, 4, -1),
+            Trans(3, 17, 6, -1),
+            Trans(3, 24, 7, -1),
+            Trans(4, 22, 5, 22),
+            Trans(6, 10, 5, 22),
+            Trans(6, 18, 5, 22),
+            Trans(7, 12, 5, 22),
+            Trans(7, 17, 5, 22),
+            Trans(7, 24, 5, 22),
             Trans(8, 6, 9, -1),
             Trans(9, 17, 10, -1),
             Trans(10, 19, 11, -1),
-            Trans(11, 9, 12, 23),
-            Trans(11, 12, 3, 22),
-            Trans(11, 17, 3, 22),
-            Trans(11, 24, 3, 22),
-            Trans(13, 0, 12, 23),
-            Trans(13, 5, 12, 23),
-            Trans(13, 6, 12, 23),
-            Trans(13, 7, 12, 23),
-            Trans(13, 8, 12, 23),
-            Trans(13, 26, 12, 23),
+            Trans(11, 9, 13, 23),
+            Trans(11, 12, 5, 22),
+            Trans(11, 17, 5, 22),
+            Trans(11, 24, 5, 22),
+            Trans(12, 0, 13, 23),
+            Trans(12, 5, 13, 23),
+            Trans(12, 6, 13, 23),
+            Trans(12, 7, 13, 23),
+            Trans(12, 8, 13, 23),
+            Trans(12, 26, 13, 23),
         ],
         k: 5,
     },
@@ -1188,7 +1188,7 @@ pub const PRODUCTIONS: &[Production; 91] = &[
         lhs: 52,
         production: &[ParseType::N(43)],
     },
-    // 79 - QuotedString: /r#{3}?".*?"#{3}/;
+    // 79 - QuotedString: /r#{0, 3}?".*?"#{0, 3}/;
     Production {
         lhs: 39,
         production: &[ParseType::T(15)],
