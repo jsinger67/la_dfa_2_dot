@@ -908,7 +908,7 @@ pub struct QualifiedValOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct QuotedString<'t> {
-    pub quoted_string: Token<'t>, /* r#{0, 3}?".*?"#{0, 3} */
+    pub quoted_string: Token<'t>, /* r#{0, 3}".*"#{0, 3} */
 }
 
 ///
@@ -2993,7 +2993,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 79:
     ///
-    /// QuotedString: /r#{0, 3}?".*?"#{0, 3}/;
+    /// QuotedString: /r#{0, 3}".*"#{0, 3}/;
     ///
     #[parol_runtime::function_name::named]
     fn quoted_string(&mut self, quoted_string: &ParseTreeType<'t>) -> Result<()> {

@@ -35,7 +35,7 @@ pub const TERMINALS: &[&str; 28] = &[
     /* 12 */ r"\&",
     /* 13 */ r";",
     /* 14 */ r",",
-    /* 15 */ r##"r#{0, 3}?".*?"#{0, 3}"##,
+    /* 15 */ r##"r#{0, 3}".*"#{0, 3}"##,
     /* 16 */ r#""(\\.|[^\\])*?""#,
     /* 17 */ r"[a-zA-Z_][a-zA-Z0-9_]*",
     /* 18 */ r"::",
@@ -1188,7 +1188,7 @@ pub const PRODUCTIONS: &[Production; 91] = &[
         lhs: 52,
         production: &[ParseType::N(43)],
     },
-    // 79 - QuotedString: /r#{0, 3}?".*?"#{0, 3}/;
+    // 79 - QuotedString: /r#{0, 3}".*"#{0, 3}/;
     Production {
         lhs: 39,
         production: &[ParseType::T(15)],
