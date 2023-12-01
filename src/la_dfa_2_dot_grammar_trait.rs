@@ -272,7 +272,7 @@ pub trait LaDfa2DotGrammarTrait<'t> {
 ///
 /// Type derived for production 9
 ///
-/// Item: UseStatement^ /* Clipped */;
+/// `Item: UseStatement^ /* Clipped */;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -282,7 +282,7 @@ pub struct ItemUseStatement {}
 ///
 /// Type derived for production 10
 ///
-/// Item: ConstDeclaration;
+/// `Item: ConstDeclaration;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -294,7 +294,7 @@ pub struct ItemConstDeclaration<'t> {
 ///
 /// Type derived for production 22
 ///
-/// ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
+/// `ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -307,7 +307,7 @@ pub struct ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon<'t> {
 ///
 /// Type derived for production 23
 ///
-/// ConstDeclaration: ConstPreamble^ /* Clipped */ Skip^ /* Clipped */;
+/// `ConstDeclaration: ConstPreamble^ /* Clipped */ Skip^ /* Clipped */;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -317,7 +317,7 @@ pub struct ConstDeclarationConstPreambleSkip {}
 ///
 /// Type derived for production 25
 ///
-/// ConstQualifier: ConstQualifierOpt /* Option */ 'const';
+/// `ConstQualifier: ConstQualifierOpt /* Option */ 'const';`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -330,7 +330,7 @@ pub struct ConstQualifierConstQualifierOptConst<'t> {
 ///
 /// Type derived for production 26
 ///
-/// ConstQualifier: 'static';
+/// `ConstQualifier: 'static';`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -342,7 +342,7 @@ pub struct ConstQualifierStatic<'t> {
 ///
 /// Type derived for production 30
 ///
-/// ConstVal: Number;
+/// `ConstVal: Number;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -354,7 +354,7 @@ pub struct ConstValNumber<'t> {
 ///
 /// Type derived for production 31
 ///
-/// ConstVal: String;
+/// `ConstVal: String;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -366,7 +366,7 @@ pub struct ConstValString<'t> {
 ///
 /// Type derived for production 32
 ///
-/// ConstVal: QualifiedVal;
+/// `ConstVal: QualifiedVal;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -378,7 +378,7 @@ pub struct ConstValQualifiedVal<'t> {
 ///
 /// Type derived for production 33
 ///
-/// ConstVal: ArrayVal;
+/// `ConstVal: ArrayVal;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -390,7 +390,7 @@ pub struct ConstValArrayVal<'t> {
 ///
 /// Type derived for production 34
 ///
-/// ConstVal: TupleVal;
+/// `ConstVal: TupleVal;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -402,7 +402,7 @@ pub struct ConstValTupleVal<'t> {
 ///
 /// Type derived for production 47
 ///
-/// StructOrTupleVal: StructVal;
+/// `StructOrTupleVal: StructVal;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -414,7 +414,7 @@ pub struct StructOrTupleValStructVal<'t> {
 ///
 /// Type derived for production 48
 ///
-/// StructOrTupleVal: TupleStructVal;
+/// `StructOrTupleVal: TupleStructVal;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -426,7 +426,7 @@ pub struct StructOrTupleValTupleStructVal<'t> {
 ///
 /// Type derived for production 57
 ///
-/// TypeSpec: QualifiedIdent;
+/// `TypeSpec: QualifiedIdent;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -438,7 +438,7 @@ pub struct TypeSpecQualifiedIdent<'t> {
 ///
 /// Type derived for production 58
 ///
-/// TypeSpec: ArrayType;
+/// `TypeSpec: ArrayType;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -450,7 +450,7 @@ pub struct TypeSpecArrayType<'t> {
 ///
 /// Type derived for production 59
 ///
-/// TypeSpec: TupleType;
+/// `TypeSpec: TupleType;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -462,7 +462,7 @@ pub struct TypeSpecTupleType<'t> {
 ///
 /// Type derived for production 77
 ///
-/// String: QuotedString;
+/// `String: QuotedString;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -474,7 +474,7 @@ pub struct StringQuotedString<'t> {
 ///
 /// Type derived for production 78
 ///
-/// String: RawString;
+/// `String: RawString;`
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
@@ -1300,7 +1300,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 0:
     ///
-    /// LaDfa2Dot: LaDfa2DotList /* Vec */;
+    /// `LaDfa2Dot: LaDfa2DotList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn la_dfa2_dot(&mut self, _la_dfa2_dot_list: &ParseTreeType<'t>) -> Result<()> {
@@ -1317,7 +1317,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 1:
     ///
-    /// LaDfa2DotList /* `Vec<T>::Push` */: AttributeOpt^ /* Clipped */ Item LaDfa2DotList;
+    /// `LaDfa2DotList /* Vec<T>::Push */: AttributeOpt^ /* Clipped */ Item LaDfa2DotList;`
     ///
     #[parol_runtime::function_name::named]
     fn la_dfa2_dot_list_0(
@@ -1344,7 +1344,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 2:
     ///
-    /// LaDfa2DotList /* `Vec<T>::New` */: ;
+    /// `LaDfa2DotList /* Vec<T>::New */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn la_dfa2_dot_list_1(&mut self) -> Result<()> {
@@ -1357,7 +1357,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 3:
     ///
-    /// AttributeOpt: AttributeOpt0 /* Option */;
+    /// `AttributeOpt: AttributeOpt0 /* Option */;`
     ///
     #[parol_runtime::function_name::named]
     fn attribute_opt(&mut self, _attribute_opt0: &ParseTreeType<'t>) -> Result<()> {
@@ -1373,7 +1373,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 4:
     ///
-    /// AttributeOpt0 /* `Option<T>::Some` */: Hash LBracket Ident AttributeArgOpt RBracket;
+    /// `AttributeOpt0 /* Option<T>::Some */: Hash LBracket Ident AttributeArgOpt RBracket;`
     ///
     #[parol_runtime::function_name::named]
     fn attribute_opt0_0(
@@ -1407,7 +1407,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 5:
     ///
-    /// AttributeOpt0 /* `Option<T>::None` */: ;
+    /// `AttributeOpt0 /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn attribute_opt0_1(&mut self) -> Result<()> {
@@ -1419,7 +1419,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 6:
     ///
-    /// AttributeArgOpt: AttributeArgOpt0 /* Option */;
+    /// `AttributeArgOpt: AttributeArgOpt0 /* Option */;`
     ///
     #[parol_runtime::function_name::named]
     fn attribute_arg_opt(&mut self, _attribute_arg_opt0: &ParseTreeType<'t>) -> Result<()> {
@@ -1436,7 +1436,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 7:
     ///
-    /// AttributeArgOpt0 /* `Option<T>::Some` */: LParen Ident RParen;
+    /// `AttributeArgOpt0 /* Option<T>::Some */: LParen Ident RParen;`
     ///
     #[parol_runtime::function_name::named]
     fn attribute_arg_opt0_0(
@@ -1464,7 +1464,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 8:
     ///
-    /// AttributeArgOpt0 /* `Option<T>::None` */: ;
+    /// `AttributeArgOpt0 /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn attribute_arg_opt0_1(&mut self) -> Result<()> {
@@ -1476,7 +1476,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 9:
     ///
-    /// Item: UseStatement^ /* Clipped */;
+    /// `Item: UseStatement^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn item_0(&mut self, _use_statement: &ParseTreeType<'t>) -> Result<()> {
@@ -1496,7 +1496,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 10:
     ///
-    /// Item: ConstDeclaration;
+    /// `Item: ConstDeclaration;`
     ///
     #[parol_runtime::function_name::named]
     fn item_1(&mut self, _const_declaration: &ParseTreeType<'t>) -> Result<()> {
@@ -1515,7 +1515,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 11:
     ///
-    /// UseStatement: 'use' ScopedQualifiedIdent Semicolon;
+    /// `UseStatement: 'use' ScopedQualifiedIdent Semicolon;`
     ///
     #[parol_runtime::function_name::named]
     fn use_statement(
@@ -1543,7 +1543,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 12:
     ///
-    /// QualifiedIdent: Ident QualifiedIdentList /* Vec */;
+    /// `QualifiedIdent: Ident QualifiedIdentList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn qualified_ident(
@@ -1568,7 +1568,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 13:
     ///
-    /// QualifiedIdentList /* `Vec<T>::Push` */: DoubleColon Ident QualifiedIdentList;
+    /// `QualifiedIdentList /* Vec<T>::Push */: DoubleColon Ident QualifiedIdentList;`
     ///
     #[parol_runtime::function_name::named]
     fn qualified_ident_list_0(
@@ -1595,7 +1595,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 14:
     ///
-    /// QualifiedIdentList /* `Vec<T>::New` */: ;
+    /// `QualifiedIdentList /* Vec<T>::New */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn qualified_ident_list_1(&mut self) -> Result<()> {
@@ -1611,7 +1611,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 15:
     ///
-    /// ScopedQualifiedIdent: QualifiedIdent ScopedQualifiedIdentOpt /* Option */;
+    /// `ScopedQualifiedIdent: QualifiedIdent ScopedQualifiedIdentOpt /* Option */;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_qualified_ident(
@@ -1644,7 +1644,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 16:
     ///
-    /// ScopedQualifiedIdentOpt /* `Option<T>::Some` */: DoubleColon ScopedList;
+    /// `ScopedQualifiedIdentOpt /* Option<T>::Some */: DoubleColon ScopedList;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_qualified_ident_opt_0(
@@ -1669,7 +1669,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 17:
     ///
-    /// ScopedQualifiedIdentOpt /* `Option<T>::None` */: ;
+    /// `ScopedQualifiedIdentOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_qualified_ident_opt_1(&mut self) -> Result<()> {
@@ -1681,7 +1681,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 18:
     ///
-    /// ScopedList: LBrace ScopedListItems CommaOpt RBrace;
+    /// `ScopedList: LBrace ScopedListItems CommaOpt RBrace;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_list(
@@ -1711,7 +1711,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 19:
     ///
-    /// ScopedListItems: ScopedQualifiedIdent ScopedListItemsList /* Vec */;
+    /// `ScopedListItems: ScopedQualifiedIdent ScopedListItemsList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_list_items(
@@ -1738,7 +1738,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 20:
     ///
-    /// ScopedListItemsList /* `Vec<T>::Push` */: Comma^ /* Clipped */ ScopedQualifiedIdent ScopedListItemsList;
+    /// `ScopedListItemsList /* Vec<T>::Push */: Comma^ /* Clipped */ ScopedQualifiedIdent ScopedListItemsList;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_list_items_list_0(
@@ -1770,7 +1770,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 21:
     ///
-    /// ScopedListItemsList /* `Vec<T>::New` */: ;
+    /// `ScopedListItemsList /* Vec<T>::New */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn scoped_list_items_list_1(&mut self) -> Result<()> {
@@ -1786,7 +1786,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 22:
     ///
-    /// ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
+    /// `ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn const_declaration_0(
@@ -1831,7 +1831,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 23:
     ///
-    /// ConstDeclaration: ConstPreamble^ /* Clipped */ Skip^ /* Clipped */;
+    /// `ConstDeclaration: ConstPreamble^ /* Clipped */ Skip^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn const_declaration_1(
@@ -1863,7 +1863,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 24:
     ///
-    /// ConstPreamble: ConstQualifier^ /* Clipped */ ConstName Colon^ /* Clipped */;
+    /// `ConstPreamble: ConstQualifier^ /* Clipped */ ConstName Colon^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn const_preamble(
@@ -1892,7 +1892,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 25:
     ///
-    /// ConstQualifier: ConstQualifierOpt /* Option */ 'const';
+    /// `ConstQualifier: ConstQualifierOpt /* Option */ 'const';`
     ///
     #[parol_runtime::function_name::named]
     fn const_qualifier_0(
@@ -1919,7 +1919,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 26:
     ///
-    /// ConstQualifier: 'static';
+    /// `ConstQualifier: 'static';`
     ///
     #[parol_runtime::function_name::named]
     fn const_qualifier_1(&mut self, r#static: &ParseTreeType<'t>) -> Result<()> {
@@ -1937,7 +1937,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 27:
     ///
-    /// ConstQualifierOpt /* `Option<T>::Some` */: 'pub';
+    /// `ConstQualifierOpt /* Option<T>::Some */: 'pub';`
     ///
     #[parol_runtime::function_name::named]
     fn const_qualifier_opt_0(&mut self, r#pub: &ParseTreeType<'t>) -> Result<()> {
@@ -1954,7 +1954,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 28:
     ///
-    /// ConstQualifierOpt /* `Option<T>::None` */: ;
+    /// `ConstQualifierOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn const_qualifier_opt_1(&mut self) -> Result<()> {
@@ -1966,7 +1966,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 29:
     ///
-    /// ConstName: Ident;
+    /// `ConstName: Ident;`
     ///
     #[parol_runtime::function_name::named]
     fn const_name(&mut self, _ident: &ParseTreeType<'t>) -> Result<()> {
@@ -1984,7 +1984,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 30:
     ///
-    /// ConstVal: Number;
+    /// `ConstVal: Number;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_0(&mut self, _number: &ParseTreeType<'t>) -> Result<()> {
@@ -2003,7 +2003,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 31:
     ///
-    /// ConstVal: String;
+    /// `ConstVal: String;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_1(&mut self, _string: &ParseTreeType<'t>) -> Result<()> {
@@ -2022,7 +2022,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 32:
     ///
-    /// ConstVal: QualifiedVal;
+    /// `ConstVal: QualifiedVal;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_2(&mut self, _qualified_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2041,7 +2041,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 33:
     ///
-    /// ConstVal: ArrayVal;
+    /// `ConstVal: ArrayVal;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_3(&mut self, _array_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2060,7 +2060,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 34:
     ///
-    /// ConstVal: TupleVal;
+    /// `ConstVal: TupleVal;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_4(&mut self, _tuple_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2079,7 +2079,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 35:
     ///
-    /// ArrayVal: Ref^ /* Clipped */ LBracket^ /* Clipped */ ArrayValOpt /* Option */ RBracket^ /* Clipped */;
+    /// `ArrayVal: Ref^ /* Clipped */ LBracket^ /* Clipped */ ArrayValOpt /* Option */ RBracket^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn array_val(
@@ -2112,7 +2112,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 36:
     ///
-    /// ArrayValOpt /* `Option<T>::Some` */: ConstValList CommaOpt^ /* Clipped */;
+    /// `ArrayValOpt /* Option<T>::Some */: ConstValList CommaOpt^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn array_val_opt_0(
@@ -2138,7 +2138,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 37:
     ///
-    /// ArrayValOpt /* `Option<T>::None` */: ;
+    /// `ArrayValOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn array_val_opt_1(&mut self) -> Result<()> {
@@ -2150,7 +2150,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 38:
     ///
-    /// ConstValList: ConstVal ConstValListList /* Vec */;
+    /// `ConstValList: ConstVal ConstValListList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_list(
@@ -2175,7 +2175,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 39:
     ///
-    /// ConstValListList /* `Vec<T>::Push` */: Comma^ /* Clipped */ ConstVal ConstValListList;
+    /// `ConstValListList /* Vec<T>::Push */: Comma^ /* Clipped */ ConstVal ConstValListList;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_list_list_0(
@@ -2203,7 +2203,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 40:
     ///
-    /// ConstValListList /* `Vec<T>::New` */: ;
+    /// `ConstValListList /* Vec<T>::New */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn const_val_list_list_1(&mut self) -> Result<()> {
@@ -2219,7 +2219,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 41:
     ///
-    /// TupleVal: LParen^ /* Clipped */ TupleValOpt /* Option */ RParen^ /* Clipped */;
+    /// `TupleVal: LParen^ /* Clipped */ TupleValOpt /* Option */ RParen^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_val(
@@ -2248,7 +2248,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 42:
     ///
-    /// TupleValOpt /* `Option<T>::Some` */: ConstValList CommaOpt^ /* Clipped */;
+    /// `TupleValOpt /* Option<T>::Some */: ConstValList CommaOpt^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_val_opt_0(
@@ -2274,7 +2274,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 43:
     ///
-    /// TupleValOpt /* `Option<T>::None` */: ;
+    /// `TupleValOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_val_opt_1(&mut self) -> Result<()> {
@@ -2286,7 +2286,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 44:
     ///
-    /// QualifiedVal: QualifiedIdent QualifiedValOpt /* Option */;
+    /// `QualifiedVal: QualifiedIdent QualifiedValOpt /* Option */;`
     ///
     #[parol_runtime::function_name::named]
     fn qualified_val(
@@ -2310,7 +2310,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 45:
     ///
-    /// QualifiedValOpt /* `Option<T>::Some` */: StructOrTupleVal;
+    /// `QualifiedValOpt /* Option<T>::Some */: StructOrTupleVal;`
     ///
     #[parol_runtime::function_name::named]
     fn qualified_val_opt_0(&mut self, _struct_or_tuple_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2329,7 +2329,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 46:
     ///
-    /// QualifiedValOpt /* `Option<T>::None` */: ;
+    /// `QualifiedValOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn qualified_val_opt_1(&mut self) -> Result<()> {
@@ -2341,7 +2341,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 47:
     ///
-    /// StructOrTupleVal: StructVal;
+    /// `StructOrTupleVal: StructVal;`
     ///
     #[parol_runtime::function_name::named]
     fn struct_or_tuple_val_0(&mut self, _struct_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2364,7 +2364,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 48:
     ///
-    /// StructOrTupleVal: TupleStructVal;
+    /// `StructOrTupleVal: TupleStructVal;`
     ///
     #[parol_runtime::function_name::named]
     fn struct_or_tuple_val_1(&mut self, _tuple_struct_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2388,7 +2388,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 49:
     ///
-    /// StructVal: LBrace^ /* Clipped */ StructValOpt /* Option */ RBrace^ /* Clipped */;
+    /// `StructVal: LBrace^ /* Clipped */ StructValOpt /* Option */ RBrace^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn struct_val(
@@ -2417,7 +2417,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 50:
     ///
-    /// StructValOpt /* `Option<T>::Some` */: MemberValues Comma^ /* Clipped */;
+    /// `StructValOpt /* Option<T>::Some */: MemberValues Comma^ /* Clipped */;`
     ///
     #[parol_runtime::function_name::named]
     fn struct_val_opt_0(
@@ -2443,7 +2443,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 51:
     ///
-    /// StructValOpt /* `Option<T>::None` */: ;
+    /// `StructValOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn struct_val_opt_1(&mut self) -> Result<()> {
@@ -2455,7 +2455,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 52:
     ///
-    /// MemberValues: MemberValue MemberValuesList /* Vec */;
+    /// `MemberValues: MemberValue MemberValuesList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn member_values(
@@ -2480,7 +2480,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 53:
     ///
-    /// MemberValuesList /* `Vec<T>::Push` */: Comma^ /* Clipped */ MemberValue MemberValuesList;
+    /// `MemberValuesList /* Vec<T>::Push */: Comma^ /* Clipped */ MemberValue MemberValuesList;`
     ///
     #[parol_runtime::function_name::named]
     fn member_values_list_0(
@@ -2507,7 +2507,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 54:
     ///
-    /// MemberValuesList /* `Vec<T>::New` */: ;
+    /// `MemberValuesList /* Vec<T>::New */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn member_values_list_1(&mut self) -> Result<()> {
@@ -2523,7 +2523,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 55:
     ///
-    /// MemberValue: Ident Colon^ /* Clipped */ ConstVal;
+    /// `MemberValue: Ident Colon^ /* Clipped */ ConstVal;`
     ///
     #[parol_runtime::function_name::named]
     fn member_value(
@@ -2551,7 +2551,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 56:
     ///
-    /// TupleStructVal: TupleVal;
+    /// `TupleStructVal: TupleVal;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_struct_val(&mut self, _tuple_val: &ParseTreeType<'t>) -> Result<()> {
@@ -2570,7 +2570,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 57:
     ///
-    /// TypeSpec: QualifiedIdent;
+    /// `TypeSpec: QualifiedIdent;`
     ///
     #[parol_runtime::function_name::named]
     fn type_spec_0(&mut self, _qualified_ident: &ParseTreeType<'t>) -> Result<()> {
@@ -2589,7 +2589,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 58:
     ///
-    /// TypeSpec: ArrayType;
+    /// `TypeSpec: ArrayType;`
     ///
     #[parol_runtime::function_name::named]
     fn type_spec_1(&mut self, _array_type: &ParseTreeType<'t>) -> Result<()> {
@@ -2608,7 +2608,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 59:
     ///
-    /// TypeSpec: TupleType;
+    /// `TypeSpec: TupleType;`
     ///
     #[parol_runtime::function_name::named]
     fn type_spec_2(&mut self, _tuple_type: &ParseTreeType<'t>) -> Result<()> {
@@ -2627,7 +2627,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 60:
     ///
-    /// ArrayType: Ref LBracket ArrayTypeSpec RBracket;
+    /// `ArrayType: Ref LBracket ArrayTypeSpec RBracket;`
     ///
     #[parol_runtime::function_name::named]
     fn array_type(
@@ -2657,7 +2657,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 61:
     ///
-    /// ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ Ident Semicolon Number;
+    /// `ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ Ident Semicolon Number;`
     ///
     #[parol_runtime::function_name::named]
     fn array_type_spec(
@@ -2687,7 +2687,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 62:
     ///
-    /// ArrayTypeSpecOpt /* `Option<T>::Some` */: Ref;
+    /// `ArrayTypeSpecOpt /* Option<T>::Some */: Ref;`
     ///
     #[parol_runtime::function_name::named]
     fn array_type_spec_opt_0(&mut self, _ref: &ParseTreeType<'t>) -> Result<()> {
@@ -2706,7 +2706,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 63:
     ///
-    /// ArrayTypeSpecOpt /* `Option<T>::None` */: ;
+    /// `ArrayTypeSpecOpt /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn array_type_spec_opt_1(&mut self) -> Result<()> {
@@ -2718,7 +2718,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 64:
     ///
-    /// TupleType: LParen TupleItems CommaOpt RParen;
+    /// `TupleType: LParen TupleItems CommaOpt RParen;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_type(
@@ -2748,7 +2748,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 65:
     ///
-    /// TupleItems: TypeSpec TupleItemsList /* Vec */;
+    /// `TupleItems: TypeSpec TupleItemsList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_items(
@@ -2773,7 +2773,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 66:
     ///
-    /// TupleItemsList /* `Vec<T>::Push` */: Comma TypeSpec TupleItemsList;
+    /// `TupleItemsList /* Vec<T>::Push */: Comma TypeSpec TupleItemsList;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_items_list_0(
@@ -2799,7 +2799,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 67:
     ///
-    /// TupleItemsList /* `Vec<T>::New` */: ;
+    /// `TupleItemsList /* Vec<T>::New */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_items_list_1(&mut self) -> Result<()> {
@@ -2812,7 +2812,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 68:
     ///
-    /// Skip: /(?s)&\[Production; \d+\] = &\[.*(?-s)/;
+    /// `Skip: /(?s)&\[Production; \d+\] = &\[.*(?-s)/;`
     ///
     #[parol_runtime::function_name::named]
     fn skip(&mut self, skip: &ParseTreeType<'t>) -> Result<()> {
@@ -2828,7 +2828,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 69:
     ///
-    /// CommaOpt: CommaOpt0 /* Option */;
+    /// `CommaOpt: CommaOpt0 /* Option */;`
     ///
     #[parol_runtime::function_name::named]
     fn comma_opt(&mut self, _comma_opt0: &ParseTreeType<'t>) -> Result<()> {
@@ -2844,7 +2844,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 70:
     ///
-    /// CommaOpt0 /* `Option<T>::Some` */: Comma;
+    /// `CommaOpt0 /* Option<T>::Some */: Comma;`
     ///
     #[parol_runtime::function_name::named]
     fn comma_opt0_0(&mut self, _comma: &ParseTreeType<'t>) -> Result<()> {
@@ -2863,7 +2863,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 71:
     ///
-    /// CommaOpt0 /* `Option<T>::None` */: ;
+    /// `CommaOpt0 /* Option<T>::None */: ;`
     ///
     #[parol_runtime::function_name::named]
     fn comma_opt0_1(&mut self) -> Result<()> {
@@ -2875,7 +2875,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 72:
     ///
-    /// Assign: '=';
+    /// `Assign: '=';`
     ///
     #[parol_runtime::function_name::named]
     fn assign(&mut self, assign: &ParseTreeType<'t>) -> Result<()> {
@@ -2891,7 +2891,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 73:
     ///
-    /// Number: /-?\d+/;
+    /// `Number: /-?\d+/;`
     ///
     #[parol_runtime::function_name::named]
     fn number(&mut self, number: &ParseTreeType<'t>) -> Result<()> {
@@ -2907,7 +2907,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 74:
     ///
-    /// Ref: '&';
+    /// `Ref: '&';`
     ///
     #[parol_runtime::function_name::named]
     fn r#ref(&mut self, r#ref: &ParseTreeType<'t>) -> Result<()> {
@@ -2923,7 +2923,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 75:
     ///
-    /// Semicolon: ';';
+    /// `Semicolon: ';';`
     ///
     #[parol_runtime::function_name::named]
     fn semicolon(&mut self, semicolon: &ParseTreeType<'t>) -> Result<()> {
@@ -2939,7 +2939,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 76:
     ///
-    /// Comma: ',';
+    /// `Comma: ',';`
     ///
     #[parol_runtime::function_name::named]
     fn comma(&mut self, comma: &ParseTreeType<'t>) -> Result<()> {
@@ -2955,7 +2955,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 77:
     ///
-    /// String: QuotedString;
+    /// `String: QuotedString;`
     ///
     #[parol_runtime::function_name::named]
     fn string_0(&mut self, _quoted_string: &ParseTreeType<'t>) -> Result<()> {
@@ -2974,7 +2974,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 78:
     ///
-    /// String: RawString;
+    /// `String: RawString;`
     ///
     #[parol_runtime::function_name::named]
     fn string_1(&mut self, _raw_string: &ParseTreeType<'t>) -> Result<()> {
@@ -2993,7 +2993,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 79:
     ///
-    /// QuotedString: /r#{0, 3}".*"#{0, 3}/;
+    /// `QuotedString: /r#{0, 3}".*"#{0, 3}/;`
     ///
     #[parol_runtime::function_name::named]
     fn quoted_string(&mut self, quoted_string: &ParseTreeType<'t>) -> Result<()> {
@@ -3009,7 +3009,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 80:
     ///
-    /// RawString: /"(\\.|[^\\])*?"/;
+    /// `RawString: /"(\\.|[^\\])*?"/;`
     ///
     #[parol_runtime::function_name::named]
     fn raw_string(&mut self, raw_string: &ParseTreeType<'t>) -> Result<()> {
@@ -3025,7 +3025,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 81:
     ///
-    /// Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;
+    /// `Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;`
     ///
     #[parol_runtime::function_name::named]
     fn ident(&mut self, ident: &ParseTreeType<'t>) -> Result<()> {
@@ -3041,7 +3041,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 82:
     ///
-    /// DoubleColon: '::';
+    /// `DoubleColon: '::';`
     ///
     #[parol_runtime::function_name::named]
     fn double_colon(&mut self, double_colon: &ParseTreeType<'t>) -> Result<()> {
@@ -3057,7 +3057,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 83:
     ///
-    /// Colon: ':';
+    /// `Colon: ':';`
     ///
     #[parol_runtime::function_name::named]
     fn colon(&mut self, colon: &ParseTreeType<'t>) -> Result<()> {
@@ -3073,7 +3073,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 84:
     ///
-    /// LBrace: '{';
+    /// `LBrace: '{';`
     ///
     #[parol_runtime::function_name::named]
     fn l_brace(&mut self, l_brace: &ParseTreeType<'t>) -> Result<()> {
@@ -3089,7 +3089,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 85:
     ///
-    /// RBrace: '}';
+    /// `RBrace: '}';`
     ///
     #[parol_runtime::function_name::named]
     fn r_brace(&mut self, r_brace: &ParseTreeType<'t>) -> Result<()> {
@@ -3105,7 +3105,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 86:
     ///
-    /// LBracket: '[';
+    /// `LBracket: '[';`
     ///
     #[parol_runtime::function_name::named]
     fn l_bracket(&mut self, l_bracket: &ParseTreeType<'t>) -> Result<()> {
@@ -3121,7 +3121,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 87:
     ///
-    /// RBracket: ']';
+    /// `RBracket: ']';`
     ///
     #[parol_runtime::function_name::named]
     fn r_bracket(&mut self, r_bracket: &ParseTreeType<'t>) -> Result<()> {
@@ -3137,7 +3137,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 88:
     ///
-    /// LParen: '(';
+    /// `LParen: '(';`
     ///
     #[parol_runtime::function_name::named]
     fn l_paren(&mut self, l_paren: &ParseTreeType<'t>) -> Result<()> {
@@ -3153,7 +3153,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 89:
     ///
-    /// RParen: ')';
+    /// `RParen: ')';`
     ///
     #[parol_runtime::function_name::named]
     fn r_paren(&mut self, r_paren: &ParseTreeType<'t>) -> Result<()> {
@@ -3169,7 +3169,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 90:
     ///
-    /// Hash: /#/;
+    /// `Hash: /#/;`
     ///
     #[parol_runtime::function_name::named]
     fn hash(&mut self, hash: &ParseTreeType<'t>) -> Result<()> {
