@@ -23,15 +23,15 @@ la_dfa_2_dot --help
 to get help.
 
 
-Try to visualize the lookahead DFAs if the LL(5) grammar used by this tool
+To visualize the lookahead DFAs of the LL(5) grammar used by this crate call this
 
 ```shell
 la_dfa_2_dot -f .\src\la_dfa_2_dot_parser.rs -o ..\la_dfa_2_dot_dot
 ```
 
 Please note, that the invocation above will create a folder in parallel to the current crate's
-folder. This folder will contain the dot files derived or re-engineered form the parser used in this
-crate.
+folder. This folder will contain the dot files derived resp. re-engineered form the parser used in
+this crate.
 
 Inspect for instance the file `ConstDeclaration.dot` which is a good example of a LL(5) lookahead
 DFA.
