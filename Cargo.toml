@@ -14,15 +14,15 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 anyhow = "1.0"
 clap = { version = "4.3.1", features = ["derive", "cargo"] }
-env_logger = "0.10.0"
-parol_runtime = { version = "0.20.0", features = ["auto_generation"] }
+env_logger = "0.11.1"
+parol_runtime = { version = "0.20.1", features = ["auto_generation"] }
 regex = "1.8.4"
 tera = "1.19.0"
 thiserror = "1.0"
 
 [build-dependencies]
-parol = "0.25.0"
-parol_runtime = { version = "0.20.0", features = ["auto_generation"] }
+parol = "0.26.1"
+parol_runtime = { version = "0.20.1", features = ["auto_generation"] }
 
 # For faster builds.
 [profile.dev.build-override]

@@ -45,11 +45,11 @@ impl<'t> Ident<'t> {
 impl<'t> MemberValues<'t> {
     fn get_member(&self, ident: &str) -> Option<&ConstVal<'t>> {
         if self.member_value.ident.text() == ident {
-            Some(self.member_value.const_val.as_ref())
+            Some(&self.member_value.const_val)
         } else {
             self.member_values_list.iter().find_map(|m| {
                 if m.member_value.ident.text() == ident {
-                    Some(m.member_value.const_val.as_ref())
+                    Some(&m.member_value.const_val)
                 } else {
                     None
                 }
@@ -114,10 +114,10 @@ impl LaDfa2DotGrammar<'_> {
             ConstVal::Number(to),
             ConstVal::Number(prod),
         ) = (
-            cv_list.const_val.as_ref(),
-            cv_list.const_val_list_list[0].const_val.as_ref(),
-            cv_list.const_val_list_list[1].const_val.as_ref(),
-            cv_list.const_val_list_list[2].const_val.as_ref(),
+            &cv_list.const_val,
+            &cv_list.const_val_list_list[0].const_val,
+            &cv_list.const_val_list_list[1].const_val,
+            &cv_list.const_val_list_list[2].const_val,
         ) {
             let id = Self::extract_value(id);
             let term = Self::extract_value(term);
@@ -296,7 +296,7 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
         let ident = q.qualified_ident.ident.ident.text();
         if ident == "LookaheadDFA" {
             if let Some(qualified_val) = q.qualified_val_opt.as_ref() {
-                if let StructOrTupleVal::StructVal(struct_val) = &*qualified_val.struct_or_tuple_val
+                if let StructOrTupleVal::StructVal(struct_val) = &qualified_val.struct_or_tuple_val
                 {
                     self.process_lookahead_struct(&struct_val.struct_val)?;
                 }
@@ -304,7 +304,7 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
         } else if ident == "Trans" {
             if let Some(qualified_val) = q.qualified_val_opt.as_ref() {
                 if let StructOrTupleVal::TupleStructVal(tuple_val) =
-                    &*qualified_val.struct_or_tuple_val
+                    &qualified_val.struct_or_tuple_val
                 {
                     self.process_trans_tuple(&tuple_val.tuple_struct_val.tuple_val)?;
                 }

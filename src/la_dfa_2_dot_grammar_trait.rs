@@ -288,7 +288,7 @@ pub struct ItemUseStatement {}
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ItemConstDeclaration<'t> {
-    pub const_declaration: Box<ConstDeclaration<'t>>,
+    pub const_declaration: ConstDeclaration<'t>,
 }
 
 ///
@@ -300,8 +300,8 @@ pub struct ItemConstDeclaration<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon<'t> {
-    pub const_preamble: Box<ConstPreamble<'t>>,
-    pub const_val: Box<ConstVal<'t>>,
+    pub const_preamble: ConstPreamble<'t>,
+    pub const_val: ConstVal<'t>,
 }
 
 ///
@@ -323,7 +323,7 @@ pub struct ConstDeclarationConstPreambleSkip {}
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstQualifierConstQualifierOptConst<'t> {
-    pub const_qualifier_opt: Option<Box<ConstQualifierOpt<'t>>>,
+    pub const_qualifier_opt: Option<ConstQualifierOpt<'t>>,
     pub r#const: Token<'t>, /* const */
 }
 
@@ -348,7 +348,7 @@ pub struct ConstQualifierStatic<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValNumber<'t> {
-    pub number: Box<Number<'t>>,
+    pub number: Number<'t>,
 }
 
 ///
@@ -360,7 +360,7 @@ pub struct ConstValNumber<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValString<'t> {
-    pub string: Box<String<'t>>,
+    pub string: String<'t>,
 }
 
 ///
@@ -420,7 +420,7 @@ pub struct StructOrTupleValStructVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StructOrTupleValTupleStructVal<'t> {
-    pub tuple_struct_val: Box<TupleStructVal<'t>>,
+    pub tuple_struct_val: TupleStructVal<'t>,
 }
 
 ///
@@ -432,7 +432,7 @@ pub struct StructOrTupleValTupleStructVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TypeSpecQualifiedIdent<'t> {
-    pub qualified_ident: Box<QualifiedIdent<'t>>,
+    pub qualified_ident: QualifiedIdent<'t>,
 }
 
 ///
@@ -444,7 +444,7 @@ pub struct TypeSpecQualifiedIdent<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TypeSpecArrayType<'t> {
-    pub array_type: Box<ArrayType<'t>>,
+    pub array_type: ArrayType<'t>,
 }
 
 ///
@@ -468,7 +468,7 @@ pub struct TypeSpecTupleType<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StringQuotedString<'t> {
-    pub quoted_string: Box<QuotedString<'t>>,
+    pub quoted_string: QuotedString<'t>,
 }
 
 ///
@@ -480,7 +480,7 @@ pub struct StringQuotedString<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StringRawString<'t> {
-    pub raw_string: Box<RawString<'t>>,
+    pub raw_string: RawString<'t>,
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -495,10 +495,10 @@ pub struct StringRawString<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayType<'t> {
-    pub r#ref: Box<Ref<'t>>,
-    pub l_bracket: Box<LBracket<'t>>,
-    pub array_type_spec: Box<ArrayTypeSpec<'t>>,
-    pub r_bracket: Box<RBracket<'t>>,
+    pub r#ref: Ref<'t>,
+    pub l_bracket: LBracket<'t>,
+    pub array_type_spec: ArrayTypeSpec<'t>,
+    pub r_bracket: RBracket<'t>,
 }
 
 ///
@@ -508,10 +508,10 @@ pub struct ArrayType<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayTypeSpec<'t> {
-    pub array_type_spec_opt: Option<Box<ArrayTypeSpecOpt<'t>>>,
-    pub ident: Box<Ident<'t>>,
-    pub semicolon: Box<Semicolon<'t>>,
-    pub number: Box<Number<'t>>,
+    pub array_type_spec_opt: Option<ArrayTypeSpecOpt<'t>>,
+    pub ident: Ident<'t>,
+    pub semicolon: Semicolon<'t>,
+    pub number: Number<'t>,
 }
 
 ///
@@ -521,7 +521,7 @@ pub struct ArrayTypeSpec<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayTypeSpecOpt<'t> {
-    pub r#ref: Box<Ref<'t>>,
+    pub r#ref: Ref<'t>,
 }
 
 ///
@@ -531,7 +531,7 @@ pub struct ArrayTypeSpecOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayVal<'t> {
-    pub array_val_opt: Option<Box<ArrayValOpt<'t>>>,
+    pub array_val_opt: Option<ArrayValOpt<'t>>,
 }
 
 ///
@@ -541,7 +541,7 @@ pub struct ArrayVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayValOpt<'t> {
-    pub const_val_list: Box<ConstValList<'t>>,
+    pub const_val_list: ConstValList<'t>,
 }
 
 ///
@@ -561,7 +561,7 @@ pub struct Assign<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct AttributeArgOpt<'t> {
-    pub attribute_arg_opt0: Option<Box<AttributeArgOpt0<'t>>>,
+    pub attribute_arg_opt0: Option<AttributeArgOpt0<'t>>,
 }
 
 ///
@@ -571,9 +571,9 @@ pub struct AttributeArgOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct AttributeArgOpt0<'t> {
-    pub l_paren: Box<LParen<'t>>,
-    pub ident: Box<Ident<'t>>,
-    pub r_paren: Box<RParen<'t>>,
+    pub l_paren: LParen<'t>,
+    pub ident: Ident<'t>,
+    pub r_paren: RParen<'t>,
 }
 
 ///
@@ -583,7 +583,7 @@ pub struct AttributeArgOpt0<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct AttributeOpt<'t> {
-    pub attribute_opt0: Option<Box<AttributeOpt0<'t>>>,
+    pub attribute_opt0: Option<AttributeOpt0<'t>>,
 }
 
 ///
@@ -593,11 +593,11 @@ pub struct AttributeOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct AttributeOpt0<'t> {
-    pub hash: Box<Hash<'t>>,
-    pub l_bracket: Box<LBracket<'t>>,
-    pub ident: Box<Ident<'t>>,
-    pub attribute_arg_opt: Box<AttributeArgOpt<'t>>,
-    pub r_bracket: Box<RBracket<'t>>,
+    pub hash: Hash<'t>,
+    pub l_bracket: LBracket<'t>,
+    pub ident: Ident<'t>,
+    pub attribute_arg_opt: AttributeArgOpt<'t>,
+    pub r_bracket: RBracket<'t>,
 }
 
 ///
@@ -627,7 +627,7 @@ pub struct Comma<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct CommaOpt<'t> {
-    pub comma_opt0: Option<Box<CommaOpt0<'t>>>,
+    pub comma_opt0: Option<CommaOpt0<'t>>,
 }
 
 ///
@@ -637,7 +637,7 @@ pub struct CommaOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct CommaOpt0<'t> {
-    pub comma: Box<Comma<'t>>,
+    pub comma: Comma<'t>,
 }
 
 ///
@@ -659,7 +659,7 @@ pub enum ConstDeclaration<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstName<'t> {
-    pub ident: Box<Ident<'t>>,
+    pub ident: Ident<'t>,
 }
 
 ///
@@ -669,7 +669,7 @@ pub struct ConstName<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstPreamble<'t> {
-    pub const_name: Box<ConstName<'t>>,
+    pub const_name: ConstName<'t>,
 }
 
 ///
@@ -712,7 +712,7 @@ pub enum ConstVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValList<'t> {
-    pub const_val: Box<ConstVal<'t>>,
+    pub const_val: ConstVal<'t>,
     pub const_val_list_list: Vec<ConstValListList<'t>>,
 }
 
@@ -723,7 +723,7 @@ pub struct ConstValList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ConstValListList<'t> {
-    pub const_val: Box<ConstVal<'t>>,
+    pub const_val: ConstVal<'t>,
 }
 
 ///
@@ -813,7 +813,7 @@ pub struct LaDfa2Dot<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct LaDfa2DotList<'t> {
-    pub item: Box<Item<'t>>,
+    pub item: Item<'t>,
 }
 
 ///
@@ -823,8 +823,8 @@ pub struct LaDfa2DotList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct MemberValue<'t> {
-    pub ident: Box<Ident<'t>>,
-    pub const_val: Box<ConstVal<'t>>,
+    pub ident: Ident<'t>,
+    pub const_val: ConstVal<'t>,
 }
 
 ///
@@ -834,7 +834,7 @@ pub struct MemberValue<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct MemberValues<'t> {
-    pub member_value: Box<MemberValue<'t>>,
+    pub member_value: MemberValue<'t>,
     pub member_values_list: Vec<MemberValuesList<'t>>,
 }
 
@@ -845,7 +845,7 @@ pub struct MemberValues<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct MemberValuesList<'t> {
-    pub member_value: Box<MemberValue<'t>>,
+    pub member_value: MemberValue<'t>,
 }
 
 ///
@@ -865,7 +865,7 @@ pub struct Number<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct QualifiedIdent<'t> {
-    pub ident: Box<Ident<'t>>,
+    pub ident: Ident<'t>,
     pub qualified_ident_list: Vec<QualifiedIdentList<'t>>,
 }
 
@@ -876,8 +876,8 @@ pub struct QualifiedIdent<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct QualifiedIdentList<'t> {
-    pub double_colon: Box<DoubleColon<'t>>,
-    pub ident: Box<Ident<'t>>,
+    pub double_colon: DoubleColon<'t>,
+    pub ident: Ident<'t>,
 }
 
 ///
@@ -887,8 +887,8 @@ pub struct QualifiedIdentList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct QualifiedVal<'t> {
-    pub qualified_ident: Box<QualifiedIdent<'t>>,
-    pub qualified_val_opt: Option<Box<QualifiedValOpt<'t>>>,
+    pub qualified_ident: QualifiedIdent<'t>,
+    pub qualified_val_opt: Option<QualifiedValOpt<'t>>,
 }
 
 ///
@@ -898,7 +898,7 @@ pub struct QualifiedVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct QualifiedValOpt<'t> {
-    pub struct_or_tuple_val: Box<StructOrTupleVal<'t>>,
+    pub struct_or_tuple_val: StructOrTupleVal<'t>,
 }
 
 ///
@@ -968,10 +968,10 @@ pub struct Ref<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ScopedList<'t> {
-    pub l_brace: Box<LBrace<'t>>,
+    pub l_brace: LBrace<'t>,
     pub scoped_list_items: Box<ScopedListItems<'t>>,
-    pub comma_opt: Box<CommaOpt<'t>>,
-    pub r_brace: Box<RBrace<'t>>,
+    pub comma_opt: CommaOpt<'t>,
+    pub r_brace: RBrace<'t>,
 }
 
 ///
@@ -981,7 +981,7 @@ pub struct ScopedList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ScopedListItems<'t> {
-    pub scoped_qualified_ident: Box<ScopedQualifiedIdent<'t>>,
+    pub scoped_qualified_ident: ScopedQualifiedIdent<'t>,
     pub scoped_list_items_list: Vec<ScopedListItemsList<'t>>,
 }
 
@@ -992,7 +992,7 @@ pub struct ScopedListItems<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ScopedListItemsList<'t> {
-    pub scoped_qualified_ident: Box<ScopedQualifiedIdent<'t>>,
+    pub scoped_qualified_ident: ScopedQualifiedIdent<'t>,
 }
 
 ///
@@ -1002,8 +1002,8 @@ pub struct ScopedListItemsList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ScopedQualifiedIdent<'t> {
-    pub qualified_ident: Box<QualifiedIdent<'t>>,
-    pub scoped_qualified_ident_opt: Option<Box<ScopedQualifiedIdentOpt<'t>>>,
+    pub qualified_ident: QualifiedIdent<'t>,
+    pub scoped_qualified_ident_opt: Option<ScopedQualifiedIdentOpt<'t>>,
 }
 
 ///
@@ -1013,8 +1013,8 @@ pub struct ScopedQualifiedIdent<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ScopedQualifiedIdentOpt<'t> {
-    pub double_colon: Box<DoubleColon<'t>>,
-    pub scoped_list: Box<ScopedList<'t>>,
+    pub double_colon: DoubleColon<'t>,
+    pub scoped_list: ScopedList<'t>,
 }
 
 ///
@@ -1064,7 +1064,7 @@ pub enum StructOrTupleVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StructVal<'t> {
-    pub struct_val_opt: Option<Box<StructValOpt<'t>>>,
+    pub struct_val_opt: Option<StructValOpt<'t>>,
 }
 
 ///
@@ -1074,7 +1074,7 @@ pub struct StructVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct StructValOpt<'t> {
-    pub member_values: Box<MemberValues<'t>>,
+    pub member_values: MemberValues<'t>,
 }
 
 ///
@@ -1084,7 +1084,7 @@ pub struct StructValOpt<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleItems<'t> {
-    pub type_spec: Box<TypeSpec<'t>>,
+    pub type_spec: TypeSpec<'t>,
     pub tuple_items_list: Vec<TupleItemsList<'t>>,
 }
 
@@ -1095,8 +1095,8 @@ pub struct TupleItems<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleItemsList<'t> {
-    pub comma: Box<Comma<'t>>,
-    pub type_spec: Box<TypeSpec<'t>>,
+    pub comma: Comma<'t>,
+    pub type_spec: TypeSpec<'t>,
 }
 
 ///
@@ -1106,7 +1106,7 @@ pub struct TupleItemsList<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleStructVal<'t> {
-    pub tuple_val: Box<TupleVal<'t>>,
+    pub tuple_val: TupleVal<'t>,
 }
 
 ///
@@ -1116,10 +1116,10 @@ pub struct TupleStructVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleType<'t> {
-    pub l_paren: Box<LParen<'t>>,
-    pub tuple_items: Box<TupleItems<'t>>,
-    pub comma_opt: Box<CommaOpt<'t>>,
-    pub r_paren: Box<RParen<'t>>,
+    pub l_paren: LParen<'t>,
+    pub tuple_items: TupleItems<'t>,
+    pub comma_opt: CommaOpt<'t>,
+    pub r_paren: RParen<'t>,
 }
 
 ///
@@ -1129,7 +1129,7 @@ pub struct TupleType<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleVal<'t> {
-    pub tuple_val_opt: Option<Box<TupleValOpt<'t>>>,
+    pub tuple_val_opt: Option<TupleValOpt<'t>>,
 }
 
 ///
@@ -1139,7 +1139,7 @@ pub struct TupleVal<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleValOpt<'t> {
-    pub const_val_list: Box<ConstValList<'t>>,
+    pub const_val_list: ConstValList<'t>,
 }
 
 ///
@@ -1161,8 +1161,8 @@ pub enum TypeSpec<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct UseStatement<'t> {
     pub r#use: Token<'t>, /* use */
-    pub scoped_qualified_ident: Box<ScopedQualifiedIdent<'t>>,
-    pub semicolon: Box<Semicolon<'t>>,
+    pub scoped_qualified_ident: ScopedQualifiedIdent<'t>,
+    pub semicolon: Semicolon<'t>,
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1175,23 +1175,23 @@ pub struct UseStatement<'t> {
 pub enum ASTType<'t> {
     ArrayType(ArrayType<'t>),
     ArrayTypeSpec(ArrayTypeSpec<'t>),
-    ArrayTypeSpecOpt(Option<Box<ArrayTypeSpecOpt<'t>>>),
+    ArrayTypeSpecOpt(Option<ArrayTypeSpecOpt<'t>>),
     ArrayVal(ArrayVal<'t>),
-    ArrayValOpt(Option<Box<ArrayValOpt<'t>>>),
+    ArrayValOpt(Option<ArrayValOpt<'t>>),
     Assign(Assign<'t>),
     AttributeArgOpt(AttributeArgOpt<'t>),
-    AttributeArgOpt0(Option<Box<AttributeArgOpt0<'t>>>),
+    AttributeArgOpt0(Option<AttributeArgOpt0<'t>>),
     AttributeOpt(AttributeOpt<'t>),
-    AttributeOpt0(Option<Box<AttributeOpt0<'t>>>),
+    AttributeOpt0(Option<AttributeOpt0<'t>>),
     Colon(Colon<'t>),
     Comma(Comma<'t>),
     CommaOpt(CommaOpt<'t>),
-    CommaOpt0(Option<Box<CommaOpt0<'t>>>),
+    CommaOpt0(Option<CommaOpt0<'t>>),
     ConstDeclaration(ConstDeclaration<'t>),
     ConstName(ConstName<'t>),
     ConstPreamble(ConstPreamble<'t>),
     ConstQualifier(ConstQualifier<'t>),
-    ConstQualifierOpt(Option<Box<ConstQualifierOpt<'t>>>),
+    ConstQualifierOpt(Option<ConstQualifierOpt<'t>>),
     ConstVal(ConstVal<'t>),
     ConstValList(ConstValList<'t>),
     ConstValListList(Vec<ConstValListList<'t>>),
@@ -1211,7 +1211,7 @@ pub enum ASTType<'t> {
     QualifiedIdent(QualifiedIdent<'t>),
     QualifiedIdentList(Vec<QualifiedIdentList<'t>>),
     QualifiedVal(QualifiedVal<'t>),
-    QualifiedValOpt(Option<Box<QualifiedValOpt<'t>>>),
+    QualifiedValOpt(Option<QualifiedValOpt<'t>>),
     QuotedString(QuotedString<'t>),
     RBrace(RBrace<'t>),
     RBracket(RBracket<'t>),
@@ -1222,19 +1222,19 @@ pub enum ASTType<'t> {
     ScopedListItems(ScopedListItems<'t>),
     ScopedListItemsList(Vec<ScopedListItemsList<'t>>),
     ScopedQualifiedIdent(ScopedQualifiedIdent<'t>),
-    ScopedQualifiedIdentOpt(Option<Box<ScopedQualifiedIdentOpt<'t>>>),
+    ScopedQualifiedIdentOpt(Option<ScopedQualifiedIdentOpt<'t>>),
     Semicolon(Semicolon<'t>),
     Skip(Skip<'t>),
     String(String<'t>),
     StructOrTupleVal(StructOrTupleVal<'t>),
     StructVal(StructVal<'t>),
-    StructValOpt(Option<Box<StructValOpt<'t>>>),
+    StructValOpt(Option<StructValOpt<'t>>),
     TupleItems(TupleItems<'t>),
     TupleItemsList(Vec<TupleItemsList<'t>>),
     TupleStructVal(TupleStructVal<'t>),
     TupleType(TupleType<'t>),
     TupleVal(TupleVal<'t>),
-    TupleValOpt(Option<Box<TupleValOpt<'t>>>),
+    TupleValOpt(Option<TupleValOpt<'t>>),
     TypeSpec(TypeSpec<'t>),
     UseStatement(UseStatement<'t>),
 }
@@ -1330,12 +1330,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let mut la_dfa2_dot_list = pop_item!(self, la_dfa2_dot_list, LaDfa2DotList, context);
         let item = pop_item!(self, item, Item, context);
-        // Ignore clipped member 'attribute_opt'
         self.pop(context);
-        let la_dfa2_dot_list_0_built = LaDfa2DotList {
-            item: Box::new(item),
-            // Ignore clipped member 'attribute_opt'
-        };
+        let la_dfa2_dot_list_0_built = LaDfa2DotList { item };
         // Add an element to the vector
         la_dfa2_dot_list.push(la_dfa2_dot_list_0_built);
         self.push(ASTType::LaDfa2DotList(la_dfa2_dot_list), context);
@@ -1392,14 +1388,14 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let l_bracket = pop_item!(self, l_bracket, LBracket, context);
         let hash = pop_item!(self, hash, Hash, context);
         let attribute_opt0_0_built = AttributeOpt0 {
-            hash: Box::new(hash),
-            l_bracket: Box::new(l_bracket),
-            ident: Box::new(ident),
-            attribute_arg_opt: Box::new(attribute_arg_opt),
-            r_bracket: Box::new(r_bracket),
+            hash,
+            l_bracket,
+            ident,
+            attribute_arg_opt,
+            r_bracket,
         };
         self.push(
-            ASTType::AttributeOpt0(Some(Box::new(attribute_opt0_0_built))),
+            ASTType::AttributeOpt0(Some(attribute_opt0_0_built)),
             context,
         );
         Ok(())
@@ -1451,12 +1447,12 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let ident = pop_item!(self, ident, Ident, context);
         let l_paren = pop_item!(self, l_paren, LParen, context);
         let attribute_arg_opt0_0_built = AttributeArgOpt0 {
-            l_paren: Box::new(l_paren),
-            ident: Box::new(ident),
-            r_paren: Box::new(r_paren),
+            l_paren,
+            ident,
+            r_paren,
         };
         self.push(
-            ASTType::AttributeArgOpt0(Some(Box::new(attribute_arg_opt0_0_built))),
+            ASTType::AttributeArgOpt0(Some(attribute_arg_opt0_0_built)),
             context,
         );
         Ok(())
@@ -1482,11 +1478,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     fn item_0(&mut self, _use_statement: &ParseTreeType<'t>) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'use_statement'
         self.pop(context);
-        let item_0_built = ItemUseStatement {
-        // Ignore clipped member 'use_statement'
-        };
+        let item_0_built = ItemUseStatement {};
         let item_0_built = Item::UseStatement(item_0_built);
         // Calling user action here
         self.user_grammar.item(&item_0_built)?;
@@ -1503,9 +1496,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let const_declaration = pop_item!(self, const_declaration, ConstDeclaration, context);
-        let item_1_built = ItemConstDeclaration {
-            const_declaration: Box::new(const_declaration),
-        };
+        let item_1_built = ItemConstDeclaration { const_declaration };
         let item_1_built = Item::ConstDeclaration(item_1_built);
         // Calling user action here
         self.user_grammar.item(&item_1_built)?;
@@ -1532,8 +1523,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
             pop_item!(self, scoped_qualified_ident, ScopedQualifiedIdent, context);
         let use_statement_built = UseStatement {
             r#use,
-            scoped_qualified_ident: Box::new(scoped_qualified_ident),
-            semicolon: Box::new(semicolon),
+            scoped_qualified_ident,
+            semicolon,
         };
         // Calling user action here
         self.user_grammar.use_statement(&use_statement_built)?;
@@ -1557,7 +1548,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
             pop_and_reverse_item!(self, qualified_ident_list, QualifiedIdentList, context);
         let ident = pop_item!(self, ident, Ident, context);
         let qualified_ident_built = QualifiedIdent {
-            ident: Box::new(ident),
+            ident,
             qualified_ident_list,
         };
         // Calling user action here
@@ -1584,8 +1575,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let ident = pop_item!(self, ident, Ident, context);
         let double_colon = pop_item!(self, double_colon, DoubleColon, context);
         let qualified_ident_list_0_built = QualifiedIdentList {
-            ident: Box::new(ident),
-            double_colon: Box::new(double_colon),
+            ident,
+            double_colon,
         };
         // Add an element to the vector
         qualified_ident_list.push(qualified_ident_list_0_built);
@@ -1629,7 +1620,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         );
         let qualified_ident = pop_item!(self, qualified_ident, QualifiedIdent, context);
         let scoped_qualified_ident_built = ScopedQualifiedIdent {
-            qualified_ident: Box::new(qualified_ident),
+            qualified_ident,
             scoped_qualified_ident_opt,
         };
         // Calling user action here
@@ -1657,11 +1648,11 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let scoped_list = pop_item!(self, scoped_list, ScopedList, context);
         let double_colon = pop_item!(self, double_colon, DoubleColon, context);
         let scoped_qualified_ident_opt_0_built = ScopedQualifiedIdentOpt {
-            double_colon: Box::new(double_colon),
-            scoped_list: Box::new(scoped_list),
+            double_colon,
+            scoped_list,
         };
         self.push(
-            ASTType::ScopedQualifiedIdentOpt(Some(Box::new(scoped_qualified_ident_opt_0_built))),
+            ASTType::ScopedQualifiedIdentOpt(Some(scoped_qualified_ident_opt_0_built)),
             context,
         );
         Ok(())
@@ -1698,10 +1689,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let scoped_list_items = pop_item!(self, scoped_list_items, ScopedListItems, context);
         let l_brace = pop_item!(self, l_brace, LBrace, context);
         let scoped_list_built = ScopedList {
-            l_brace: Box::new(l_brace),
+            l_brace,
             scoped_list_items: Box::new(scoped_list_items),
-            comma_opt: Box::new(comma_opt),
-            r_brace: Box::new(r_brace),
+            comma_opt,
+            r_brace,
         };
         // Calling user action here
         self.user_grammar.scoped_list(&scoped_list_built)?;
@@ -1726,7 +1717,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let scoped_qualified_ident =
             pop_item!(self, scoped_qualified_ident, ScopedQualifiedIdent, context);
         let scoped_list_items_built = ScopedListItems {
-            scoped_qualified_ident: Box::new(scoped_qualified_ident),
+            scoped_qualified_ident,
             scoped_list_items_list,
         };
         // Calling user action here
@@ -1753,11 +1744,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
             pop_item!(self, scoped_list_items_list, ScopedListItemsList, context);
         let scoped_qualified_ident =
             pop_item!(self, scoped_qualified_ident, ScopedQualifiedIdent, context);
-        // Ignore clipped member 'comma'
         self.pop(context);
         let scoped_list_items_list_0_built = ScopedListItemsList {
-            scoped_qualified_ident: Box::new(scoped_qualified_ident),
-            // Ignore clipped member 'comma'
+            scoped_qualified_ident,
         };
         // Add an element to the vector
         scoped_list_items_list.push(scoped_list_items_list_0_built);
@@ -1799,21 +1788,15 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'semicolon'
         self.pop(context);
         let const_val = pop_item!(self, const_val, ConstVal, context);
-        // Ignore clipped member 'assign'
         self.pop(context);
-        // Ignore clipped member 'type_spec'
         self.pop(context);
         let const_preamble = pop_item!(self, const_preamble, ConstPreamble, context);
         let const_declaration_0_built =
             ConstDeclarationConstPreambleTypeSpecAssignConstValSemicolon {
-                const_preamble: Box::new(const_preamble),
-                // Ignore clipped member 'type_spec'
-                // Ignore clipped member 'assign'
-                const_val: Box::new(const_val),
-                // Ignore clipped member 'semicolon'
+                const_preamble,
+                const_val,
             };
         let const_declaration_0_built =
             ConstDeclaration::ConstPreambleTypeSpecAssignConstValSemicolon(
@@ -1841,14 +1824,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'skip'
         self.pop(context);
-        // Ignore clipped member 'const_preamble'
         self.pop(context);
-        let const_declaration_1_built = ConstDeclarationConstPreambleSkip {
-        // Ignore clipped member 'const_preamble'
-        // Ignore clipped member 'skip'
-        };
+        let const_declaration_1_built = ConstDeclarationConstPreambleSkip {};
         let const_declaration_1_built =
             ConstDeclaration::ConstPreambleSkip(const_declaration_1_built);
         // Calling user action here
@@ -1874,16 +1852,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'colon'
         self.pop(context);
         let const_name = pop_item!(self, const_name, ConstName, context);
-        // Ignore clipped member 'const_qualifier'
         self.pop(context);
-        let const_preamble_built = ConstPreamble {
-            // Ignore clipped member 'const_qualifier'
-            const_name: Box::new(const_name),
-            // Ignore clipped member 'colon'
-        };
+        let const_preamble_built = ConstPreamble { const_name };
         // Calling user action here
         self.user_grammar.const_preamble(&const_preamble_built)?;
         self.push(ASTType::ConstPreamble(const_preamble_built), context);
@@ -1946,7 +1918,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let r#pub = r#pub.token()?.clone();
         let const_qualifier_opt_0_built = ConstQualifierOpt { r#pub };
         self.push(
-            ASTType::ConstQualifierOpt(Some(Box::new(const_qualifier_opt_0_built))),
+            ASTType::ConstQualifierOpt(Some(const_qualifier_opt_0_built)),
             context,
         );
         Ok(())
@@ -1973,9 +1945,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let ident = pop_item!(self, ident, Ident, context);
-        let const_name_built = ConstName {
-            ident: Box::new(ident),
-        };
+        let const_name_built = ConstName { ident };
         // Calling user action here
         self.user_grammar.const_name(&const_name_built)?;
         self.push(ASTType::ConstName(const_name_built), context);
@@ -1991,9 +1961,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let number = pop_item!(self, number, Number, context);
-        let const_val_0_built = ConstValNumber {
-            number: Box::new(number),
-        };
+        let const_val_0_built = ConstValNumber { number };
         let const_val_0_built = ConstVal::Number(const_val_0_built);
         // Calling user action here
         self.user_grammar.const_val(&const_val_0_built)?;
@@ -2010,9 +1978,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let string = pop_item!(self, string, String, context);
-        let const_val_1_built = ConstValString {
-            string: Box::new(string),
-        };
+        let const_val_1_built = ConstValString { string };
         let const_val_1_built = ConstVal::String(const_val_1_built);
         // Calling user action here
         self.user_grammar.const_val(&const_val_1_built)?;
@@ -2091,19 +2057,11 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'r_bracket'
         self.pop(context);
         let array_val_opt = pop_item!(self, array_val_opt, ArrayValOpt, context);
-        // Ignore clipped member 'l_bracket'
         self.pop(context);
-        // Ignore clipped member 'r#ref'
         self.pop(context);
-        let array_val_built = ArrayVal {
-            // Ignore clipped member 'r#ref'
-            // Ignore clipped member 'l_bracket'
-            array_val_opt,
-            // Ignore clipped member 'r_bracket'
-        };
+        let array_val_built = ArrayVal { array_val_opt };
         // Calling user action here
         self.user_grammar.array_val(&array_val_built)?;
         self.push(ASTType::ArrayVal(array_val_built), context);
@@ -2122,17 +2080,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'comma_opt'
         self.pop(context);
         let const_val_list = pop_item!(self, const_val_list, ConstValList, context);
-        let array_val_opt_0_built = ArrayValOpt {
-            const_val_list: Box::new(const_val_list),
-            // Ignore clipped member 'comma_opt'
-        };
-        self.push(
-            ASTType::ArrayValOpt(Some(Box::new(array_val_opt_0_built))),
-            context,
-        );
+        let array_val_opt_0_built = ArrayValOpt { const_val_list };
+        self.push(ASTType::ArrayValOpt(Some(array_val_opt_0_built)), context);
         Ok(())
     }
 
@@ -2164,7 +2115,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
             pop_and_reverse_item!(self, const_val_list_list, ConstValListList, context);
         let const_val = pop_item!(self, const_val, ConstVal, context);
         let const_val_list_built = ConstValList {
-            const_val: Box::new(const_val),
+            const_val,
             const_val_list_list,
         };
         // Calling user action here
@@ -2189,12 +2140,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let mut const_val_list_list =
             pop_item!(self, const_val_list_list, ConstValListList, context);
         let const_val = pop_item!(self, const_val, ConstVal, context);
-        // Ignore clipped member 'comma'
         self.pop(context);
-        let const_val_list_list_0_built = ConstValListList {
-            const_val: Box::new(const_val),
-            // Ignore clipped member 'comma'
-        };
+        let const_val_list_list_0_built = ConstValListList { const_val };
         // Add an element to the vector
         const_val_list_list.push(const_val_list_list_0_built);
         self.push(ASTType::ConstValListList(const_val_list_list), context);
@@ -2230,16 +2177,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'r_paren'
         self.pop(context);
         let tuple_val_opt = pop_item!(self, tuple_val_opt, TupleValOpt, context);
-        // Ignore clipped member 'l_paren'
         self.pop(context);
-        let tuple_val_built = TupleVal {
-            // Ignore clipped member 'l_paren'
-            tuple_val_opt,
-            // Ignore clipped member 'r_paren'
-        };
+        let tuple_val_built = TupleVal { tuple_val_opt };
         // Calling user action here
         self.user_grammar.tuple_val(&tuple_val_built)?;
         self.push(ASTType::TupleVal(tuple_val_built), context);
@@ -2258,17 +2199,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'comma_opt'
         self.pop(context);
         let const_val_list = pop_item!(self, const_val_list, ConstValList, context);
-        let tuple_val_opt_0_built = TupleValOpt {
-            const_val_list: Box::new(const_val_list),
-            // Ignore clipped member 'comma_opt'
-        };
-        self.push(
-            ASTType::TupleValOpt(Some(Box::new(tuple_val_opt_0_built))),
-            context,
-        );
+        let tuple_val_opt_0_built = TupleValOpt { const_val_list };
+        self.push(ASTType::TupleValOpt(Some(tuple_val_opt_0_built)), context);
         Ok(())
     }
 
@@ -2299,7 +2233,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let qualified_val_opt = pop_item!(self, qualified_val_opt, QualifiedValOpt, context);
         let qualified_ident = pop_item!(self, qualified_ident, QualifiedIdent, context);
         let qualified_val_built = QualifiedVal {
-            qualified_ident: Box::new(qualified_ident),
+            qualified_ident,
             qualified_val_opt,
         };
         // Calling user action here
@@ -2318,10 +2252,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let struct_or_tuple_val = pop_item!(self, struct_or_tuple_val, StructOrTupleVal, context);
         let qualified_val_opt_0_built = QualifiedValOpt {
-            struct_or_tuple_val: Box::new(struct_or_tuple_val),
+            struct_or_tuple_val,
         };
         self.push(
-            ASTType::QualifiedValOpt(Some(Box::new(qualified_val_opt_0_built))),
+            ASTType::QualifiedValOpt(Some(qualified_val_opt_0_built)),
             context,
         );
         Ok(())
@@ -2371,9 +2305,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let tuple_struct_val = pop_item!(self, tuple_struct_val, TupleStructVal, context);
-        let struct_or_tuple_val_1_built = StructOrTupleValTupleStructVal {
-            tuple_struct_val: Box::new(tuple_struct_val),
-        };
+        let struct_or_tuple_val_1_built = StructOrTupleValTupleStructVal { tuple_struct_val };
         let struct_or_tuple_val_1_built =
             StructOrTupleVal::TupleStructVal(struct_or_tuple_val_1_built);
         // Calling user action here
@@ -2399,16 +2331,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'r_brace'
         self.pop(context);
         let struct_val_opt = pop_item!(self, struct_val_opt, StructValOpt, context);
-        // Ignore clipped member 'l_brace'
         self.pop(context);
-        let struct_val_built = StructVal {
-            // Ignore clipped member 'l_brace'
-            struct_val_opt,
-            // Ignore clipped member 'r_brace'
-        };
+        let struct_val_built = StructVal { struct_val_opt };
         // Calling user action here
         self.user_grammar.struct_val(&struct_val_built)?;
         self.push(ASTType::StructVal(struct_val_built), context);
@@ -2427,17 +2353,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     ) -> Result<()> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
-        // Ignore clipped member 'comma'
         self.pop(context);
         let member_values = pop_item!(self, member_values, MemberValues, context);
-        let struct_val_opt_0_built = StructValOpt {
-            member_values: Box::new(member_values),
-            // Ignore clipped member 'comma'
-        };
-        self.push(
-            ASTType::StructValOpt(Some(Box::new(struct_val_opt_0_built))),
-            context,
-        );
+        let struct_val_opt_0_built = StructValOpt { member_values };
+        self.push(ASTType::StructValOpt(Some(struct_val_opt_0_built)), context);
         Ok(())
     }
 
@@ -2469,7 +2388,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
             pop_and_reverse_item!(self, member_values_list, MemberValuesList, context);
         let member_value = pop_item!(self, member_value, MemberValue, context);
         let member_values_built = MemberValues {
-            member_value: Box::new(member_value),
+            member_value,
             member_values_list,
         };
         // Calling user action here
@@ -2493,12 +2412,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let mut member_values_list = pop_item!(self, member_values_list, MemberValuesList, context);
         let member_value = pop_item!(self, member_value, MemberValue, context);
-        // Ignore clipped member 'comma'
         self.pop(context);
-        let member_values_list_0_built = MemberValuesList {
-            member_value: Box::new(member_value),
-            // Ignore clipped member 'comma'
-        };
+        let member_values_list_0_built = MemberValuesList { member_value };
         // Add an element to the vector
         member_values_list.push(member_values_list_0_built);
         self.push(ASTType::MemberValuesList(member_values_list), context);
@@ -2535,14 +2450,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let const_val = pop_item!(self, const_val, ConstVal, context);
-        // Ignore clipped member 'colon'
         self.pop(context);
         let ident = pop_item!(self, ident, Ident, context);
-        let member_value_built = MemberValue {
-            ident: Box::new(ident),
-            // Ignore clipped member 'colon'
-            const_val: Box::new(const_val),
-        };
+        let member_value_built = MemberValue { ident, const_val };
         // Calling user action here
         self.user_grammar.member_value(&member_value_built)?;
         self.push(ASTType::MemberValue(member_value_built), context);
@@ -2558,9 +2468,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let tuple_val = pop_item!(self, tuple_val, TupleVal, context);
-        let tuple_struct_val_built = TupleStructVal {
-            tuple_val: Box::new(tuple_val),
-        };
+        let tuple_struct_val_built = TupleStructVal { tuple_val };
         // Calling user action here
         self.user_grammar
             .tuple_struct_val(&tuple_struct_val_built)?;
@@ -2577,9 +2485,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let qualified_ident = pop_item!(self, qualified_ident, QualifiedIdent, context);
-        let type_spec_0_built = TypeSpecQualifiedIdent {
-            qualified_ident: Box::new(qualified_ident),
-        };
+        let type_spec_0_built = TypeSpecQualifiedIdent { qualified_ident };
         let type_spec_0_built = TypeSpec::QualifiedIdent(type_spec_0_built);
         // Calling user action here
         self.user_grammar.type_spec(&type_spec_0_built)?;
@@ -2596,9 +2502,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let array_type = pop_item!(self, array_type, ArrayType, context);
-        let type_spec_1_built = TypeSpecArrayType {
-            array_type: Box::new(array_type),
-        };
+        let type_spec_1_built = TypeSpecArrayType { array_type };
         let type_spec_1_built = TypeSpec::ArrayType(type_spec_1_built);
         // Calling user action here
         self.user_grammar.type_spec(&type_spec_1_built)?;
@@ -2644,10 +2548,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let l_bracket = pop_item!(self, l_bracket, LBracket, context);
         let r#ref = pop_item!(self, r#ref, Ref, context);
         let array_type_built = ArrayType {
-            r#ref: Box::new(r#ref),
-            l_bracket: Box::new(l_bracket),
-            array_type_spec: Box::new(array_type_spec),
-            r_bracket: Box::new(r_bracket),
+            r#ref,
+            l_bracket,
+            array_type_spec,
+            r_bracket,
         };
         // Calling user action here
         self.user_grammar.array_type(&array_type_built)?;
@@ -2675,9 +2579,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let array_type_spec_opt = pop_item!(self, array_type_spec_opt, ArrayTypeSpecOpt, context);
         let array_type_spec_built = ArrayTypeSpec {
             array_type_spec_opt,
-            ident: Box::new(ident),
-            semicolon: Box::new(semicolon),
-            number: Box::new(number),
+            ident,
+            semicolon,
+            number,
         };
         // Calling user action here
         self.user_grammar.array_type_spec(&array_type_spec_built)?;
@@ -2694,11 +2598,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let r#ref = pop_item!(self, r#ref, Ref, context);
-        let array_type_spec_opt_0_built = ArrayTypeSpecOpt {
-            r#ref: Box::new(r#ref),
-        };
+        let array_type_spec_opt_0_built = ArrayTypeSpecOpt { r#ref };
         self.push(
-            ASTType::ArrayTypeSpecOpt(Some(Box::new(array_type_spec_opt_0_built))),
+            ASTType::ArrayTypeSpecOpt(Some(array_type_spec_opt_0_built)),
             context,
         );
         Ok(())
@@ -2735,10 +2637,10 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let tuple_items = pop_item!(self, tuple_items, TupleItems, context);
         let l_paren = pop_item!(self, l_paren, LParen, context);
         let tuple_type_built = TupleType {
-            l_paren: Box::new(l_paren),
-            tuple_items: Box::new(tuple_items),
-            comma_opt: Box::new(comma_opt),
-            r_paren: Box::new(r_paren),
+            l_paren,
+            tuple_items,
+            comma_opt,
+            r_paren,
         };
         // Calling user action here
         self.user_grammar.tuple_type(&tuple_type_built)?;
@@ -2762,7 +2664,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
             pop_and_reverse_item!(self, tuple_items_list, TupleItemsList, context);
         let type_spec = pop_item!(self, type_spec, TypeSpec, context);
         let tuple_items_built = TupleItems {
-            type_spec: Box::new(type_spec),
+            type_spec,
             tuple_items_list,
         };
         // Calling user action here
@@ -2787,10 +2689,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let mut tuple_items_list = pop_item!(self, tuple_items_list, TupleItemsList, context);
         let type_spec = pop_item!(self, type_spec, TypeSpec, context);
         let comma = pop_item!(self, comma, Comma, context);
-        let tuple_items_list_0_built = TupleItemsList {
-            type_spec: Box::new(type_spec),
-            comma: Box::new(comma),
-        };
+        let tuple_items_list_0_built = TupleItemsList { type_spec, comma };
         // Add an element to the vector
         tuple_items_list.push(tuple_items_list_0_built);
         self.push(ASTType::TupleItemsList(tuple_items_list), context);
@@ -2851,13 +2750,8 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let comma = pop_item!(self, comma, Comma, context);
-        let comma_opt0_0_built = CommaOpt0 {
-            comma: Box::new(comma),
-        };
-        self.push(
-            ASTType::CommaOpt0(Some(Box::new(comma_opt0_0_built))),
-            context,
-        );
+        let comma_opt0_0_built = CommaOpt0 { comma };
+        self.push(ASTType::CommaOpt0(Some(comma_opt0_0_built)), context);
         Ok(())
     }
 
@@ -2962,9 +2856,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let quoted_string = pop_item!(self, quoted_string, QuotedString, context);
-        let string_0_built = StringQuotedString {
-            quoted_string: Box::new(quoted_string),
-        };
+        let string_0_built = StringQuotedString { quoted_string };
         let string_0_built = String::QuotedString(string_0_built);
         // Calling user action here
         self.user_grammar.string(&string_0_built)?;
@@ -2981,9 +2873,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let raw_string = pop_item!(self, raw_string, RawString, context);
-        let string_1_built = StringRawString {
-            raw_string: Box::new(raw_string),
-        };
+        let string_1_built = StringRawString { raw_string };
         let string_1_built = String::RawString(string_1_built);
         // Calling user action here
         self.user_grammar.string(&string_1_built)?;
