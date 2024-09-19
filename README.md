@@ -17,7 +17,7 @@ This way changes in the resulting DFA could be evaluated much easier.
 Try
 
 ```shell
-la_dfa_2_dot --help
+cargo run -- --help
 ```
 
 to get help.
@@ -26,7 +26,7 @@ to get help.
 To visualize the lookahead DFAs of the LL(5) grammar used by this crate call this
 
 ```shell
-la_dfa_2_dot -f .\src\la_dfa_2_dot_parser.rs -o ..\la_dfa_2_dot_dot
+cargo run -- -f .\src\la_dfa_2_dot_parser.rs -o ..\la_dfa_2_dot_dot
 ```
 
 Please note, that the invocation above will create a folder in parallel to the current crate's

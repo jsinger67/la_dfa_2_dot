@@ -8,7 +8,7 @@ use parol_runtime::once_cell::sync::Lazy;
 #[allow(unused_imports)]
 use parol_runtime::parser::{LLKParser, LookaheadDFA, ParseTreeType, ParseType, Production, Trans};
 use parol_runtime::{ParolError, ParseTree, TerminalIndex};
-use parol_runtime::{TokenStream, Tokenizer};
+use parol_runtime::{ScannerConfig, TokenStream, Tokenizer};
 use std::path::Path;
 
 use crate::la_dfa_2_dot_grammar::LaDfa2DotGrammar;
@@ -294,26 +294,26 @@ pub const LOOKAHEAD_AUTOMATA: &[LookaheadDFA; 64] = &[
         transitions: &[
             Trans(0, 6, 1, -1),
             Trans(0, 7, 1, -1),
-            Trans(0, 8, 8, -1),
+            Trans(0, 8, 6, -1),
             Trans(1, 17, 2, -1),
             Trans(2, 19, 3, -1),
             Trans(3, 9, 12, -1),
-            Trans(3, 12, 4, -1),
-            Trans(3, 17, 6, -1),
-            Trans(3, 24, 7, -1),
-            Trans(4, 22, 5, 22),
-            Trans(6, 10, 5, 22),
-            Trans(6, 18, 5, 22),
-            Trans(7, 12, 5, 22),
-            Trans(7, 17, 5, 22),
-            Trans(7, 24, 5, 22),
-            Trans(8, 6, 9, -1),
-            Trans(9, 17, 10, -1),
-            Trans(10, 19, 11, -1),
-            Trans(11, 9, 13, 23),
-            Trans(11, 12, 5, 22),
-            Trans(11, 17, 5, 22),
-            Trans(11, 24, 5, 22),
+            Trans(3, 12, 11, -1),
+            Trans(3, 17, 4, -1),
+            Trans(3, 24, 10, -1),
+            Trans(4, 10, 5, 22),
+            Trans(4, 18, 5, 22),
+            Trans(6, 6, 7, -1),
+            Trans(7, 17, 8, -1),
+            Trans(8, 19, 9, -1),
+            Trans(9, 9, 13, 23),
+            Trans(9, 12, 5, 22),
+            Trans(9, 17, 5, 22),
+            Trans(9, 24, 5, 22),
+            Trans(10, 12, 5, 22),
+            Trans(10, 17, 5, 22),
+            Trans(10, 24, 5, 22),
+            Trans(11, 22, 5, 22),
             Trans(12, 0, 13, 23),
             Trans(12, 5, 13, 23),
             Trans(12, 6, 13, 23),
@@ -1249,10 +1249,11 @@ pub const PRODUCTIONS: &[Production; 91] = &[
     },
 ];
 
-static TOKENIZERS: Lazy<Vec<(&'static str, Tokenizer)>> = Lazy::new(|| {
-    vec![(
+static SCANNERS: Lazy<Vec<ScannerConfig>> = Lazy::new(|| {
+    vec![ScannerConfig::new(
         "INITIAL",
         Tokenizer::build(TERMINALS, SCANNER_0.0, SCANNER_0.1).unwrap(),
+        &[],
     )]
 });
 
@@ -1272,11 +1273,11 @@ where
         NON_TERMINALS,
     );
     llk_parser.trim_parse_tree();
+
     // Initialize wrapper
     let mut user_actions = LaDfa2DotGrammarAuto::new(user_actions);
-
     llk_parser.parse(
-        TokenStream::new(input, file_name, &TOKENIZERS, MAX_K).unwrap(),
+        TokenStream::new(input, file_name, &SCANNERS, MAX_K).unwrap(),
         &mut user_actions,
     )
 }
