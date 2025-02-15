@@ -321,7 +321,7 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
         Ok(())
     }
 
-    fn on_comment_parsed(&mut self, token: Token<'t>) {
+    fn on_comment(&mut self, token: Token<'t>) {
         if let Some(caps) = self.naming_comment_matcher.captures(token.text()) {
             let nt_name = caps.get(1).unwrap().as_str().to_owned();
             self.non_terminal_names.push_back(nt_name);

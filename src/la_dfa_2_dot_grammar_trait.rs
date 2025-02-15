@@ -149,6 +149,21 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
+    /// Semantic action for non-terminal 'ArrayElementType'
+    fn array_element_type(&mut self, _arg: &ArrayElementType<'t>) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'OptionType'
+    fn option_type(&mut self, _arg: &OptionType<'t>) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'Tuple'
+    fn tuple(&mut self, _arg: &Tuple<'t>) -> Result<()> {
+        Ok(())
+    }
+
     /// Semantic action for non-terminal 'TupleType'
     fn tuple_type(&mut self, _arg: &TupleType<'t>) -> Result<()> {
         Ok(())
@@ -259,9 +274,19 @@ pub trait LaDfa2DotGrammarTrait<'t> {
         Ok(())
     }
 
+    /// Semantic action for non-terminal 'LT'
+    fn l_t(&mut self, _arg: &LT<'t>) -> Result<()> {
+        Ok(())
+    }
+
+    /// Semantic action for non-terminal 'GT'
+    fn g_t(&mut self, _arg: &GT<'t>) -> Result<()> {
+        Ok(())
+    }
+
     /// This method provides skipped language comments.
     /// If you need comments please provide your own implementation of this method.
-    fn on_comment_parsed(&mut self, _token: Token<'t>) {}
+    fn on_comment(&mut self, _token: Token<'t>) {}
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -444,7 +469,7 @@ pub struct TypeSpecQualifiedIdent<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TypeSpecArrayType<'t> {
-    pub array_type: ArrayType<'t>,
+    pub array_type: Box<ArrayType<'t>>,
 }
 
 ///
@@ -460,7 +485,43 @@ pub struct TypeSpecTupleType<'t> {
 }
 
 ///
-/// Type derived for production 77
+/// Type derived for production 60
+///
+/// `TypeSpec: OptionType;`
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TypeSpecOptionType<'t> {
+    pub option_type: Box<OptionType<'t>>,
+}
+
+///
+/// Type derived for production 65
+///
+/// `ArrayElementType: Ident;`
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct ArrayElementTypeIdent<'t> {
+    pub ident: Ident<'t>,
+}
+
+///
+/// Type derived for production 66
+///
+/// `ArrayElementType: Tuple;`
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct ArrayElementTypeTuple<'t> {
+    pub tuple: Tuple<'t>,
+}
+
+///
+/// Type derived for production 86
 ///
 /// `String: QuotedString;`
 ///
@@ -472,7 +533,7 @@ pub struct StringQuotedString<'t> {
 }
 
 ///
-/// Type derived for production 78
+/// Type derived for production 87
 ///
 /// `String: RawString;`
 ///
@@ -487,6 +548,16 @@ pub struct StringRawString<'t> {
 //
 // Types of non-terminals deduced from the structure of the transformed grammar
 //
+
+///
+/// Type derived for non-terminal ArrayElementType
+///
+#[allow(dead_code)]
+#[derive(Debug, Clone)]
+pub enum ArrayElementType<'t> {
+    Ident(ArrayElementTypeIdent<'t>),
+    Tuple(ArrayElementTypeTuple<'t>),
+}
 
 ///
 /// Type derived for non-terminal ArrayType
@@ -509,7 +580,7 @@ pub struct ArrayType<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct ArrayTypeSpec<'t> {
     pub array_type_spec_opt: Option<ArrayTypeSpecOpt<'t>>,
-    pub ident: Ident<'t>,
+    pub array_element_type: ArrayElementType<'t>,
     pub semicolon: Semicolon<'t>,
     pub number: Number<'t>,
 }
@@ -737,6 +808,16 @@ pub struct DoubleColon<'t> {
 }
 
 ///
+/// Type derived for non-terminal GT
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct GT<'t> {
+    pub g_t: Token<'t>, /* > */
+}
+
+///
 /// Type derived for non-terminal Hash
 ///
 #[allow(dead_code)]
@@ -794,6 +875,16 @@ pub struct LBracket<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct LParen<'t> {
     pub l_paren: Token<'t>, /* ( */
+}
+
+///
+/// Type derived for non-terminal LT
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct LT<'t> {
+    pub l_t: Token<'t>, /* < */
 }
 
 ///
@@ -856,6 +947,19 @@ pub struct MemberValuesList<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct Number<'t> {
     pub number: Token<'t>, /* -?\d+ */
+}
+
+///
+/// Type derived for non-terminal OptionType
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct OptionType<'t> {
+    pub option: Token<'t>, /* Option */
+    pub l_t: LT<'t>,
+    pub type_spec: TypeSpec<'t>,
+    pub g_t: GT<'t>,
 }
 
 ///
@@ -948,7 +1052,7 @@ pub struct RParen<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct RawString<'t> {
-    pub raw_string: Token<'t>, /* "(\\.|[^\\])*?" */
+    pub raw_string: Token<'t>, /* "(\\"|[^"])*" */
 }
 
 ///
@@ -1034,7 +1138,7 @@ pub struct Semicolon<'t> {
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct Skip<'t> {
-    pub skip: Token<'t>, /* (?s)&\[Production; \d+\] = &\[.*(?-s) */
+    pub skip: Token<'t>, /* &\[Production; \d+\] = &\[[.\r\n]* */
 }
 
 ///
@@ -1078,12 +1182,26 @@ pub struct StructValOpt<'t> {
 }
 
 ///
+/// Type derived for non-terminal Tuple
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct Tuple<'t> {
+    pub l_paren: LParen<'t>,
+    pub tuple_items: TupleItems<'t>,
+    pub comma_opt: CommaOpt<'t>,
+    pub r_paren: RParen<'t>,
+}
+
+///
 /// Type derived for non-terminal TupleItems
 ///
 #[allow(dead_code)]
 #[derive(Builder, Debug, Clone)]
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleItems<'t> {
+    pub tuple_items_opt: Option<TupleItemsOpt<'t>>,
     pub type_spec: TypeSpec<'t>,
     pub tuple_items_list: Vec<TupleItemsList<'t>>,
 }
@@ -1096,7 +1214,28 @@ pub struct TupleItems<'t> {
 #[builder(crate = "parol_runtime::derive_builder")]
 pub struct TupleItemsList<'t> {
     pub comma: Comma<'t>,
+    pub tuple_items_opt0: Option<TupleItemsOpt0<'t>>,
     pub type_spec: TypeSpec<'t>,
+}
+
+///
+/// Type derived for non-terminal TupleItemsOpt
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TupleItemsOpt<'t> {
+    pub r#ref: Ref<'t>,
+}
+
+///
+/// Type derived for non-terminal TupleItemsOpt0
+///
+#[allow(dead_code)]
+#[derive(Builder, Debug, Clone)]
+#[builder(crate = "parol_runtime::derive_builder")]
+pub struct TupleItemsOpt0<'t> {
+    pub r#ref: Ref<'t>,
 }
 
 ///
@@ -1151,6 +1290,7 @@ pub enum TypeSpec<'t> {
     QualifiedIdent(TypeSpecQualifiedIdent<'t>),
     ArrayType(TypeSpecArrayType<'t>),
     TupleType(TypeSpecTupleType<'t>),
+    OptionType(TypeSpecOptionType<'t>),
 }
 
 ///
@@ -1173,6 +1313,7 @@ pub struct UseStatement<'t> {
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub enum ASTType<'t> {
+    ArrayElementType(ArrayElementType<'t>),
     ArrayType(ArrayType<'t>),
     ArrayTypeSpec(ArrayTypeSpec<'t>),
     ArrayTypeSpecOpt(Option<ArrayTypeSpecOpt<'t>>),
@@ -1196,18 +1337,21 @@ pub enum ASTType<'t> {
     ConstValList(ConstValList<'t>),
     ConstValListList(Vec<ConstValListList<'t>>),
     DoubleColon(DoubleColon<'t>),
+    GT(GT<'t>),
     Hash(Hash<'t>),
     Ident(Ident<'t>),
     Item(Item<'t>),
     LBrace(LBrace<'t>),
     LBracket(LBracket<'t>),
     LParen(LParen<'t>),
+    LT(LT<'t>),
     LaDfa2Dot(LaDfa2Dot<'t>),
     LaDfa2DotList(Vec<LaDfa2DotList<'t>>),
     MemberValue(MemberValue<'t>),
     MemberValues(MemberValues<'t>),
     MemberValuesList(Vec<MemberValuesList<'t>>),
     Number(Number<'t>),
+    OptionType(OptionType<'t>),
     QualifiedIdent(QualifiedIdent<'t>),
     QualifiedIdentList(Vec<QualifiedIdentList<'t>>),
     QualifiedVal(QualifiedVal<'t>),
@@ -1229,8 +1373,11 @@ pub enum ASTType<'t> {
     StructOrTupleVal(StructOrTupleVal<'t>),
     StructVal(StructVal<'t>),
     StructValOpt(Option<StructValOpt<'t>>),
+    Tuple(Tuple<'t>),
     TupleItems(TupleItems<'t>),
     TupleItemsList(Vec<TupleItemsList<'t>>),
+    TupleItemsOpt(Option<TupleItemsOpt<'t>>),
+    TupleItemsOpt0(Option<TupleItemsOpt0<'t>>),
     TupleStructVal(TupleStructVal<'t>),
     TupleType(TupleType<'t>),
     TupleVal(TupleVal<'t>),
@@ -2502,7 +2649,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let context = function_name!();
         trace!("{}", self.trace_item_stack(context));
         let array_type = pop_item!(self, array_type, ArrayType, context);
-        let type_spec_1_built = TypeSpecArrayType { array_type };
+        let type_spec_1_built = TypeSpecArrayType {
+            array_type: Box::new(array_type),
+        };
         let type_spec_1_built = TypeSpec::ArrayType(type_spec_1_built);
         // Calling user action here
         self.user_grammar.type_spec(&type_spec_1_built)?;
@@ -2530,6 +2679,25 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
     }
 
     /// Semantic action for production 60:
+    ///
+    /// `TypeSpec: OptionType;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn type_spec_3(&mut self, _option_type: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let option_type = pop_item!(self, option_type, OptionType, context);
+        let type_spec_3_built = TypeSpecOptionType {
+            option_type: Box::new(option_type),
+        };
+        let type_spec_3_built = TypeSpec::OptionType(type_spec_3_built);
+        // Calling user action here
+        self.user_grammar.type_spec(&type_spec_3_built)?;
+        self.push(ASTType::TypeSpec(type_spec_3_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 61:
     ///
     /// `ArrayType: Ref LBracket ArrayTypeSpec RBracket;`
     ///
@@ -2559,15 +2727,15 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 61:
+    /// Semantic action for production 62:
     ///
-    /// `ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ Ident Semicolon Number;`
+    /// `ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ ArrayElementType Semicolon Number;`
     ///
     #[parol_runtime::function_name::named]
     fn array_type_spec(
         &mut self,
         _array_type_spec_opt: &ParseTreeType<'t>,
-        _ident: &ParseTreeType<'t>,
+        _array_element_type: &ParseTreeType<'t>,
         _semicolon: &ParseTreeType<'t>,
         _number: &ParseTreeType<'t>,
     ) -> Result<()> {
@@ -2575,11 +2743,11 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let number = pop_item!(self, number, Number, context);
         let semicolon = pop_item!(self, semicolon, Semicolon, context);
-        let ident = pop_item!(self, ident, Ident, context);
+        let array_element_type = pop_item!(self, array_element_type, ArrayElementType, context);
         let array_type_spec_opt = pop_item!(self, array_type_spec_opt, ArrayTypeSpecOpt, context);
         let array_type_spec_built = ArrayTypeSpec {
             array_type_spec_opt,
-            ident,
+            array_element_type,
             semicolon,
             number,
         };
@@ -2589,7 +2757,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 62:
+    /// Semantic action for production 63:
     ///
     /// `ArrayTypeSpecOpt /* Option<T>::Some */: Ref;`
     ///
@@ -2606,7 +2774,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 63:
+    /// Semantic action for production 64:
     ///
     /// `ArrayTypeSpecOpt /* Option<T>::None */: ;`
     ///
@@ -2618,7 +2786,109 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 64:
+    /// Semantic action for production 65:
+    ///
+    /// `ArrayElementType: Ident;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn array_element_type_0(&mut self, _ident: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let ident = pop_item!(self, ident, Ident, context);
+        let array_element_type_0_built = ArrayElementTypeIdent { ident };
+        let array_element_type_0_built = ArrayElementType::Ident(array_element_type_0_built);
+        // Calling user action here
+        self.user_grammar
+            .array_element_type(&array_element_type_0_built)?;
+        self.push(
+            ASTType::ArrayElementType(array_element_type_0_built),
+            context,
+        );
+        Ok(())
+    }
+
+    /// Semantic action for production 66:
+    ///
+    /// `ArrayElementType: Tuple;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn array_element_type_1(&mut self, _tuple: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let tuple = pop_item!(self, tuple, Tuple, context);
+        let array_element_type_1_built = ArrayElementTypeTuple { tuple };
+        let array_element_type_1_built = ArrayElementType::Tuple(array_element_type_1_built);
+        // Calling user action here
+        self.user_grammar
+            .array_element_type(&array_element_type_1_built)?;
+        self.push(
+            ASTType::ArrayElementType(array_element_type_1_built),
+            context,
+        );
+        Ok(())
+    }
+
+    /// Semantic action for production 67:
+    ///
+    /// `OptionType: 'Option' LT TypeSpec GT;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn option_type(
+        &mut self,
+        option: &ParseTreeType<'t>,
+        _l_t: &ParseTreeType<'t>,
+        _type_spec: &ParseTreeType<'t>,
+        _g_t: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let option = option.token()?.clone();
+        let g_t = pop_item!(self, g_t, GT, context);
+        let type_spec = pop_item!(self, type_spec, TypeSpec, context);
+        let l_t = pop_item!(self, l_t, LT, context);
+        let option_type_built = OptionType {
+            option,
+            l_t,
+            type_spec,
+            g_t,
+        };
+        // Calling user action here
+        self.user_grammar.option_type(&option_type_built)?;
+        self.push(ASTType::OptionType(option_type_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 68:
+    ///
+    /// `Tuple: LParen TupleItems CommaOpt RParen;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn tuple(
+        &mut self,
+        _l_paren: &ParseTreeType<'t>,
+        _tuple_items: &ParseTreeType<'t>,
+        _comma_opt: &ParseTreeType<'t>,
+        _r_paren: &ParseTreeType<'t>,
+    ) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let r_paren = pop_item!(self, r_paren, RParen, context);
+        let comma_opt = pop_item!(self, comma_opt, CommaOpt, context);
+        let tuple_items = pop_item!(self, tuple_items, TupleItems, context);
+        let l_paren = pop_item!(self, l_paren, LParen, context);
+        let tuple_built = Tuple {
+            l_paren,
+            tuple_items,
+            comma_opt,
+            r_paren,
+        };
+        // Calling user action here
+        self.user_grammar.tuple(&tuple_built)?;
+        self.push(ASTType::Tuple(tuple_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 69:
     ///
     /// `TupleType: LParen TupleItems CommaOpt RParen;`
     ///
@@ -2648,13 +2918,14 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 65:
+    /// Semantic action for production 70:
     ///
-    /// `TupleItems: TypeSpec TupleItemsList /* Vec */;`
+    /// `TupleItems: TupleItemsOpt /* Option */ TypeSpec TupleItemsList /* Vec */;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_items(
         &mut self,
+        _tuple_items_opt: &ParseTreeType<'t>,
         _type_spec: &ParseTreeType<'t>,
         _tuple_items_list: &ParseTreeType<'t>,
     ) -> Result<()> {
@@ -2663,7 +2934,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         let tuple_items_list =
             pop_and_reverse_item!(self, tuple_items_list, TupleItemsList, context);
         let type_spec = pop_item!(self, type_spec, TypeSpec, context);
+        let tuple_items_opt = pop_item!(self, tuple_items_opt, TupleItemsOpt, context);
         let tuple_items_built = TupleItems {
+            tuple_items_opt,
             type_spec,
             tuple_items_list,
         };
@@ -2673,14 +2946,15 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 66:
+    /// Semantic action for production 71:
     ///
-    /// `TupleItemsList /* Vec<T>::Push */: Comma TypeSpec TupleItemsList;`
+    /// `TupleItemsList /* Vec<T>::Push */: Comma TupleItemsOpt0 /* Option */ TypeSpec TupleItemsList;`
     ///
     #[parol_runtime::function_name::named]
     fn tuple_items_list_0(
         &mut self,
         _comma: &ParseTreeType<'t>,
+        _tuple_items_opt0: &ParseTreeType<'t>,
         _type_spec: &ParseTreeType<'t>,
         _tuple_items_list: &ParseTreeType<'t>,
     ) -> Result<()> {
@@ -2688,15 +2962,20 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         trace!("{}", self.trace_item_stack(context));
         let mut tuple_items_list = pop_item!(self, tuple_items_list, TupleItemsList, context);
         let type_spec = pop_item!(self, type_spec, TypeSpec, context);
+        let tuple_items_opt0 = pop_item!(self, tuple_items_opt0, TupleItemsOpt0, context);
         let comma = pop_item!(self, comma, Comma, context);
-        let tuple_items_list_0_built = TupleItemsList { type_spec, comma };
+        let tuple_items_list_0_built = TupleItemsList {
+            type_spec,
+            tuple_items_opt0,
+            comma,
+        };
         // Add an element to the vector
         tuple_items_list.push(tuple_items_list_0_built);
         self.push(ASTType::TupleItemsList(tuple_items_list), context);
         Ok(())
     }
 
-    /// Semantic action for production 67:
+    /// Semantic action for production 72:
     ///
     /// `TupleItemsList /* Vec<T>::New */: ;`
     ///
@@ -2709,9 +2988,67 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 68:
+    /// Semantic action for production 73:
     ///
-    /// `Skip: /(?s)&\[Production; \d+\] = &\[.*(?-s)/;`
+    /// `TupleItemsOpt0 /* Option<T>::Some */: Ref;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn tuple_items_opt0_0(&mut self, _ref: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let r#ref = pop_item!(self, r#ref, Ref, context);
+        let tuple_items_opt0_0_built = TupleItemsOpt0 { r#ref };
+        self.push(
+            ASTType::TupleItemsOpt0(Some(tuple_items_opt0_0_built)),
+            context,
+        );
+        Ok(())
+    }
+
+    /// Semantic action for production 74:
+    ///
+    /// `TupleItemsOpt0 /* Option<T>::None */: ;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn tuple_items_opt0_1(&mut self) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        self.push(ASTType::TupleItemsOpt0(None), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 75:
+    ///
+    /// `TupleItemsOpt /* Option<T>::Some */: Ref;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn tuple_items_opt_0(&mut self, _ref: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let r#ref = pop_item!(self, r#ref, Ref, context);
+        let tuple_items_opt_0_built = TupleItemsOpt { r#ref };
+        self.push(
+            ASTType::TupleItemsOpt(Some(tuple_items_opt_0_built)),
+            context,
+        );
+        Ok(())
+    }
+
+    /// Semantic action for production 76:
+    ///
+    /// `TupleItemsOpt /* Option<T>::None */: ;`
+    ///
+    #[parol_runtime::function_name::named]
+    fn tuple_items_opt_1(&mut self) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        self.push(ASTType::TupleItemsOpt(None), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 77:
+    ///
+    /// `Skip: /&\[Production; \d+\] = &\[[.\r\n]*/;`
     ///
     #[parol_runtime::function_name::named]
     fn skip(&mut self, skip: &ParseTreeType<'t>) -> Result<()> {
@@ -2725,7 +3062,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 69:
+    /// Semantic action for production 78:
     ///
     /// `CommaOpt: CommaOpt0 /* Option */;`
     ///
@@ -2741,7 +3078,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 70:
+    /// Semantic action for production 79:
     ///
     /// `CommaOpt0 /* Option<T>::Some */: Comma;`
     ///
@@ -2755,7 +3092,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 71:
+    /// Semantic action for production 80:
     ///
     /// `CommaOpt0 /* Option<T>::None */: ;`
     ///
@@ -2767,7 +3104,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 72:
+    /// Semantic action for production 81:
     ///
     /// `Assign: '=';`
     ///
@@ -2783,7 +3120,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 73:
+    /// Semantic action for production 82:
     ///
     /// `Number: /-?\d+/;`
     ///
@@ -2799,7 +3136,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 74:
+    /// Semantic action for production 83:
     ///
     /// `Ref: '&';`
     ///
@@ -2815,7 +3152,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 75:
+    /// Semantic action for production 84:
     ///
     /// `Semicolon: ';';`
     ///
@@ -2831,7 +3168,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 76:
+    /// Semantic action for production 85:
     ///
     /// `Comma: ',';`
     ///
@@ -2847,7 +3184,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 77:
+    /// Semantic action for production 86:
     ///
     /// `String: QuotedString;`
     ///
@@ -2864,7 +3201,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 78:
+    /// Semantic action for production 87:
     ///
     /// `String: RawString;`
     ///
@@ -2881,7 +3218,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 79:
+    /// Semantic action for production 88:
     ///
     /// `QuotedString: /r#{0, 3}".*"#{0, 3}/;`
     ///
@@ -2897,9 +3234,9 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 80:
+    /// Semantic action for production 89:
     ///
-    /// `RawString: /"(\\.|[^\\])*?"/;`
+    /// `RawString: /"(\\"|[^"])*"/;`
     ///
     #[parol_runtime::function_name::named]
     fn raw_string(&mut self, raw_string: &ParseTreeType<'t>) -> Result<()> {
@@ -2913,7 +3250,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 81:
+    /// Semantic action for production 90:
     ///
     /// `Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;`
     ///
@@ -2929,7 +3266,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 82:
+    /// Semantic action for production 91:
     ///
     /// `DoubleColon: '::';`
     ///
@@ -2945,7 +3282,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 83:
+    /// Semantic action for production 92:
     ///
     /// `Colon: ':';`
     ///
@@ -2961,7 +3298,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 84:
+    /// Semantic action for production 93:
     ///
     /// `LBrace: '{';`
     ///
@@ -2977,7 +3314,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 85:
+    /// Semantic action for production 94:
     ///
     /// `RBrace: '}';`
     ///
@@ -2993,7 +3330,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 86:
+    /// Semantic action for production 95:
     ///
     /// `LBracket: '[';`
     ///
@@ -3009,7 +3346,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 87:
+    /// Semantic action for production 96:
     ///
     /// `RBracket: ']';`
     ///
@@ -3025,7 +3362,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 88:
+    /// Semantic action for production 97:
     ///
     /// `LParen: '(';`
     ///
@@ -3041,7 +3378,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 89:
+    /// Semantic action for production 98:
     ///
     /// `RParen: ')';`
     ///
@@ -3057,7 +3394,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         Ok(())
     }
 
-    /// Semantic action for production 90:
+    /// Semantic action for production 99:
     ///
     /// `Hash: /#/;`
     ///
@@ -3070,6 +3407,38 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
         // Calling user action here
         self.user_grammar.hash(&hash_built)?;
         self.push(ASTType::Hash(hash_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 100:
+    ///
+    /// `LT: '<';`
+    ///
+    #[parol_runtime::function_name::named]
+    fn l_t(&mut self, l_t: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let l_t = l_t.token()?.clone();
+        let l_t_built = LT { l_t };
+        // Calling user action here
+        self.user_grammar.l_t(&l_t_built)?;
+        self.push(ASTType::LT(l_t_built), context);
+        Ok(())
+    }
+
+    /// Semantic action for production 101:
+    ///
+    /// `GT: '>';`
+    ///
+    #[parol_runtime::function_name::named]
+    fn g_t(&mut self, g_t: &ParseTreeType<'t>) -> Result<()> {
+        let context = function_name!();
+        trace!("{}", self.trace_item_stack(context));
+        let g_t = g_t.token()?.clone();
+        let g_t_built = GT { g_t };
+        // Calling user action here
+        self.user_grammar.g_t(&g_t_built)?;
+        self.push(ASTType::GT(g_t_built), context);
         Ok(())
     }
 }
@@ -3156,37 +3525,48 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
             57 => self.type_spec_0(&children[0]),
             58 => self.type_spec_1(&children[0]),
             59 => self.type_spec_2(&children[0]),
-            60 => self.array_type(&children[0], &children[1], &children[2], &children[3]),
-            61 => self.array_type_spec(&children[0], &children[1], &children[2], &children[3]),
-            62 => self.array_type_spec_opt_0(&children[0]),
-            63 => self.array_type_spec_opt_1(),
-            64 => self.tuple_type(&children[0], &children[1], &children[2], &children[3]),
-            65 => self.tuple_items(&children[0], &children[1]),
-            66 => self.tuple_items_list_0(&children[0], &children[1], &children[2]),
-            67 => self.tuple_items_list_1(),
-            68 => self.skip(&children[0]),
-            69 => self.comma_opt(&children[0]),
-            70 => self.comma_opt0_0(&children[0]),
-            71 => self.comma_opt0_1(),
-            72 => self.assign(&children[0]),
-            73 => self.number(&children[0]),
-            74 => self.r#ref(&children[0]),
-            75 => self.semicolon(&children[0]),
-            76 => self.comma(&children[0]),
-            77 => self.string_0(&children[0]),
-            78 => self.string_1(&children[0]),
-            79 => self.quoted_string(&children[0]),
-            80 => self.raw_string(&children[0]),
-            81 => self.ident(&children[0]),
-            82 => self.double_colon(&children[0]),
-            83 => self.colon(&children[0]),
-            84 => self.l_brace(&children[0]),
-            85 => self.r_brace(&children[0]),
-            86 => self.l_bracket(&children[0]),
-            87 => self.r_bracket(&children[0]),
-            88 => self.l_paren(&children[0]),
-            89 => self.r_paren(&children[0]),
-            90 => self.hash(&children[0]),
+            60 => self.type_spec_3(&children[0]),
+            61 => self.array_type(&children[0], &children[1], &children[2], &children[3]),
+            62 => self.array_type_spec(&children[0], &children[1], &children[2], &children[3]),
+            63 => self.array_type_spec_opt_0(&children[0]),
+            64 => self.array_type_spec_opt_1(),
+            65 => self.array_element_type_0(&children[0]),
+            66 => self.array_element_type_1(&children[0]),
+            67 => self.option_type(&children[0], &children[1], &children[2], &children[3]),
+            68 => self.tuple(&children[0], &children[1], &children[2], &children[3]),
+            69 => self.tuple_type(&children[0], &children[1], &children[2], &children[3]),
+            70 => self.tuple_items(&children[0], &children[1], &children[2]),
+            71 => self.tuple_items_list_0(&children[0], &children[1], &children[2], &children[3]),
+            72 => self.tuple_items_list_1(),
+            73 => self.tuple_items_opt0_0(&children[0]),
+            74 => self.tuple_items_opt0_1(),
+            75 => self.tuple_items_opt_0(&children[0]),
+            76 => self.tuple_items_opt_1(),
+            77 => self.skip(&children[0]),
+            78 => self.comma_opt(&children[0]),
+            79 => self.comma_opt0_0(&children[0]),
+            80 => self.comma_opt0_1(),
+            81 => self.assign(&children[0]),
+            82 => self.number(&children[0]),
+            83 => self.r#ref(&children[0]),
+            84 => self.semicolon(&children[0]),
+            85 => self.comma(&children[0]),
+            86 => self.string_0(&children[0]),
+            87 => self.string_1(&children[0]),
+            88 => self.quoted_string(&children[0]),
+            89 => self.raw_string(&children[0]),
+            90 => self.ident(&children[0]),
+            91 => self.double_colon(&children[0]),
+            92 => self.colon(&children[0]),
+            93 => self.l_brace(&children[0]),
+            94 => self.r_brace(&children[0]),
+            95 => self.l_bracket(&children[0]),
+            96 => self.r_bracket(&children[0]),
+            97 => self.l_paren(&children[0]),
+            98 => self.r_paren(&children[0]),
+            99 => self.hash(&children[0]),
+            100 => self.l_t(&children[0]),
+            101 => self.g_t(&children[0]),
             _ => Err(ParserError::InternalError(format!(
                 "Unhandled production number: {}",
                 prod_num
@@ -3195,7 +3575,7 @@ impl<'t> UserActionsTrait<'t> for LaDfa2DotGrammarAuto<'t, '_> {
         }
     }
 
-    fn on_comment_parsed(&mut self, token: Token<'t>) {
-        self.user_grammar.on_comment_parsed(token)
+    fn on_comment(&mut self, token: Token<'t>) {
+        self.user_grammar.on_comment(token)
     }
 }
