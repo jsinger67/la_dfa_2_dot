@@ -3,6 +3,31 @@
 %comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
 %line_comment "//"
 %block_comment "/\*" "\*/"
+%on RawString1Start %enter RAW_STRING1
+%on RawString2Start %enter RAW_STRING2
+%on RawString3Start %enter RAW_STRING3
+%on RawStringStart %enter RAW_STRING
+
+%scanner RAW_STRING {
+    %auto_newline_off
+    %auto_ws_off
+    %on RawStringEnd %enter INITIAL
+}
+%scanner RAW_STRING1 {
+    %auto_newline_off
+    %auto_ws_off
+    %on RawString1End %enter INITIAL
+}
+%scanner RAW_STRING2 {
+    %auto_newline_off
+    %auto_ws_off
+    %on RawString2End %enter INITIAL
+}
+%scanner RAW_STRING3 {
+    %auto_newline_off
+    %auto_ws_off
+    %on RawString3End %enter INITIAL
+}
 
 %%
 
@@ -17,94 +42,146 @@
 /*   8 */ AttributeArgOpt0 /* Option<T>::None */: ;
 /*   9 */ Item: UseStatement^ /* Clipped */;
 /*  10 */ Item: ConstDeclaration;
-/*  11 */ UseStatement: 'use' ScopedQualifiedIdent Semicolon;
-/*  12 */ QualifiedIdent: Ident QualifiedIdentList /* Vec */;
-/*  13 */ QualifiedIdentList /* Vec<T>::Push */: DoubleColon Ident QualifiedIdentList;
-/*  14 */ QualifiedIdentList /* Vec<T>::New */: ;
-/*  15 */ ScopedQualifiedIdent: QualifiedIdent ScopedQualifiedIdentOpt /* Option */;
-/*  16 */ ScopedQualifiedIdentOpt /* Option<T>::Some */: DoubleColon ScopedList;
-/*  17 */ ScopedQualifiedIdentOpt /* Option<T>::None */: ;
-/*  18 */ ScopedList: LBrace ScopedListItems CommaOpt RBrace;
-/*  19 */ ScopedListItems: ScopedQualifiedIdent ScopedListItemsList /* Vec */;
-/*  20 */ ScopedListItemsList /* Vec<T>::Push */: Comma^ /* Clipped */ ScopedQualifiedIdent ScopedListItemsList;
-/*  21 */ ScopedListItemsList /* Vec<T>::New */: ;
-/*  22 */ ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
-/*  23 */ ConstDeclaration: ConstPreamble^ /* Clipped */ Skip^ /* Clipped */;
-/*  24 */ ConstPreamble: ConstQualifier^ /* Clipped */ ConstName Colon^ /* Clipped */;
-/*  25 */ ConstQualifier: ConstQualifierOpt /* Option */ 'const';
-/*  26 */ ConstQualifier: 'static';
-/*  27 */ ConstQualifierOpt /* Option<T>::Some */: 'pub';
-/*  28 */ ConstQualifierOpt /* Option<T>::None */: ;
-/*  29 */ ConstName: Ident;
-/*  30 */ ConstVal: Number;
-/*  31 */ ConstVal: String;
-/*  32 */ ConstVal: QualifiedVal;
-/*  33 */ ConstVal: ArrayVal;
-/*  34 */ ConstVal: TupleVal;
-/*  35 */ ArrayVal: Ref^ /* Clipped */ LBracket^ /* Clipped */ ArrayValOpt /* Option */ RBracket^ /* Clipped */;
-/*  36 */ ArrayValOpt /* Option<T>::Some */: ConstValList CommaOpt^ /* Clipped */;
-/*  37 */ ArrayValOpt /* Option<T>::None */: ;
-/*  38 */ ConstValList: ConstVal ConstValListList /* Vec */;
-/*  39 */ ConstValListList /* Vec<T>::Push */: Comma^ /* Clipped */ ConstVal ConstValListList;
-/*  40 */ ConstValListList /* Vec<T>::New */: ;
-/*  41 */ TupleVal: LParen^ /* Clipped */ TupleValOpt /* Option */ RParen^ /* Clipped */;
-/*  42 */ TupleValOpt /* Option<T>::Some */: ConstValList CommaOpt^ /* Clipped */;
-/*  43 */ TupleValOpt /* Option<T>::None */: ;
-/*  44 */ QualifiedVal: QualifiedIdent QualifiedValOpt /* Option */;
-/*  45 */ QualifiedValOpt /* Option<T>::Some */: StructOrTupleVal;
-/*  46 */ QualifiedValOpt /* Option<T>::None */: ;
-/*  47 */ StructOrTupleVal: StructVal;
-/*  48 */ StructOrTupleVal: TupleStructVal;
-/*  49 */ StructVal: LBrace^ /* Clipped */ StructValOpt /* Option */ RBrace^ /* Clipped */;
-/*  50 */ StructValOpt /* Option<T>::Some */: MemberValues Comma^ /* Clipped */;
-/*  51 */ StructValOpt /* Option<T>::None */: ;
-/*  52 */ MemberValues: MemberValue MemberValuesList /* Vec */;
-/*  53 */ MemberValuesList /* Vec<T>::Push */: Comma^ /* Clipped */ MemberValue MemberValuesList;
-/*  54 */ MemberValuesList /* Vec<T>::New */: ;
-/*  55 */ MemberValue: Ident Colon^ /* Clipped */ ConstVal;
-/*  56 */ TupleStructVal: TupleVal;
-/*  57 */ TypeSpec: QualifiedIdent;
-/*  58 */ TypeSpec: ArrayType;
-/*  59 */ TypeSpec: TupleType;
-/*  60 */ TypeSpec: OptionType;
-/*  61 */ ArrayType: Ref LBracket ArrayTypeSpec RBracket;
-/*  62 */ ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ ArrayElementType Semicolon Number;
-/*  63 */ ArrayTypeSpecOpt /* Option<T>::Some */: Ref;
-/*  64 */ ArrayTypeSpecOpt /* Option<T>::None */: ;
-/*  65 */ ArrayElementType: Ident;
-/*  66 */ ArrayElementType: Tuple;
-/*  67 */ OptionType: 'Option' LT TypeSpec GT;
-/*  68 */ Tuple: LParen TupleItems CommaOpt RParen;
-/*  69 */ TupleType: LParen TupleItems CommaOpt RParen;
-/*  70 */ TupleItems: TupleItemsOpt /* Option */ TypeSpec TupleItemsList /* Vec */;
-/*  71 */ TupleItemsList /* Vec<T>::Push */: Comma TupleItemsOpt0 /* Option */ TypeSpec TupleItemsList;
-/*  72 */ TupleItemsList /* Vec<T>::New */: ;
-/*  73 */ TupleItemsOpt0 /* Option<T>::Some */: Ref;
-/*  74 */ TupleItemsOpt0 /* Option<T>::None */: ;
-/*  75 */ TupleItemsOpt /* Option<T>::Some */: Ref;
-/*  76 */ TupleItemsOpt /* Option<T>::None */: ;
-/*  77 */ Skip: /&\[Production; \d+\] = &\[[.\r\n]*/;
-/*  78 */ CommaOpt: CommaOpt0 /* Option */;
-/*  79 */ CommaOpt0 /* Option<T>::Some */: Comma;
-/*  80 */ CommaOpt0 /* Option<T>::None */: ;
-/*  81 */ Assign: '=';
-/*  82 */ Number: /-?\d+/;
-/*  83 */ Ref: '&';
-/*  84 */ Semicolon: ';';
-/*  85 */ Comma: ',';
-/*  86 */ String: QuotedString;
-/*  87 */ String: RawString;
-/*  88 */ QuotedString: /r#{0, 3}".*"#{0, 3}/;
-/*  89 */ RawString: /"(\\"|[^"])*"/;
-/*  90 */ Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;
-/*  91 */ DoubleColon: '::';
-/*  92 */ Colon: ':';
-/*  93 */ LBrace: '{';
-/*  94 */ RBrace: '}';
-/*  95 */ LBracket: '[';
-/*  96 */ RBracket: ']';
-/*  97 */ LParen: '(';
-/*  98 */ RParen: ')';
-/*  99 */ Hash: /#/;
-/* 100 */ LT: '<';
-/* 101 */ GT: '>';
+/*  11 */ Item: ScannerMacro;
+/*  12 */ UseStatement: 'use' ScopedQualifiedIdent Semicolon;
+/*  13 */ QualifiedIdent: Ident QualifiedIdentList /* Vec */;
+/*  14 */ QualifiedIdentList /* Vec<T>::Push */: DoubleColon Ident QualifiedIdentList;
+/*  15 */ QualifiedIdentList /* Vec<T>::New */: ;
+/*  16 */ ScopedQualifiedIdent: QualifiedIdent ScopedQualifiedIdentOpt /* Option */;
+/*  17 */ ScopedQualifiedIdentOpt /* Option<T>::Some */: DoubleColon ScopedList;
+/*  18 */ ScopedQualifiedIdentOpt /* Option<T>::None */: ;
+/*  19 */ ScopedList: LBrace ScopedListItems CommaOpt RBrace;
+/*  20 */ ScopedListItems: ScopedQualifiedIdent ScopedListItemsList /* Vec */;
+/*  21 */ ScopedListItemsList /* Vec<T>::Push */: Comma^ /* Clipped */ ScopedQualifiedIdent ScopedListItemsList;
+/*  22 */ ScopedListItemsList /* Vec<T>::New */: ;
+/*  23 */ ConstDeclaration: ConstPreamble TypeSpec^ /* Clipped */ Assign^ /* Clipped */ ConstVal Semicolon^ /* Clipped */;
+/*  24 */ ConstDeclaration: ConstPreamble^ /* Clipped */ Skip^ /* Clipped */;
+/*  25 */ ConstPreamble: ConstQualifier^ /* Clipped */ ConstName Colon^ /* Clipped */;
+/*  26 */ ConstQualifier: ConstQualifierOpt /* Option */ 'const';
+/*  27 */ ConstQualifier: 'static';
+/*  28 */ ConstQualifierOpt /* Option<T>::Some */: 'pub';
+/*  29 */ ConstQualifierOpt /* Option<T>::None */: ;
+/*  30 */ ConstName: Ident;
+/*  31 */ ConstVal: Number;
+/*  32 */ ConstVal: String;
+/*  33 */ ConstVal: QualifiedVal;
+/*  34 */ ConstVal: ArrayVal;
+/*  35 */ ConstVal: TupleVal;
+/*  36 */ ArrayVal: Ref^ /* Clipped */ LBracket^ /* Clipped */ ArrayValOpt /* Option */ RBracket^ /* Clipped */;
+/*  37 */ ArrayValOpt /* Option<T>::Some */: ConstValList CommaOpt^ /* Clipped */;
+/*  38 */ ArrayValOpt /* Option<T>::None */: ;
+/*  39 */ ConstValList: ConstVal ConstValListList /* Vec */;
+/*  40 */ ConstValListList /* Vec<T>::Push */: Comma^ /* Clipped */ ConstVal ConstValListList;
+/*  41 */ ConstValListList /* Vec<T>::New */: ;
+/*  42 */ TupleVal: LParen^ /* Clipped */ TupleValOpt /* Option */ RParen^ /* Clipped */;
+/*  43 */ TupleValOpt /* Option<T>::Some */: ConstValList CommaOpt^ /* Clipped */;
+/*  44 */ TupleValOpt /* Option<T>::None */: ;
+/*  45 */ QualifiedVal: QualifiedIdent QualifiedValOpt /* Option */;
+/*  46 */ QualifiedValOpt /* Option<T>::Some */: StructOrTupleVal;
+/*  47 */ QualifiedValOpt /* Option<T>::None */: ;
+/*  48 */ StructOrTupleVal: StructVal;
+/*  49 */ StructOrTupleVal: TupleStructVal;
+/*  50 */ StructVal: LBrace^ /* Clipped */ StructValOpt /* Option */ RBrace^ /* Clipped */;
+/*  51 */ StructValOpt /* Option<T>::Some */: MemberValues Comma^ /* Clipped */;
+/*  52 */ StructValOpt /* Option<T>::None */: ;
+/*  53 */ MemberValues: MemberValue MemberValuesList /* Vec */;
+/*  54 */ MemberValuesList /* Vec<T>::Push */: Comma^ /* Clipped */ MemberValue MemberValuesList;
+/*  55 */ MemberValuesList /* Vec<T>::New */: ;
+/*  56 */ MemberValue: Ident Colon^ /* Clipped */ ConstVal;
+/*  57 */ TupleStructVal: TupleVal;
+/*  58 */ ScannerMacro: 'scanner!' LBrace^ /* Clipped */ ScannerMacroBody^ /* Clipped */ RBrace^ /* Clipped */;
+/*  59 */ ScannerMacroBody: Ident^ /* Clipped */ LBrace^ /* Clipped */ ScannerMacroItem^ /* Clipped */ ScannerMacroBodyList /* Vec */ RBrace^ /* Clipped */;
+/*  60 */ ScannerMacroBodyList /* Vec<T>::Push */: ScannerMacroItem^ /* Clipped */ ScannerMacroBodyList;
+/*  61 */ ScannerMacroBodyList /* Vec<T>::New */: ;
+/*  62 */ ScannerMacroItem: 'mode'^ /* Clipped */ Ident^ /* Clipped */ LBrace^ /* Clipped */ ScannerMacroItemList /* Vec */ RBrace^ /* Clipped */;
+/*  63 */ ScannerMacroItemList /* Vec<T>::Push */: ScannerMacroItemListGroup ScannerMacroItemList;
+/*  64 */ ScannerMacroItemListGroup: TokenDefinition^ /* Clipped */;
+/*  65 */ ScannerMacroItemListGroup: ModeTransition^ /* Clipped */;
+/*  66 */ ScannerMacroItemList /* Vec<T>::New */: ;
+/*  67 */ TokenDefinition: 'token'^ /* Clipped */ String^ /* Clipped */ TokenDefinitionOpt /* Option */ Arrow^ /* Clipped */ Number^ /* Clipped */ Semicolon^ /* Clipped */;
+/*  68 */ TokenDefinitionOpt /* Option<T>::Some */: LookaheadExpression^ /* Clipped */;
+/*  69 */ TokenDefinitionOpt /* Option<T>::None */: ;
+/*  70 */ ModeTransition: 'on'^ /* Clipped */ Number^ /* Clipped */ 'enter'^ /* Clipped */ Ident^ /* Clipped */ Semicolon^ /* Clipped */;
+/*  71 */ LookaheadExpression: LookaheadExpressionOpt /* Option */ 'followed'^ /* Clipped */ 'by'^ /* Clipped */ String^ /* Clipped */;
+/*  72 */ LookaheadExpressionOpt /* Option<T>::Some */: 'not';
+/*  73 */ LookaheadExpressionOpt /* Option<T>::None */: ;
+/*  74 */ TypeSpec: QualifiedIdent;
+/*  75 */ TypeSpec: ArrayType;
+/*  76 */ TypeSpec: TupleType;
+/*  77 */ TypeSpec: OptionType;
+/*  78 */ ArrayType: Ref LBracket ArrayTypeSpec RBracket;
+/*  79 */ ArrayTypeSpec: ArrayTypeSpecOpt /* Option */ ArrayElementType Semicolon Number;
+/*  80 */ ArrayTypeSpecOpt /* Option<T>::Some */: Ref;
+/*  81 */ ArrayTypeSpecOpt /* Option<T>::None */: ;
+/*  82 */ ArrayElementType: Ident;
+/*  83 */ ArrayElementType: Tuple;
+/*  84 */ OptionType: 'Option' LT TypeSpec GT;
+/*  85 */ Tuple: LParen TupleItems CommaOpt RParen;
+/*  86 */ TupleType: LParen TupleItems CommaOpt RParen;
+/*  87 */ TupleItems: TupleItemsOpt /* Option */ TypeSpec TupleItemsList /* Vec */;
+/*  88 */ TupleItemsList /* Vec<T>::Push */: Comma TupleItemsOpt0 /* Option */ TypeSpec TupleItemsList;
+/*  89 */ TupleItemsList /* Vec<T>::New */: ;
+/*  90 */ TupleItemsOpt0 /* Option<T>::Some */: Ref;
+/*  91 */ TupleItemsOpt0 /* Option<T>::None */: ;
+/*  92 */ TupleItemsOpt /* Option<T>::Some */: Ref;
+/*  93 */ TupleItemsOpt /* Option<T>::None */: ;
+/*  94 */ Skip: /&\[Production; \d+\] = &\[[.\r\n]*/;
+/*  95 */ CommaOpt: CommaOpt0 /* Option */;
+/*  96 */ CommaOpt0 /* Option<T>::Some */: Comma;
+/*  97 */ CommaOpt0 /* Option<T>::None */: ;
+/*  98 */ Assign: '=';
+/*  99 */ Number: /-?\d+/;
+/* 100 */ Ref: '&';
+/* 101 */ Arrow: '=>';
+/* 102 */ Semicolon: ';';
+/* 103 */ Comma: ',';
+/* 104 */ String: QuotedString;
+/* 105 */ String: RawString;
+/* 106 */ String: RawString1;
+/* 107 */ String: RawString2;
+/* 108 */ String: RawString3;
+/* 109 */ QuotedString: /"([^"]|\\")*"/;
+/* 110 */ RawStringStart: /r"/;
+/* 111 */ RawStringEnd: <RAW_STRING>/"/;
+/* 112 */ RawStringContent: <RAW_STRING>/([^"]|\\")*/;
+/* 113 */ RawString: RawStringStart^ /* Clipped */ RawStringContent@strng RawStringEnd^ /* Clipped */;
+/* 114 */ RawString1Start: /r#"/;
+/* 115 */ RawString1End: <RAW_STRING1>/"#/;
+/* 116 */ RawStringContentNoQuotes: <RAW_STRING1>/[^"]*/;
+/* 117 */ RawString1ContentQuotes: <RAW_STRING1>/"/ ?! /#/;
+/* 118 */ RawString1Content: RawString1ContentList /* Vec */;
+/* 119 */ RawString1ContentList /* Vec<T>::Push */: RawString1ContentListGroup RawString1ContentList;
+/* 120 */ RawString1ContentListGroup: RawStringContentNoQuotes;
+/* 121 */ RawString1ContentListGroup: RawString1ContentQuotes;
+/* 122 */ RawString1ContentList /* Vec<T>::New */: ;
+/* 123 */ RawString1: RawString1Start^ /* Clipped */ RawString1Content@strng RawString1End^ /* Clipped */;
+/* 124 */ RawString2Start: /r##"/;
+/* 125 */ RawString2End: <RAW_STRING2>/"##/;
+/* 126 */ RawString2ContentQuotes: <RAW_STRING2>/"/ ?! /##/;
+/* 127 */ RawString2Content: RawString2ContentList /* Vec */;
+/* 128 */ RawString2ContentList /* Vec<T>::Push */: RawString2ContentListGroup RawString2ContentList;
+/* 129 */ RawString2ContentListGroup: RawStringContentNoQuotes;
+/* 130 */ RawString2ContentListGroup: RawString2ContentQuotes;
+/* 131 */ RawString2ContentList /* Vec<T>::New */: ;
+/* 132 */ RawString2: RawString2Start^ /* Clipped */ RawString2Content@strng RawString2End^ /* Clipped */;
+/* 133 */ RawString3Start: /r###"/;
+/* 134 */ RawString3End: <RAW_STRING3>/"###/;
+/* 135 */ RawString3ContentQuotes: <RAW_STRING3>/"/ ?! /###/;
+/* 136 */ RawString3Content: RawString3ContentList /* Vec */;
+/* 137 */ RawString3ContentList /* Vec<T>::Push */: RawString3ContentListGroup RawString3ContentList;
+/* 138 */ RawString3ContentListGroup: RawStringContentNoQuotes;
+/* 139 */ RawString3ContentListGroup: RawString3ContentQuotes;
+/* 140 */ RawString3ContentList /* Vec<T>::New */: ;
+/* 141 */ RawString3: RawString3Start^ /* Clipped */ RawString3Content@strng RawString3End^ /* Clipped */;
+/* 142 */ Ident: /[a-zA-Z_][a-zA-Z0-9_]*/;
+/* 143 */ DoubleColon: '::';
+/* 144 */ Colon: ':';
+/* 145 */ LBrace: '{';
+/* 146 */ RBrace: '}';
+/* 147 */ LBracket: '[';
+/* 148 */ RBracket: ']';
+/* 149 */ LParen: '(';
+/* 150 */ RParen: ')';
+/* 151 */ Hash: /#/;
+/* 152 */ LT: '<';
+/* 153 */ GT: '>';

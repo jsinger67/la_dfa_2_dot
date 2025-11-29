@@ -9,6 +9,33 @@
 %line_comment '//'
 %block_comment '/*' '*/'
 
+%on RawStringStart %enter RAW_STRING
+%on RawString1Start %enter RAW_STRING1
+%on RawString2Start %enter RAW_STRING2
+%on RawString3Start %enter RAW_STRING3
+%scanner RAW_STRING {
+    %auto_newline_off
+    %auto_ws_off
+    %on RawStringEnd %enter INITIAL
+}
+%scanner RAW_STRING1 {
+    %auto_newline_off
+    %auto_ws_off
+    %on RawString1End %enter INITIAL
+}
+%scanner RAW_STRING2 {
+    %auto_newline_off
+    %auto_ws_off
+    %allow_unmatched
+    %on RawString2End %enter INITIAL
+}
+%scanner RAW_STRING3 {
+    %auto_newline_off
+    %auto_ws_off
+    %allow_unmatched
+    %on RawString3End %enter INITIAL
+}
+
 %%
 
 LaDfa2Dot
@@ -23,9 +50,9 @@ AttributeArgOpt
     : [ LParen Ident RParen ]
     ;
 
-Item
-    : UseStatement^ 
+Item: UseStatement^
     | ConstDeclaration
+    | ScannerMacro
     ;
 
 // -------------------------------------------------------------------------------------------------
@@ -55,7 +82,7 @@ ScopedListItems
 // ConstDeclaration
 // -------------------------------------------------------------------------------------------------
 ConstDeclaration
-    : ConstPreamble TypeSpec^ Assign^ ConstVal Semicolon^ 
+    : ConstPreamble TypeSpec^ Assign^ ConstVal Semicolon^
     | ConstPreamble^ Skip^
     ;
 
@@ -64,7 +91,7 @@ ConstPreamble
     ;
 
 ConstQualifier
-    : [ 'pub' ] 'const' 
+    : [ 'pub' ] 'const'
     | 'static'
     ;
 
@@ -73,7 +100,7 @@ ConstName
     ;
 
 ConstVal
-    : Number 
+    : Number
     | String
     | QualifiedVal
     | ArrayVal
@@ -97,7 +124,7 @@ QualifiedVal
     ;
 
 StructOrTupleVal
-    : StructVal 
+    : StructVal
     | TupleStructVal
     ;
 
@@ -118,10 +145,37 @@ TupleStructVal
     ;
 
 // -------------------------------------------------------------------------------------------------
+// ScannerMacro
+// -------------------------------------------------------------------------------------------------
+ScannerMacro
+    : 'scanner!' LBrace^ ScannerMacroBody^ RBrace^
+    ;
+
+ScannerMacroBody
+    : Ident^ LBrace^ ScannerMacroItem^ { ScannerMacroItem^ } RBrace^
+    ;
+
+ScannerMacroItem
+    : 'mode'^ Ident^ LBrace^ { TokenDefinition^ | ModeTransition^ } RBrace^
+    ;
+
+TokenDefinition
+    : 'token'^ String^ [ LookaheadExpression^ ] Arrow^ Number^ Semicolon^
+    ;
+
+ModeTransition
+    : 'on'^ Number^ 'enter'^ Ident^ Semicolon^
+    ;
+
+LookaheadExpression
+    : [ 'not' ] 'followed'^ 'by'^ String^
+    ;
+
+// -------------------------------------------------------------------------------------------------
 // TypeSpec
 // -------------------------------------------------------------------------------------------------
 TypeSpec
-    : QualifiedIdent 
+    : QualifiedIdent
     | ArrayType
     | TupleType
     | OptionType
@@ -157,8 +211,7 @@ TupleItems
     ;
 
 // We ignore the rest of the file from here on because we have parsed all necessary information
-Skip
-    : /&\[Production; \d+\] = &\[[.\r\n]*/
+Skip: /&\[Production; \d+\] = &\[[.\r\n]*/
     ;
 
 // -------------------------------------------------------------------------------------------------
@@ -179,8 +232,11 @@ Number
     : /-?\d+/
     ;
 
-Ref
-    : '&'
+Ref : '&'
+    ;
+
+Arrow
+    : '=>'
     ;
 
 Semicolon
@@ -192,18 +248,112 @@ Comma
     ;
 
 String
-    : QuotedString 
+    : QuotedString
     | RawString
+    | RawString1
+    | RawString2
+    | RawString3
     ;
 
 QuotedString
-    : /r#{0, 3}".*"#{0, 3}/
+    : /"([^"]|\\")*"/
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// RawString
+// -------------------------------------------------------------------------------------------------
+RawStringStart
+    : /r"/
+    ;
+
+RawStringEnd
+    : <RAW_STRING>/"/
+    ;
+
+RawStringContent
+    : <RAW_STRING>/([^"]|\\")*/
     ;
 
 RawString
-    : /"(\\"|[^"])*"/
+    : RawStringStart^ RawStringContent@strng RawStringEnd^
     ;
 
+// -------------------------------------------------------------------------------------------------
+// RawString1
+// -------------------------------------------------------------------------------------------------
+RawString1Start
+    : /r#"/
+    ;
+
+RawString1End
+    : <RAW_STRING1>/"#/
+    ;
+
+RawStringContentNoQuotes
+    : <RAW_STRING1>/[^"]*/
+    ;
+
+RawString1ContentQuotes
+    : <RAW_STRING1>/"/?!/#/
+    ;
+
+RawString1Content
+    : { RawStringContentNoQuotes | RawString1ContentQuotes }
+    ;
+
+RawString1
+    : RawString1Start^ RawString1Content@strng RawString1End^
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// RawString2
+// -------------------------------------------------------------------------------------------------
+RawString2Start
+    : /r##"/
+    ;
+
+RawString2End
+    : <RAW_STRING2>/"##/
+    ;
+
+RawString2ContentQuotes
+    : <RAW_STRING2>/"/?!/##/
+    ;
+
+RawString2Content
+    : { RawStringContentNoQuotes | RawString2ContentQuotes }
+    ;
+
+RawString2
+    : RawString2Start^ RawString2Content@strng RawString2End^
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// RawString3
+// -------------------------------------------------------------------------------------------------
+RawString3Start
+    : /r###"/
+    ;
+
+RawString3End
+    : <RAW_STRING3>/"###/
+    ;
+
+RawString3ContentQuotes
+    : <RAW_STRING3>/"/?!/###/
+    ;
+
+RawString3Content
+    : { RawStringContentNoQuotes | RawString3ContentQuotes }
+    ;
+
+RawString3
+    : RawString3Start^ RawString3Content@strng RawString3End^
+    ;
+
+// -------------------------------------------------------------------------------------------------
+// Ident
+// -------------------------------------------------------------------------------------------------
 Ident
     : /[a-zA-Z_][a-zA-Z0-9_]*/
     ;
@@ -240,14 +390,11 @@ RParen
     : ')'
     ;
 
-Hash
-    : /#/
+Hash: /#/
     ;
 
-LT
-    : '<'
+LT  : '<'
     ;
 
-GT
-    : '>'
+GT  : '>'
     ;

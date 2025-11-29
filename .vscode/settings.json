@@ -4,7 +4,10 @@
         "Paren",
         "rankdir",
         "retransforms",
+        "scnr",
         "strct",
+        "strng",
+        "syntree",
         "tera"
     ]
 }
