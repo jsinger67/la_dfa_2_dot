@@ -15,15 +15,15 @@ license = "MIT OR Apache-2.0"
 anyhow = "1.0"
 clap = { version = "4.5", features = ["derive", "cargo"] }
 env_logger = "0.11"
-parol_runtime = { version = "4.1", path = "../parol/crates/parol_runtime" }
+parol_runtime = "4.1"
 regex = "1.10"
 scnr2 = "0.3.3"
 tera = "1.20"
 thiserror = "2.0"
 
 [build-dependencies]
-parol = { version = "4.2", path = "../parol/crates/parol" }
-parol_runtime = { version = "4.1", path = "../parol/crates/parol_runtime" }
+parol = "4.2"
+parol_runtime = "4.1"
 
 # For faster builds.
 [profile.dev.build-override]

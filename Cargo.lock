@@ -755,6 +755,8 @@ checksum = "9c6901729fa79e91a0913333229e9ca5dc725089d1c363b2f4b4760709dc4a52"
 [[package]]
 name = "parol"
 version = "4.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1020d56fb78dea1c6cdf6dde2c7399cc80534f7e987c67699a1f8aa9990a9402"
 dependencies = [
  "anyhow",
  "assert_cmd",
@@ -791,10 +793,14 @@ dependencies = [
 [[package]]
 name = "parol-macros"
 version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "54ec451836679aaa55158b454b441e21446a111ea34aa1917eba29245bafe4b8"
 
 [[package]]
 name = "parol_runtime"
 version = "4.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b54b61657abde68018f0112d35da230cdd9e531e169a7bb85a91305a7b2b155f"
 dependencies = [
  "anyhow",
  "codespan-reporting",
