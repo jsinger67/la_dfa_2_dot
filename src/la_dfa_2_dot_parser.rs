@@ -91,7 +91,7 @@ scanner! {
             token r"by" => 15; // "By"
             token r"not" => 16; // "Not"
             token r"Option" => 17; // "Option"
-            token r"&\[Production; \d+\] = &\[[.\r\n]*" => 18; // "Skip"
+            token r"&\[Production; \d+\] = &\[(?s).*" => 18; // "Skip"
             token r"=" => 19; // "Assign"
             token r"-?\d+" => 20; // "Number"
             token r"\&" => 21; // "Ref"
@@ -102,7 +102,7 @@ scanner! {
             token r#"r""# => 26; // "RawStringStart"
             token r#"r#""# => 29; // "RawString1Start"
             token r#"r##""# => 33; // "RawString2Start"
-            token r#"r###""# => 36; // "RawString3Start"
+            token r#"r\u{0023}{3}""# => 36; // "RawString3Start"
             token r"[a-zA-Z_][a-zA-Z0-9_]*" => 39; // "Ident"
             token r"::" => 40; // "DoubleColon"
             token r":" => 41; // "Colon"
@@ -140,8 +140,8 @@ scanner! {
             on 34 enter INITIAL;
         }
         mode RAW_STRING3 {
-            token r####""###"#### => 37; // "RawString3End"
-            token r#"""#  not followed by r"###"=> 38; // "RawString3ContentQuotes"
+            token r#""\u{0023}{3}"# => 37; // "RawString3End"
+            token r#"""#  not followed by r"\u{0023}{3}"=> 38; // "RawString3ContentQuotes"
             on 37 enter INITIAL;
         }
     }
@@ -1759,7 +1759,7 @@ pub const PRODUCTIONS: &[Production; 154] = &[
         lhs: 100,
         production: &[],
     },
-    // 94 - Skip: /&\[Production; \d+\] = &\[[.\r\n]*/;
+    // 94 - Skip: /&\[Production; \d+\] = &\[(?s).*/;
     Production {
         lhs: 90,
         production: &[ParseType::T(18)],
@@ -1954,12 +1954,12 @@ pub const PRODUCTIONS: &[Production; 154] = &[
         lhs: 59,
         production: &[ParseType::N(64), ParseType::N(60), ParseType::N(65)],
     },
-    // 133 - RawString3Start: /r###"/;
+    // 133 - RawString3Start: /r\u{0023}{3}"/;
     Production {
         lhs: 72,
         production: &[ParseType::T(36)],
     },
-    // 134 - RawString3End: /"###/;
+    // 134 - RawString3End: /"\u{0023}{3}/;
     Production {
         lhs: 71,
         production: &[ParseType::T(37)],

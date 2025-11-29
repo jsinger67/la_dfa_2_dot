@@ -211,7 +211,7 @@ TupleItems
     ;
 
 // We ignore the rest of the file from here on because we have parsed all necessary information
-Skip: /&\[Production; \d+\] = &\[[.\r\n]*/
+Skip: /&\[Production; \d+\] = &\[(?s).*/
     ;
 
 // -------------------------------------------------------------------------------------------------
@@ -332,15 +332,15 @@ RawString2
 // RawString3
 // -------------------------------------------------------------------------------------------------
 RawString3Start
-    : /r###"/
+    : /r\u{0023}{3}"/
     ;
 
 RawString3End
-    : <RAW_STRING3>/"###/
+    : <RAW_STRING3>/"\u{0023}{3}/
     ;
 
 RawString3ContentQuotes
-    : <RAW_STRING3>/"/?!/###/
+    : <RAW_STRING3>/"/?!/\u{0023}{3}/
     ;
 
 RawString3Content

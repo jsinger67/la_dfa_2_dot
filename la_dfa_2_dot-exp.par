@@ -125,7 +125,7 @@
 /*  91 */ TupleItemsOpt0 /* Option<T>::None */: ;
 /*  92 */ TupleItemsOpt /* Option<T>::Some */: Ref;
 /*  93 */ TupleItemsOpt /* Option<T>::None */: ;
-/*  94 */ Skip: /&\[Production; \d+\] = &\[[.\r\n]*/;
+/*  94 */ Skip: /&\[Production; \d+\] = &\[(?s).*/;
 /*  95 */ CommaOpt: CommaOpt0 /* Option */;
 /*  96 */ CommaOpt0 /* Option<T>::Some */: Comma;
 /*  97 */ CommaOpt0 /* Option<T>::None */: ;
@@ -164,9 +164,9 @@
 /* 130 */ RawString2ContentListGroup: RawString2ContentQuotes;
 /* 131 */ RawString2ContentList /* Vec<T>::New */: ;
 /* 132 */ RawString2: RawString2Start^ /* Clipped */ RawString2Content@strng RawString2End^ /* Clipped */;
-/* 133 */ RawString3Start: /r###"/;
-/* 134 */ RawString3End: <RAW_STRING3>/"###/;
-/* 135 */ RawString3ContentQuotes: <RAW_STRING3>/"/ ?! /###/;
+/* 133 */ RawString3Start: /r\u{0023}{3}"/;
+/* 134 */ RawString3End: <RAW_STRING3>/"\u{0023}{3}/;
+/* 135 */ RawString3ContentQuotes: <RAW_STRING3>/"/ ?! /\u{0023}{3}/;
 /* 136 */ RawString3Content: RawString3ContentList /* Vec */;
 /* 137 */ RawString3ContentList /* Vec<T>::Push */: RawString3ContentListGroup RawString3ContentList;
 /* 138 */ RawString3ContentListGroup: RawStringContentNoQuotes;

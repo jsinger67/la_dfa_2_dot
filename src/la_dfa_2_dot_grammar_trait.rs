@@ -1463,7 +1463,7 @@ pub struct RawString3ContentQuotes<'t> {
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct RawString3End<'t> {
-    pub raw_string3_end: Token<'t>, /* "### */
+    pub raw_string3_end: Token<'t>, /* "\u{0023}{3} */
 }
 
 ///
@@ -1472,7 +1472,7 @@ pub struct RawString3End<'t> {
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct RawString3Start<'t> {
-    pub raw_string3_start: Token<'t>, /* r###" */
+    pub raw_string3_start: Token<'t>, /* r\u{0023}{3}" */
 }
 
 ///
@@ -1639,7 +1639,7 @@ pub struct Semicolon<'t> {
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Skip<'t> {
-    pub skip: Token<'t>, /* &\[Production; \d+\] = &\[[.\r\n]* */
+    pub skip: Token<'t>, /* &\[Production; \d+\] = &\[(?s).* */
 }
 
 ///
@@ -3978,7 +3978,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 94:
     ///
-    /// `Skip: /&\[Production; \d+\] = &\[[.\r\n]*/;`
+    /// `Skip: /&\[Production; \d+\] = &\[(?s).*/;`
     ///
     #[parol_runtime::function_name::named]
     fn skip(&mut self, skip: &ParseTreeType<'t>) -> Result<()> {
@@ -4769,7 +4769,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 133:
     ///
-    /// `RawString3Start: /r###"/;`
+    /// `RawString3Start: /r\u{0023}{3}"/;`
     ///
     #[parol_runtime::function_name::named]
     fn raw_string3_start(&mut self, raw_string3_start: &ParseTreeType<'t>) -> Result<()> {
@@ -4786,7 +4786,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 134:
     ///
-    /// `RawString3End: <RAW_STRING3>/"###/;`
+    /// `RawString3End: <RAW_STRING3>/"\u{0023}{3}/;`
     ///
     #[parol_runtime::function_name::named]
     fn raw_string3_end(&mut self, raw_string3_end: &ParseTreeType<'t>) -> Result<()> {
@@ -4802,7 +4802,7 @@ impl<'t, 'u> LaDfa2DotGrammarAuto<'t, 'u> {
 
     /// Semantic action for production 135:
     ///
-    /// `RawString3ContentQuotes: <RAW_STRING3>/"/ ?! /###/;`
+    /// `RawString3ContentQuotes: <RAW_STRING3>/"/ ?! /\u{0023}{3}/;`
     ///
     #[parol_runtime::function_name::named]
     fn raw_string3_content_quotes(&mut self, raw_string_end: &ParseTreeType<'t>) -> Result<()> {

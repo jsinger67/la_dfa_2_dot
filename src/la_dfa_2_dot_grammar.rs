@@ -62,45 +62,50 @@ impl<'t> crate::la_dfa_2_dot_grammar_trait::String<'t> {
     fn text(&'t self) -> String {
         match self {
             crate::la_dfa_2_dot_grammar_trait::String::QuotedString(string_quoted_string) => {
-                string_quoted_string.quoted_string.quoted_string.text().to_string()
+                string_quoted_string
+                    .quoted_string
+                    .quoted_string
+                    .text()
+                    .to_string()
             }
             crate::la_dfa_2_dot_grammar_trait::String::RawString(string_raw_string) => {
                 string_raw_string.raw_string.strng.raw_string_content.text().to_string()
             }
             crate::la_dfa_2_dot_grammar_trait::String::RawString1(string_raw_string1) => {
-                string_raw_string1
-                    .raw_string1
-                    .strng
-                    .raw_string1_content_list
-                    .iter()
-                    .fold(String::new(), |acc, x| {
-                        acc + match &x.raw_string1_content_list_group {
-                            crate::la_dfa_2_dot_grammar_trait::RawString1ContentListGroup::RawStringContentNoQuotes(raw_string1_content_list_group_raw_string_content_no_quotes) =>
-                                raw_string1_content_list_group_raw_string_content_no_quotes.raw_string_content_no_quotes.raw_string_content_no_quotes.text(),
-                            crate::la_dfa_2_dot_grammar_trait::RawString1ContentListGroup::RawString1ContentQuotes(raw_string1_content_list_group_raw_string_content_quotes) =>
-                                raw_string1_content_list_group_raw_string_content_quotes.raw_string1_content_quotes.raw_string_end.text(),
+                string_raw_string1.raw_string1.strng.raw_string1_content_list.iter().map(|c| {
+                    match &c.raw_string1_content_list_group {
+                        crate::la_dfa_2_dot_grammar_trait::RawString1ContentListGroup::RawStringContentNoQuotes(g) => {
+                            g.raw_string_content_no_quotes.raw_string_content_no_quotes.text()
                         }
-                    })
+                        crate::la_dfa_2_dot_grammar_trait::RawString1ContentListGroup::RawString1ContentQuotes(g) => {
+                            g.raw_string1_content_quotes.raw_string_end.text()
+                        }
+                    }
+                }).collect::<Vec<_>>().join("")
             }
             crate::la_dfa_2_dot_grammar_trait::String::RawString2(string_raw_string2) => {
-                string_raw_string2.raw_string2.strng.raw_string2_content_list.iter().fold(String::new(), |acc, x| {
-                    acc + match &x.raw_string2_content_list_group {
-                        crate::la_dfa_2_dot_grammar_trait::RawString2ContentListGroup::RawStringContentNoQuotes(raw_string2_content_list_group_raw_string_content_no_quotes) =>
-                            raw_string2_content_list_group_raw_string_content_no_quotes.raw_string_content_no_quotes.raw_string_content_no_quotes.text(),
-                        crate::la_dfa_2_dot_grammar_trait::RawString2ContentListGroup::RawString2ContentQuotes(raw_string2_content_list_group_raw_string_content_quotes) =>
-                            raw_string2_content_list_group_raw_string_content_quotes.raw_string2_content_quotes.raw_string_end.text(),
+                string_raw_string2.raw_string2.strng.raw_string2_content_list.iter().map(|c| {
+                    match &c.raw_string2_content_list_group {
+                        crate::la_dfa_2_dot_grammar_trait::RawString2ContentListGroup::RawStringContentNoQuotes(g) => {
+                            g.raw_string_content_no_quotes.raw_string_content_no_quotes.text()
+                        }
+                        crate::la_dfa_2_dot_grammar_trait::RawString2ContentListGroup::RawString2ContentQuotes(g) => {
+                            g.raw_string2_content_quotes.raw_string_end.text()
+                        }
                     }
-                })
+                }).collect::<Vec<_>>().join("")
             }
             crate::la_dfa_2_dot_grammar_trait::String::RawString3(string_raw_string3) => {
-                string_raw_string3.raw_string3.strng.raw_string3_content_list.iter().fold(String::new(), |acc, x| {
-                    acc + match &x.raw_string3_content_list_group {
-                        crate::la_dfa_2_dot_grammar_trait::RawString3ContentListGroup::RawStringContentNoQuotes(raw_string3_content_list_group_raw_string_content_no_quotes) =>
-                            raw_string3_content_list_group_raw_string_content_no_quotes.raw_string_content_no_quotes.raw_string_content_no_quotes.text(),
-                        crate::la_dfa_2_dot_grammar_trait::RawString3ContentListGroup::RawString3ContentQuotes(raw_string3_content_list_group_raw_string_content_quotes) =>
-                            raw_string3_content_list_group_raw_string_content_quotes.raw_string3_content_quotes.raw_string_end.text(),
+                string_raw_string3.raw_string3.strng.raw_string3_content_list.iter().map(|c| {
+                    match &c.raw_string3_content_list_group {
+                        crate::la_dfa_2_dot_grammar_trait::RawString3ContentListGroup::RawStringContentNoQuotes(g) => {
+                            g.raw_string_content_no_quotes.raw_string_content_no_quotes.text()
+                        }
+                        crate::la_dfa_2_dot_grammar_trait::RawString3ContentListGroup::RawString3ContentQuotes(g) => {
+                            g.raw_string3_content_quotes.raw_string_end.text()
+                        }
                     }
-                })
+                }).collect::<Vec<_>>().join("")
             }
         }
     }
