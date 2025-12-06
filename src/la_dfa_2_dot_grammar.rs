@@ -197,11 +197,11 @@ impl LaDfa2DotGrammar<'_> {
 
     /// Semantic action for non-terminal 'TupleVal'
     fn process_trans_tuple(&mut self, tuple: &TupleVal<'_>) -> Result<()> {
-        if let Some(tuple) = tuple.tuple_val_opt.as_ref() {
-            if tuple.const_val_list.const_val_list_list.len() == 3 {
-                let transition = Self::extract_transition(&tuple.const_val_list)?;
-                self.current_transitions.push(transition);
-            }
+        if let Some(tuple) = tuple.tuple_val_opt.as_ref()
+            && tuple.const_val_list.const_val_list_list.len() == 3
+        {
+            let transition = Self::extract_transition(&tuple.const_val_list)?;
+            self.current_transitions.push(transition);
         }
         Ok(())
     }
@@ -334,21 +334,16 @@ impl<'t> LaDfa2DotGrammarTrait<'t> for LaDfa2DotGrammar<'t> {
     /// Semantic action for non-terminal 'QualifiedVal'
     fn qualified_val(&mut self, q: &QualifiedVal<'t>) -> Result<()> {
         let ident = q.qualified_ident.ident.ident.text();
-        if ident == "LookaheadDFA" {
-            if let Some(qualified_val) = q.qualified_val_opt.as_ref() {
-                if let StructOrTupleVal::StructVal(struct_val) = &qualified_val.struct_or_tuple_val
-                {
-                    self.process_lookahead_struct(&struct_val.struct_val)?;
-                }
-            }
-        } else if ident == "Trans" {
-            if let Some(qualified_val) = q.qualified_val_opt.as_ref() {
-                if let StructOrTupleVal::TupleStructVal(tuple_val) =
-                    &qualified_val.struct_or_tuple_val
-                {
-                    self.process_trans_tuple(&tuple_val.tuple_struct_val.tuple_val)?;
-                }
-            }
+        if ident == "LookaheadDFA"
+            && let Some(qualified_val) = q.qualified_val_opt.as_ref()
+            && let StructOrTupleVal::StructVal(struct_val) = &qualified_val.struct_or_tuple_val
+        {
+            self.process_lookahead_struct(&struct_val.struct_val)?;
+        } else if ident == "Trans"
+            && let Some(qualified_val) = q.qualified_val_opt.as_ref()
+            && let StructOrTupleVal::TupleStructVal(tuple_val) = &qualified_val.struct_or_tuple_val
+        {
+            self.process_trans_tuple(&tuple_val.tuple_struct_val.tuple_val)?;
         }
         Ok(())
     }

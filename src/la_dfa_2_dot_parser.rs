@@ -49,13 +49,13 @@ pub const TERMINAL_NAMES: &[&str; 52] = &[
     /* 29 */ "RawString1Start",
     /* 30 */ "RawString1End",
     /* 31 */ "RawStringContentNoQuotes",
-    /* 32 */ "RawStringEnd0",
+    /* 32 */ "RawString1ContentQuotes",
     /* 33 */ "RawString2Start",
     /* 34 */ "RawString2End",
-    /* 35 */ "RawStringEnd1",
+    /* 35 */ "RawString2ContentQuotes",
     /* 36 */ "RawString3Start",
     /* 37 */ "RawString3End",
-    /* 38 */ "RawStringEnd2",
+    /* 38 */ "RawString3ContentQuotes",
     /* 39 */ "Ident",
     /* 40 */ "DoubleColon",
     /* 41 */ "Colon",
@@ -130,18 +130,17 @@ scanner! {
         mode RAW_STRING1 {
             token r##""#"## => 30; // "RawString1End"
             token r#"[^"]*"# => 31; // "RawStringContentNoQuotes"
-            token r#"""#  not followed by r"#"=> 32; // "RawStringEnd0"
-            token r"." => 51; // "Error"
+            token r#"""#  not followed by r"#"=> 32; // "RawString1ContentQuotes"
             on 30 enter INITIAL;
         }
         mode RAW_STRING2 {
             token r###""##"### => 34; // "RawString2End"
-            token r#"""#  not followed by r"##"=> 35; // "RawStringEnd1"
+            token r#"""#  not followed by r"##"=> 35; // "RawString2ContentQuotes"
             on 34 enter INITIAL;
         }
         mode RAW_STRING3 {
             token r#""\u{0023}{3}"# => 37; // "RawString3End"
-            token r#"""#  not followed by r"\u{0023}{3}"=> 38; // "RawStringEnd2"
+            token r#"""#  not followed by r"\u{0023}{3}"=> 38; // "RawString3ContentQuotes"
             on 37 enter INITIAL;
         }
     }
@@ -1877,7 +1876,7 @@ pub const PRODUCTIONS: &[Production; 154] = &[
     // 117 - RawString1ContentQuotes: /"/;
     Production {
         lhs: 56,
-        production: &[ParseType::T(27)],
+        production: &[ParseType::T(32)],
     },
     // 118 - RawString1Content: RawString1ContentList /* Vec */;
     Production {
@@ -1922,7 +1921,7 @@ pub const PRODUCTIONS: &[Production; 154] = &[
     // 126 - RawString2ContentQuotes: /"/;
     Production {
         lhs: 63,
-        production: &[ParseType::T(27)],
+        production: &[ParseType::T(35)],
     },
     // 127 - RawString2Content: RawString2ContentList /* Vec */;
     Production {
@@ -1967,7 +1966,7 @@ pub const PRODUCTIONS: &[Production; 154] = &[
     // 135 - RawString3ContentQuotes: /"/;
     Production {
         lhs: 70,
-        production: &[ParseType::T(27)],
+        production: &[ParseType::T(38)],
     },
     // 136 - RawString3Content: RawString3ContentList /* Vec */;
     Production {

@@ -8,11 +8,11 @@
 %comment "Create a Graphviz representation of `parol`'s LookaheadDFAs"
 %line_comment '//'
 %block_comment '/*' '*/'
-
 %on RawStringStart %enter RAW_STRING
 %on RawString1Start %enter RAW_STRING1
 %on RawString2Start %enter RAW_STRING2
 %on RawString3Start %enter RAW_STRING3
+
 %scanner RAW_STRING {
     %auto_newline_off
     %auto_ws_off
@@ -21,6 +21,7 @@
 %scanner RAW_STRING1 {
     %auto_newline_off
     %auto_ws_off
+    %allow_unmatched
     %on RawString1End %enter INITIAL
 }
 %scanner RAW_STRING2 {
